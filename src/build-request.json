@@ -1,0 +1,252 @@
+{
+  "kind": "build_request",
+  "title": "Business simulator game for designing smart devices with research, competitors, office upgrades, and cloud saves",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Create the core game shell UI with navigation for: Dashboard, Device Studio (create devices), Research, Competitors/Market, Office, Investments, and Cloud Saves.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Make a game that allows you to Create smartphones ,tablets,watches and smart-glasses from scratch by selecting the desired characteristics and design."
+        ]
+      },
+      "acceptanceCriteria": [
+        "App loads to a playable home/dashboard screen with clear navigation to all major sections listed in the requirement.",
+        "Each section renders a distinct page/panel with placeholder content where deeper features are implemented in later requirements.",
+        "All user-facing text is in English."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Implement a device creation system that lets the player create smartphones, tablets, watches, and smart-glasses from scratch by selecting characteristics (e.g., CPU tier, RAM, storage, display, battery, camera, materials) and a design option, then saving the device as a product blueprint.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Make a game that allows you to Create smartphones ,tablets,watches and smart-glasses from scratch by selecting the desired characteristics and design."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Device Studio supports selecting a device category (smartphone/tablet/watch/smart-glasses).",
+        "Player can configure a set of characteristics and choose a design variant.",
+        "A saved blueprint appears in a list of created blueprints and can be opened and edited.",
+        "Blueprint data persists across reloads for the same signed-in user (or locally for anonymous mode if implemented)."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Add an R&D technology research system containing 3000+ technologies, with a searchable/browsable tech tree/list, research prerequisites, research time/cost, and effects that modify device characteristics and/or business efficiency.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "* 3000+ technologies for research"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Research screen shows 3000+ technology entries (generated dataset is acceptable).",
+        "Technologies can be searched by name and filtered by category/tier.",
+        "A technology can only be researched if prerequisites are met.",
+        "Completing research updates the player's unlocked technologies and impacts at least one visible stat/effect in the UI."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Implement a challenging mode (difficulty setting) aimed at economic-strategy fans that changes economic parameters (e.g., starting cash, competitor strength, R&D costs, market volatility) and is selectable when starting a new game.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "* Challenging mode for fans of economic strategies"
+        ]
+      },
+      "acceptanceCriteria": [
+        "New Game flow includes difficulty selection with at least: Normal and Challenging.",
+        "Challenging mode applies clearly documented parameter changes shown in the UI (e.g., higher costs and stronger competitors).",
+        "Difficulty choice is stored with the save and affects gameplay consistently after reload."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Implement competitor simulation with smart behavior: AI competitors automatically research technologies, develop products, and release them to the market over time, affecting market competition and player outcomes.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "* Smart behavior of competitors, automatic development and release of products"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Competitors list shows multiple AI companies with basic stats (cash/market share/active products).",
+        "At defined simulation steps (turn/day/week), competitors perform actions (research/develop/release) without player input.",
+        "Player can see a market feed/log of competitor releases and their impact on market conditions (even if simplified)."
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Add a product release and market loop: the player can take a saved blueprint, set pricing/production/marketing options, release it, and then observe sales/earnings over simulation time.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "automatic development and release of products"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A blueprint can be converted into a released product with configurable price (and at least one additional launch parameter).",
+        "After release, the product generates sales/earnings during simulation progression.",
+        "Dashboard shows cash and at least one market metric changing over time (e.g., revenue, market share, product rating)."
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Implement an in-game smartphone OS simulation that can be “run” on a virtual phone: provide a basic home screen, app launcher, settings, and at least two interactive built-in apps (e.g., Notes, Mail, Browser mock).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "* The ability to run the OS on your gaming smartphone"
+        ]
+      },
+      "acceptanceCriteria": [
+        "From a device/product view, the user can open an OS simulation screen.",
+        "OS simulation includes a home screen, an app grid/launcher, and a settings screen.",
+        "At least two built-in apps are interactive (create/edit a note; browse mock pages; etc.).",
+        "OS simulation state is stored per save (e.g., created notes persist after reload)."
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Create an office improvement/progression system with 20 upgrade levels and a dedicated 3D office viewer; each level changes the office appearance using beautiful 3D models rendered with Three.js/React Three Fiber.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "* 20 levels of office improvement with beautiful 3D models"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Office screen displays current office level (1–20) and upgrade requirements/cost.",
+        "Upgrading increases the office level and persists in the save.",
+        "A 3D office viewer renders a scene that visibly changes across multiple levels (at least 5 distinct visual milestones initially, scalable to 20).",
+        "3D viewer includes basic camera controls (orbit/pan/zoom) and performs acceptably in browser."
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Add business investment actions: buying companies, marketing spend, and paid employee search; each action must affect at least one simulated variable (cash, market share, product sales, R&D speed, staffing quality).",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "* Many ways to invest your money, including buying companies, marketing, paid employee search"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Investments screen lists at least: Buy Company, Marketing Campaign, Paid Employee Search.",
+        "Each action deducts cash and produces a measurable effect visible in UI metrics within the simulation (immediate or over time).",
+        "Actions are recorded in a timeline/log for the current save.",
+        "All investment outcomes persist after reload."
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Provide many device design variants (visual styles) for each device category and a design browser/selector within Device Studio.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "* Many smartphone designs"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Device Studio includes a design picker with multiple variants per category (smartphone/tablet/watch/smart-glasses).",
+        "Selecting a design updates a live preview (2D render or 3D model).",
+        "Design choices are saved in the blueprint and appear correctly when re-opened."
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Implement cloud synchronization via Internet Identity: allow users to sign in and have their saves stored and retrievable across devices; include save slot management (create, rename, load, delete).",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "* Cloud synchronization"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can sign in with Internet Identity and see authentication state in the UI.",
+        "Signed-in users can create at least one cloud save slot and load it later.",
+        "Saves persist across page reloads and across browsers/devices when signed into the same identity.",
+        "User can rename and delete save slots.",
+        "Anonymous users either (a) are prompted to sign in for cloud saves or (b) use a clearly labeled local-only mode."
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "text": "Define and apply a coherent, distinctive visual theme (colors, typography, layout, and component styling) appropriate for a serious economic-strategy/business-simulator game, and apply it consistently across all screens (avoid blue/purple as the dominant palette).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Allows you to manage a business simulator game that is worth your attention and is a serious player among economic strategies."
+        ]
+      },
+      "acceptanceCriteria": [
+        "UI uses a consistent design system (spacing, typography scale, buttons, cards, tables) across all screens.",
+        "Theme is suitable for an economic strategy game and does not use blue/purple as the dominant palette.",
+        "Key game metrics (cash, revenue, market share, R&D progress) are presented clearly and consistently."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single Motoko actor (all logic in backend/main.mo).",
+    "Do not add external databases or third-party backend services; use canister stable storage for persistence.",
+    "Frontend must use React + TypeScript with Tailwind and React Query.",
+    "Do not edit files under frontend/src/components/ui or other immutable paths; only compose/use them.",
+    "All user-facing text must be in English."
+  ],
+  "nonGoals": [
+    "Implementing a real smartphone OS emulator or running third-party operating systems (only a game-like OS simulation UI is required).",
+    "Multiplayer, real-time chat, or WebSocket-based real-time systems.",
+    "Integration with external cloud providers or external account systems beyond Internet Identity.",
+    "Photorealistic AAA 3D environments; office 3D can be stylized and optimized for web."
+  ],
+  "imageRequirements": {
+    "required": [
+      "Game logo mark in a clean tech-business style (logo.dim_512x512.png)",
+      "Wide dashboard hero/banner illustration with a stylized office + devices scene (hero-banner.dim_1600x600.png)",
+      "Set of 12 minimal monochrome UI icons for the main navigation (nav-icons-set.dim_1024x1024.png)",
+      "Device design preview sheet showing multiple silhouettes/angles for smartphone/tablet/watch/smart-glasses (device-design-sheet.dim_1600x900.png)"
+    ],
+    "edits": []
+  }
+}

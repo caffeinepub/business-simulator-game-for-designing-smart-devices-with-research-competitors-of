@@ -1,0 +1,167 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Business simulator/economic strategy game where players design and manufacture smart devices (smartphones, tablets, watches, smart-glasses) from scratch, research technologies, compete with AI rivals, manage investments, upgrade offices with 3D models, and support cloud sync.",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Game logo mark in a clean tech-business style (logo.dim_512x512.png)\n- Wide dashboard hero/banner illustration with a stylized office + devices scene (hero-banner.dim_1600x600.png)\n- Set of 12 minimal monochrome UI icons for the main navigation (nav-icons-set.dim_1024x1024.png)\n- Device design preview sheet showing multiple silhouettes/angles for smartphone/tablet/watch/smart-glasses (device-design-sheet.dim_1600x900.png)",
+  "existing_features": [
+    {
+      "id": "feature-create-the-core-game-shell-ui-with-navigation-for-dashboard-device-studio-create-devices-research-competitors-market-office-investments-and-cloud-saves",
+      "title": "Create the core game shell UI with navigation for: Dashboard, Device Studio (create devices), Research, Competitors/Market, Office, Investments, and Cloud Saves.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-device-creation-system-that-lets-the-player-create-smartphones-tablets-watches-and-smart-glasses-from-scratch-by-selecting-characteristics-e-g-cpu-tier-ram-storage-display-battery-camera-materials-and-a-design-option-then-saving-the-device-as-a-product-blueprint",
+      "title": "Implement a device creation system that lets the player create smartphones, tablets, watches, and smart-glasses from scratch by selecting characteristics (e.g., CPU tier, RAM, storage, display, battery, camera, materials) and a design option, then saving the device as a product blueprint.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-r-d-technology-research-system-containing-3000-technologies-with-a-searchable-browsable-tech-tree-list-research-prerequisites-research-time-cost-and-effects-that-modify-device-characteristics-and-or-business-efficiency",
+      "title": "Add an R&D technology research system containing 3000+ technologies, with a searchable/browsable tech tree/list, research prerequisites, research time/cost, and effects that modify device characteristics and/or business efficiency.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-challenging-mode-difficulty-setting-aimed-at-economic-strategy-fans-that-changes-economic-parameters-e-g-starting-cash-competitor-strength-r-d-costs-market-volatility-and-is-selectable-when-starting-a-new-game",
+      "title": "Implement a challenging mode (difficulty setting) aimed at economic-strategy fans that changes economic parameters (e.g., starting cash, competitor strength, R&D costs, market volatility) and is selectable when starting a new game.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-competitor-simulation-with-smart-behavior-ai-competitors-automatically-research-technologies-develop-products-and-release-them-to-the-market-over-time-affecting-market-competition-and-player-outcomes",
+      "title": "Implement competitor simulation with smart behavior: AI competitors automatically research technologies, develop products, and release them to the market over time, affecting market competition and player outcomes.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-product-release-and-market-loop-the-player-can-take-a-saved-blueprint-set-pricing-production-marketing-options-release-it-and-then-observe-sales-earnings-over-simulation-time",
+      "title": "Add a product release and market loop: the player can take a saved blueprint, set pricing/production/marketing options, release it, and then observe sales/earnings over simulation time.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-an-in-game-smartphone-os-simulation-that-can-be-run-on-a-virtual-phone-provide-a-basic-home-screen-app-launcher-settings-and-at-least-two-interactive-built-in-apps-e-g-notes-mail-browser-mock",
+      "title": "Implement an in-game smartphone OS simulation that can be “run” on a virtual phone: provide a basic home screen, app launcher, settings, and at least two interactive built-in apps (e.g., Notes, Mail, Browser mock).",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-office-improvement-progression-system-with-20-upgrade-levels-and-a-dedicated-3d-office-viewer-each-level-changes-the-office-appearance-using-beautiful-3d-models-rendered-with-three-js-react-three-fiber",
+      "title": "Create an office improvement/progression system with 20 upgrade levels and a dedicated 3D office viewer; each level changes the office appearance using beautiful 3D models rendered with Three.js/React Three Fiber.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-business-investment-actions-buying-companies-marketing-spend-and-paid-employee-search-each-action-must-affect-at-least-one-simulated-variable-cash-market-share-product-sales-r-d-speed-staffing-quality",
+      "title": "Add business investment actions: buying companies, marketing spend, and paid employee search; each action must affect at least one simulated variable (cash, market share, product sales, R&D speed, staffing quality).",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-many-device-design-variants-visual-styles-for-each-device-category-and-a-design-browser-selector-within-device-studio",
+      "title": "Provide many device design variants (visual styles) for each device category and a design browser/selector within Device Studio.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-cloud-synchronization-via-internet-identity-allow-users-to-sign-in-and-have-their-saves-stored-and-retrievable-across-devices-include-save-slot-management-create-rename-load-delete",
+      "title": "Implement cloud synchronization via Internet Identity: allow users to sign in and have their saves stored and retrievable across devices; include save slot management (create, rename, load, delete).",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-define-and-apply-a-coherent-distinctive-visual-theme-colors-typography-layout-and-component-styling-appropriate-for-a-serious-economic-strategy-business-simulator-game-and-apply-it-consistently-across-all-screens-avoid-blue-purple-as-the-dominant-palette",
+      "title": "Define and apply a coherent, distinctive visual theme (colors, typography, layout, and component styling) appropriate for a serious economic-strategy/business-simulator game, and apply it consistently across all screens (avoid blue/purple as the dominant palette).",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Device creation system: build smartphones/tablets/watches/smart-glasses from scratch by selecting characteristics and design",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Technology research system with 3000+ technologies",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Challenging economic-strategy mode (difficulty/advanced gameplay options)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Competitor AI with smart behavior including automatic product development and releases",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Ability to run an OS on the in-game smartphone (device OS simulation/emulation feature)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Office improvement/progression system with 20 upgrade levels and beautiful 3D models",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Investment and business actions: buy companies, marketing, paid employee search, etc.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Many smartphone designs (large library/variety of device designs)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Cloud synchronization (cross-device save sync)",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "3d",
+  "projectName": "Business simulator game for designing smart devices with research, competitors, office upgrades, and cloud saves",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

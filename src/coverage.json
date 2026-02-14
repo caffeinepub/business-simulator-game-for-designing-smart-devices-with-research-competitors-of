@@ -1,0 +1,409 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-14T03:17:09.091Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 12,
+    "implemented": 12,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Create the core game shell UI with navigation for: Dashboard, Device Studio (create devices), Research, Competitors/Market, Office, Investments, and Cloud Saves.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/components/layout/GameLayout.tsx",
+          "frontend/src/components/nav/MainNav.tsx",
+          "frontend/src/pages/DashboardPage.tsx",
+          "frontend/src/pages/DeviceStudioPage.tsx",
+          "frontend/src/pages/ResearchPage.tsx",
+          "frontend/src/pages/CompetitorsMarketPage.tsx",
+          "frontend/src/pages/OfficePage.tsx",
+          "frontend/src/pages/InvestmentsPage.tsx",
+          "frontend/src/pages/CloudSavesPage.tsx",
+          "frontend/public/assets/generated/nav-icons-set.dim_1024x1024.png",
+          "frontend/public/assets/generated/hero-banner.dim_1600x600.png",
+          "frontend/public/assets/generated/logo.dim_512x512.png"
+        ],
+        "matchedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/components/layout/GameLayout.tsx",
+          "frontend/src/components/nav/MainNav.tsx",
+          "frontend/src/pages/DashboardPage.tsx",
+          "frontend/src/pages/DeviceStudioPage.tsx",
+          "frontend/src/pages/ResearchPage.tsx",
+          "frontend/src/pages/CompetitorsMarketPage.tsx",
+          "frontend/src/pages/OfficePage.tsx",
+          "frontend/src/pages/InvestmentsPage.tsx",
+          "frontend/src/pages/CloudSavesPage.tsx",
+          "frontend/public/assets/generated/nav-icons-set.dim_1024x1024.png",
+          "frontend/public/assets/generated/hero-banner.dim_1600x600.png",
+          "frontend/public/assets/generated/logo.dim_512x512.png"
+        ]
+      },
+      {
+        "id": "REQ-10",
+        "summary": "Provide many device design variants (visual styles) for each device category and a design browser/selector within Device Studio.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/public/assets/generated/device-design-sheet.dim_1600x900.png",
+          "frontend/src/features/device-studio/DesignPicker.tsx",
+          "frontend/src/features/device-studio/DesignPreview.tsx",
+          "frontend/src/features/device-studio/designCatalog.ts",
+          "frontend/src/features/device-studio/DeviceBlueprintEditor.tsx",
+          "frontend/src/features/device-studio/deviceBlueprintAdapters.ts"
+        ],
+        "matchedFiles": [
+          "frontend/public/assets/generated/device-design-sheet.dim_1600x900.png",
+          "frontend/src/features/device-studio/DesignPicker.tsx",
+          "frontend/src/features/device-studio/designCatalog.ts",
+          "frontend/src/features/device-studio/DeviceBlueprintEditor.tsx",
+          "frontend/src/features/device-studio/deviceBlueprintAdapters.ts"
+        ]
+      },
+      {
+        "id": "REQ-11",
+        "summary": "Implement cloud synchronization via Internet Identity: allow users to sign in and have their saves stored and retrievable across devices; include save slot management (create, rename, load, delete).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/auth/LoginButton.tsx",
+          "frontend/src/components/auth/ProfileSetupModal.tsx",
+          "frontend/src/hooks/useCurrentUserProfile.ts",
+          "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
+          "frontend/src/features/cloud-saves/cloudSaveAdapters.ts",
+          "frontend/src/hooks/useCloudSaves.ts",
+          "frontend/src/pages/CloudSavesPage.tsx",
+          "frontend/src/components/layout/GameLayout.tsx",
+          "frontend/src/state/saveGameStore.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/auth/LoginButton.tsx",
+          "frontend/src/components/auth/ProfileSetupModal.tsx",
+          "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
+          "frontend/src/pages/CloudSavesPage.tsx",
+          "frontend/src/components/layout/GameLayout.tsx",
+          "frontend/src/state/saveGameStore.ts"
+        ]
+      },
+      {
+        "id": "REQ-12",
+        "summary": "Define and apply a coherent, distinctive visual theme (colors, typography, layout, and component styling) appropriate for a serious economic-strategy/business-simulator game, and apply it consistently across all screens (avoid blue/purple as the dominant palette).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/index.css",
+          "frontend/tailwind.config.js",
+          "frontend/src/components/layout/GameLayout.tsx",
+          "frontend/src/features/dashboard/MetricsPanel.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/index.css",
+          "frontend/tailwind.config.js",
+          "frontend/src/components/layout/GameLayout.tsx",
+          "frontend/src/features/dashboard/MetricsPanel.tsx"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Implement a device creation system that lets the player create smartphones, tablets, watches, and smart-glasses from scratch by selecting characteristics (e.g., CPU tier, RAM, storage, display, battery, camera, materials) and a design option, then saving the device as a product blueprint.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/device-studio/DeviceBlueprintEditor.tsx",
+          "frontend/src/features/device-studio/BlueprintList.tsx",
+          "frontend/src/features/device-studio/deviceBlueprintAdapters.ts",
+          "frontend/src/hooks/useDeviceBlueprints.ts",
+          "frontend/src/state/saveGameStore.ts",
+          "frontend/src/pages/DeviceStudioPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/device-studio/DeviceBlueprintEditor.tsx",
+          "frontend/src/features/device-studio/BlueprintList.tsx",
+          "frontend/src/features/device-studio/deviceBlueprintAdapters.ts",
+          "frontend/src/state/saveGameStore.ts",
+          "frontend/src/pages/DeviceStudioPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Add an R&D technology research system containing 3000+ technologies, with a searchable/browsable tech tree/list, research prerequisites, research time/cost, and effects that modify device characteristics and/or business efficiency.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/research/techDataset.ts",
+          "frontend/src/features/research/ResearchList.tsx",
+          "frontend/src/features/research/ResearchDetailsPanel.tsx",
+          "frontend/src/hooks/useTechnologies.ts",
+          "frontend/src/hooks/useResearchProgress.ts",
+          "frontend/src/pages/ResearchPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/research/techDataset.ts",
+          "frontend/src/features/research/ResearchList.tsx",
+          "frontend/src/features/research/ResearchDetailsPanel.tsx",
+          "frontend/src/pages/ResearchPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Implement a challenging mode (difficulty setting) aimed at economic-strategy fans that changes economic parameters (e.g., starting cash, competitor strength, R&D costs, market volatility) and is selectable when starting a new game.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/new-game/NewGameModal.tsx",
+          "frontend/src/features/new-game/difficultyPresets.ts",
+          "frontend/src/state/gameState.ts",
+          "frontend/src/pages/DashboardPage.tsx",
+          "frontend/src/state/saveGameStore.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/new-game/NewGameModal.tsx",
+          "frontend/src/features/new-game/difficultyPresets.ts",
+          "frontend/src/state/gameState.ts",
+          "frontend/src/pages/DashboardPage.tsx",
+          "frontend/src/state/saveGameStore.ts"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Implement competitor simulation with smart behavior: AI competitors automatically research technologies, develop products, and release them to the market over time, affecting market competition and player outcomes.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/simulation/simulationEngine.ts",
+          "frontend/src/features/competitors/competitorModel.ts",
+          "frontend/src/features/competitors/CompetitorList.tsx",
+          "frontend/src/features/market/MarketFeed.tsx",
+          "frontend/src/pages/CompetitorsMarketPage.tsx",
+          "frontend/src/state/saveGameStore.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/simulation/simulationEngine.ts",
+          "frontend/src/features/competitors/competitorModel.ts",
+          "frontend/src/features/competitors/CompetitorList.tsx",
+          "frontend/src/features/market/MarketFeed.tsx",
+          "frontend/src/pages/CompetitorsMarketPage.tsx",
+          "frontend/src/state/saveGameStore.ts"
+        ]
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Add a product release and market loop: the player can take a saved blueprint, set pricing/production/marketing options, release it, and then observe sales/earnings over simulation time.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/products/ReleaseProductModal.tsx",
+          "frontend/src/features/products/productSimulation.ts",
+          "frontend/src/features/dashboard/MetricsPanel.tsx",
+          "frontend/src/pages/DashboardPage.tsx",
+          "frontend/src/features/device-studio/BlueprintList.tsx",
+          "frontend/src/state/saveGameStore.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/products/ReleaseProductModal.tsx",
+          "frontend/src/features/dashboard/MetricsPanel.tsx",
+          "frontend/src/pages/DashboardPage.tsx",
+          "frontend/src/features/device-studio/BlueprintList.tsx",
+          "frontend/src/state/saveGameStore.ts"
+        ]
+      },
+      {
+        "id": "REQ-7",
+        "summary": "Implement an in-game smartphone OS simulation that can be “run” on a virtual phone: provide a basic home screen, app launcher, settings, and at least two interactive built-in apps (e.g., Notes, Mail, Browser mock).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/os-sim/OsSimScreen.tsx",
+          "frontend/src/features/os-sim/apps/NotesApp.tsx",
+          "frontend/src/features/os-sim/apps/BrowserMockApp.tsx",
+          "frontend/src/features/os-sim/SettingsApp.tsx",
+          "frontend/src/features/products/ProductDetailsPanel.tsx",
+          "frontend/src/pages/DeviceStudioPage.tsx",
+          "frontend/src/state/saveGameStore.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DeviceStudioPage.tsx",
+          "frontend/src/state/saveGameStore.ts"
+        ]
+      },
+      {
+        "id": "REQ-8",
+        "summary": "Create an office improvement/progression system with 20 upgrade levels and a dedicated 3D office viewer; each level changes the office appearance using beautiful 3D models rendered with Three.js/React Three Fiber.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/office/OfficeUpgradePanel.tsx",
+          "frontend/src/features/office/Office3DViewer.tsx",
+          "frontend/src/features/office/officeScenePresets.ts",
+          "frontend/src/pages/OfficePage.tsx",
+          "frontend/src/state/saveGameStore.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/office/OfficeUpgradePanel.tsx",
+          "frontend/src/features/office/Office3DViewer.tsx",
+          "frontend/src/features/office/officeScenePresets.ts",
+          "frontend/src/pages/OfficePage.tsx",
+          "frontend/src/state/saveGameStore.ts"
+        ]
+      },
+      {
+        "id": "REQ-9",
+        "summary": "Add business investment actions: buying companies, marketing spend, and paid employee search; each action must affect at least one simulated variable (cash, market share, product sales, R&D speed, staffing quality).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/investments/InvestmentsActionsPanel.tsx",
+          "frontend/src/features/investments/InvestmentsLog.tsx",
+          "frontend/src/features/investments/investmentEffects.ts",
+          "frontend/src/pages/InvestmentsPage.tsx",
+          "frontend/src/state/saveGameStore.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/investments/InvestmentsActionsPanel.tsx",
+          "frontend/src/features/investments/InvestmentsLog.tsx",
+          "frontend/src/pages/InvestmentsPage.tsx",
+          "frontend/src/state/saveGameStore.ts"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/authorization/MixinAuthorization.mo",
+    "backend/authorization/access-control.mo",
+    "backend/main.mo",
+    "build-request.json",
+    "build-template/Dockerfile",
+    "build-template/LICENSE",
+    "build-template/README.md",
+    "build-template/deploy.sh",
+    "build-template/icp.yaml",
+    "build-template/package.json",
+    "build-template/pnpm-lock.yaml",
+    "build-template/pnpm-workspace.yaml",
+    "build-template/scripts/prune-unused-images.js",
+    "build-template/scripts/resize-images.js",
+    "build-template/src/backend/canister.yaml",
+    "build-template/src/backend/system-idl/aaaaa-aa.did",
+    "build-template/src/frontend/canister.yaml",
+    "build-template/src/frontend/components.json",
+    "build-template/src/frontend/env.json",
+    "build-template/src/frontend/eslint-rules/no-bigint-in-query-keys.js",
+    "build-template/src/frontend/eslint-rules/require-internet-identity-provider.js",
+    "build-template/src/frontend/eslint.config.js",
+    "build-template/src/frontend/package.json",
+    "build-template/src/frontend/postcss.config.js",
+    "build-template/src/frontend/src/components/ui/accordion.tsx",
+    "build-template/src/frontend/src/components/ui/alert-dialog.tsx",
+    "build-template/src/frontend/src/components/ui/alert.tsx",
+    "build-template/src/frontend/src/components/ui/aspect-ratio.tsx",
+    "build-template/src/frontend/src/components/ui/avatar.tsx",
+    "build-template/src/frontend/src/components/ui/badge.tsx",
+    "build-template/src/frontend/src/components/ui/breadcrumb.tsx",
+    "build-template/src/frontend/src/components/ui/button.tsx",
+    "build-template/src/frontend/src/components/ui/calendar.tsx",
+    "build-template/src/frontend/src/components/ui/card.tsx",
+    "build-template/src/frontend/src/components/ui/carousel.tsx",
+    "build-template/src/frontend/src/components/ui/chart.tsx",
+    "build-template/src/frontend/src/components/ui/checkbox.tsx",
+    "build-template/src/frontend/src/components/ui/collapsible.tsx",
+    "build-template/src/frontend/src/components/ui/command.tsx",
+    "build-template/src/frontend/src/components/ui/context-menu.tsx",
+    "build-template/src/frontend/src/components/ui/dialog.tsx",
+    "build-template/src/frontend/src/components/ui/drawer.tsx",
+    "build-template/src/frontend/src/components/ui/dropdown-menu.tsx",
+    "build-template/src/frontend/src/components/ui/form.tsx",
+    "build-template/src/frontend/src/components/ui/hover-card.tsx",
+    "build-template/src/frontend/src/components/ui/input-otp.tsx",
+    "build-template/src/frontend/src/components/ui/input.tsx",
+    "build-template/src/frontend/src/components/ui/label.tsx",
+    "build-template/src/frontend/src/components/ui/menubar.tsx",
+    "build-template/src/frontend/src/components/ui/navigation-menu.tsx",
+    "build-template/src/frontend/src/components/ui/pagination.tsx",
+    "build-template/src/frontend/src/components/ui/popover.tsx",
+    "build-template/src/frontend/src/components/ui/progress.tsx",
+    "build-template/src/frontend/src/components/ui/radio-group.tsx",
+    "build-template/src/frontend/src/components/ui/resizable.tsx",
+    "build-template/src/frontend/src/components/ui/scroll-area.tsx",
+    "build-template/src/frontend/src/components/ui/select.tsx",
+    "build-template/src/frontend/src/components/ui/separator.tsx",
+    "build-template/src/frontend/src/components/ui/sheet.tsx",
+    "build-template/src/frontend/src/components/ui/sidebar.tsx",
+    "build-template/src/frontend/src/components/ui/skeleton.tsx",
+    "build-template/src/frontend/src/components/ui/slider.tsx",
+    "build-template/src/frontend/src/components/ui/sonner.tsx",
+    "build-template/src/frontend/src/components/ui/switch.tsx",
+    "build-template/src/frontend/src/components/ui/table.tsx",
+    "build-template/src/frontend/src/components/ui/tabs.tsx",
+    "build-template/src/frontend/src/components/ui/textarea.tsx",
+    "build-template/src/frontend/src/components/ui/toggle-group.tsx",
+    "build-template/src/frontend/src/components/ui/toggle.tsx",
+    "build-template/src/frontend/src/components/ui/tooltip.tsx",
+    "build-template/src/frontend/src/hooks/use-mobile.tsx",
+    "build-template/src/frontend/src/lib/utils.ts",
+    "build-template/src/frontend/tsconfig.json",
+    "build-template/src/frontend/vite.config.js",
+    "build-template/tsconfig.json",
+    "caffeine.lock.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/public/assets/generated/device-design-sheet.dim_1600x900.png",
+    "frontend/public/assets/generated/hero-banner.dim_1600x600.png",
+    "frontend/public/assets/generated/logo.dim_512x512.png",
+    "frontend/public/assets/generated/nav-icons-set.dim_1024x1024.png",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/auth/LoginButton.tsx",
+    "frontend/src/components/auth/ProfileSetupModal.tsx",
+    "frontend/src/components/layout/GameLayout.tsx",
+    "frontend/src/components/nav/MainNav.tsx",
+    "frontend/src/config.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
+    "frontend/src/features/competitors/CompetitorList.tsx",
+    "frontend/src/features/competitors/competitorModel.ts",
+    "frontend/src/features/dashboard/MetricsPanel.tsx",
+    "frontend/src/features/device-studio/BlueprintList.tsx",
+    "frontend/src/features/device-studio/DesignPicker.tsx",
+    "frontend/src/features/device-studio/DeviceBlueprintEditor.tsx",
+    "frontend/src/features/device-studio/designCatalog.ts",
+    "frontend/src/features/device-studio/deviceBlueprintAdapters.ts",
+    "frontend/src/features/investments/InvestmentsActionsPanel.tsx",
+    "frontend/src/features/investments/InvestmentsLog.tsx",
+    "frontend/src/features/investments/investmentStore.ts",
+    "frontend/src/features/market/MarketFeed.tsx",
+    "frontend/src/features/market/marketFeedStore.ts",
+    "frontend/src/features/new-game/NewGameModal.tsx",
+    "frontend/src/features/new-game/difficultyPresets.ts",
+    "frontend/src/features/office/Office3DViewer.tsx",
+    "frontend/src/features/office/OfficeUpgradePanel.tsx",
+    "frontend/src/features/office/officeScenePresets.ts",
+    "frontend/src/features/office/officeStore.ts",
+    "frontend/src/features/products/ReleaseProductModal.tsx",
+    "frontend/src/features/research/ResearchDetailsPanel.tsx",
+    "frontend/src/features/research/ResearchList.tsx",
+    "frontend/src/features/research/techDataset.ts",
+    "frontend/src/features/simulation/simulationEngine.ts",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/index.css",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/CloudSavesPage.tsx",
+    "frontend/src/pages/CompetitorsMarketPage.tsx",
+    "frontend/src/pages/DashboardPage.tsx",
+    "frontend/src/pages/DeviceStudioPage.tsx",
+    "frontend/src/pages/InvestmentsPage.tsx",
+    "frontend/src/pages/OfficePage.tsx",
+    "frontend/src/pages/ResearchPage.tsx",
+    "frontend/src/state/gameState.ts",
+    "frontend/src/state/saveGameStore.ts",
+    "frontend/src/ui-summary.json",
+    "frontend/src/utils/StorageClient.ts",
+    "frontend/src/utils/urlParams.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

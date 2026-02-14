@@ -1,0 +1,3 @@
+{
+  "frontend/src/features/office/officeScenePresets.ts": "Defines 5 office scene presets with furniture configurations for different office levels (1-4, 5-8, 9-12, 13-16, 17-20), using properly typed tuples for Three.js position and size vectors."
+}

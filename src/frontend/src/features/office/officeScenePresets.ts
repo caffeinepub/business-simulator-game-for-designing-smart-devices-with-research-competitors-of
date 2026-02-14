@@ -1,0 +1,66 @@
+export const officeScenePresets = [
+  {
+    level: '1-4',
+    ambientLight: 0.4,
+    directionalLight: 0.6,
+    floorColor: '#3a3a3a',
+    furniture: [
+      { position: [0, 0.5, 0] as [number, number, number], size: [2, 1, 1] as [number, number, number], color: '#8b7355' },
+      { position: [-2, 0.5, -2] as [number, number, number], size: [1, 1, 1] as [number, number, number], color: '#6b5d4f' },
+    ],
+  },
+  {
+    level: '5-8',
+    ambientLight: 0.5,
+    directionalLight: 0.7,
+    floorColor: '#4a4a4a',
+    furniture: [
+      { position: [0, 0.5, 0] as [number, number, number], size: [2.5, 1, 1.5] as [number, number, number], color: '#8b7355' },
+      { position: [-2.5, 0.5, -2] as [number, number, number], size: [1.2, 1.2, 1.2] as [number, number, number], color: '#6b5d4f' },
+      { position: [2.5, 0.5, -2] as [number, number, number], size: [1, 1.5, 1] as [number, number, number], color: '#7a6a5a' },
+      { position: [0, 0.3, 2] as [number, number, number], size: [3, 0.6, 1.5] as [number, number, number], color: '#5a4a3a' },
+    ],
+  },
+  {
+    level: '9-12',
+    ambientLight: 0.6,
+    directionalLight: 0.8,
+    floorColor: '#5a5a5a',
+    furniture: [
+      { position: [0, 0.5, 0] as [number, number, number], size: [3, 1, 2] as [number, number, number], color: '#9b8365' },
+      { position: [-3, 0.5, -2] as [number, number, number], size: [1.5, 1.5, 1.5] as [number, number, number], color: '#7b6d5f' },
+      { position: [3, 0.5, -2] as [number, number, number], size: [1.2, 1.8, 1.2] as [number, number, number], color: '#8a7a6a' },
+      { position: [0, 0.3, 2.5] as [number, number, number], size: [4, 0.6, 2] as [number, number, number], color: '#6a5a4a' },
+      { position: [-2, 0.8, 1] as [number, number, number], size: [0.8, 1.6, 0.8] as [number, number, number], color: '#4a4a4a' },
+    ],
+  },
+  {
+    level: '13-16',
+    ambientLight: 0.7,
+    directionalLight: 0.9,
+    floorColor: '#6a6a6a',
+    furniture: [
+      { position: [0, 0.5, 0] as [number, number, number], size: [3.5, 1, 2.5] as [number, number, number], color: '#ab9375' },
+      { position: [-3.5, 0.5, -2.5] as [number, number, number], size: [1.8, 1.8, 1.8] as [number, number, number], color: '#8b7d6f' },
+      { position: [3.5, 0.5, -2.5] as [number, number, number], size: [1.5, 2, 1.5] as [number, number, number], color: '#9a8a7a' },
+      { position: [0, 0.3, 3] as [number, number, number], size: [5, 0.6, 2.5] as [number, number, number], color: '#7a6a5a' },
+      { position: [-2.5, 0.8, 1.5] as [number, number, number], size: [1, 1.6, 1] as [number, number, number], color: '#5a5a5a' },
+      { position: [2.5, 0.8, 1.5] as [number, number, number], size: [1, 1.6, 1] as [number, number, number], color: '#5a5a5a' },
+    ],
+  },
+  {
+    level: '17-20',
+    ambientLight: 0.8,
+    directionalLight: 1.0,
+    floorColor: '#7a7a7a',
+    furniture: [
+      { position: [0, 0.5, 0] as [number, number, number], size: [4, 1, 3] as [number, number, number], color: '#bba385' },
+      { position: [-3.8, 0.5, -3] as [number, number, number], size: [2, 2, 2] as [number, number, number], color: '#9b8d7f' },
+      { position: [3.8, 0.5, -3] as [number, number, number], size: [1.8, 2.2, 1.8] as [number, number, number], color: '#aa9a8a' },
+      { position: [0, 0.3, 3.5] as [number, number, number], size: [6, 0.6, 3] as [number, number, number], color: '#8a7a6a' },
+      { position: [-3, 0.8, 2] as [number, number, number], size: [1.2, 1.6, 1.2] as [number, number, number], color: '#6a6a6a' },
+      { position: [3, 0.8, 2] as [number, number, number], size: [1.2, 1.6, 1.2] as [number, number, number], color: '#6a6a6a' },
+      { position: [0, 1, -3] as [number, number, number], size: [2, 2, 0.2] as [number, number, number], color: '#4a4a4a' },
+    ],
+  },
+];
