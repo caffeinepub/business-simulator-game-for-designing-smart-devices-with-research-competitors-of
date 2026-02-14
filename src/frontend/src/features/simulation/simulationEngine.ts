@@ -3,6 +3,8 @@ import { create } from 'zustand';
 import { useCompetitorStore } from '../competitors/competitorModel';
 import { useMarketFeedStore } from '../market/marketFeedStore';
 import { useGameState } from '@/state/gameState';
+import { dayToDateParts } from '@/utils/gameCalendar';
+import { findEventsForDate, type EraEvent } from './eraEventsDataset';
 
 interface SimulationStore {
   isRunning: boolean;
@@ -22,7 +24,7 @@ export function useSimulationEngine() {
   const { isRunning, currentDay, toggleSimulation, advanceDay } = useSimulationStore();
   const { competitors, updateCompetitor, initializeCompetitors } = useCompetitorStore();
   const { addEvent } = useMarketFeedStore();
-  const { gameState } = useGameState();
+  const { gameState, updateCash, markTriggeredEraEvent, hasTriggeredEraEvent } = useGameState();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -31,11 +33,59 @@ export function useSimulationEngine() {
     }
   }, [gameState, competitors.length, initializeCompetitors]);
 
+  // Apply era event effects
+  const applyEraEventEffects = (event: EraEvent) => {
+    if (!gameState) return;
+
+    event.effects.forEach((effect) => {
+      switch (effect.type) {
+        case 'cash':
+          const newCash = Number(gameState.cash) + effect.value;
+          updateCash(BigInt(Math.max(0, newCash)));
+          break;
+        case 'competitor-market-share':
+          // Apply market share change to all competitors
+          competitors.forEach((competitor) => {
+            const newShare = Math.max(0, Math.min(30, competitor.marketShare + effect.value));
+            updateCompetitor(competitor.id, { marketShare: newShare });
+          });
+          break;
+        case 'simulation-parameter':
+          // Reserved for future parameter modifications
+          break;
+      }
+    });
+  };
+
   useEffect(() => {
     if (isRunning) {
       intervalRef.current = setInterval(() => {
         advanceDay();
 
+        // Check for era-specific events
+        const dateParts = dayToDateParts(currentDay);
+        const matchingEvents = findEventsForDate(dateParts.year, dateParts.month, dateParts.day);
+
+        matchingEvents.forEach((event) => {
+          if (!hasTriggeredEraEvent(event.id)) {
+            // Mark as triggered
+            markTriggeredEraEvent(event.id);
+
+            // Apply effects
+            applyEraEventEffects(event);
+
+            // Add to market feed
+            addEvent({
+              type: 'era-event',
+              title: event.title,
+              description: event.description,
+              day: currentDay,
+              impact: event.impact,
+            });
+          }
+        });
+
+        // Existing competitor activity simulation
         if (Math.random() > 0.7) {
           const competitor = competitors[Math.floor(Math.random() * competitors.length)];
           if (competitor) {
@@ -68,7 +118,7 @@ export function useSimulationEngine() {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning, currentDay, competitors, advanceDay, addEvent, updateCompetitor]);
+  }, [isRunning, currentDay, competitors, advanceDay, addEvent, updateCompetitor, gameState, updateCash, markTriggeredEraEvent, hasTriggeredEraEvent]);
 
   return { isRunning, currentDay, toggleSimulation };
 }

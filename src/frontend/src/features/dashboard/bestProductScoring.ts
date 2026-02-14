@@ -1,10 +1,6 @@
 import type { ReleasedProduct } from '../../backend';
 
-export const DEVICE_CATEGORIES = ['smartphones', 'tablets', 'watches', 'smart-glasses', 'laptops'];
-
-export function dayToYear(day: number): number {
-  return Math.floor((day - 1) / 365) + 1;
-}
+export const DEVICE_CATEGORIES = ['smartphones', 'tablets', 'watches', 'smart-glasses', 'laptops', 'foldables'];
 
 export function filterProductsByYearAndCategory(
   products: ReleasedProduct[],

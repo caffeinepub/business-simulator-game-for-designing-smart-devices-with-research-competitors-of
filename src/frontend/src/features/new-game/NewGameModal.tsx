@@ -18,7 +18,7 @@ export default function NewGameModal({ onClose }: NewGameModalProps) {
   const [difficulty, setDifficulty] = useState<'normal' | 'challenging'>('normal');
   const [companyName, setCompanyName] = useState('');
   const [companyLogo, setCompanyLogo] = useState('');
-  const { setGameState, setReleasedProducts, setBranding } = useGameState();
+  const { setGameState, setReleasedProducts, setBranding, setTriggeredEraEvents } = useGameState();
 
   const handleStartGame = () => {
     const trimmedName = companyName.trim();
@@ -41,6 +41,7 @@ export default function NewGameModal({ onClose }: NewGameModalProps) {
       productName: '',
       productLogo: '',
     });
+    setTriggeredEraEvents([]);
     toast.success(`New game started on ${difficulty} difficulty!`);
     onClose();
   };

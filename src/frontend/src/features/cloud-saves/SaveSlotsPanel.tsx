@@ -30,7 +30,7 @@ export default function SaveSlotsPanel() {
   const saveGame = useSaveGameToSlot();
   const loadGame = useLoadSaveSlot();
   const renameSlot = useRenameSaveSlot();
-  const { gameState, setGameState, releasedProducts, setReleasedProducts, branding, setBranding } = useGameState();
+  const { gameState, setGameState, releasedProducts, setReleasedProducts, branding, setBranding, triggeredEraEvents, setTriggeredEraEvents } = useGameState();
   const { storeNetwork, initializeFromSave } = useStoreNetworkStore();
 
   const [showNewSave, setShowNewSave] = useState(false);
@@ -54,6 +54,7 @@ export default function SaveSlotsPanel() {
         gameState,
         releasedProducts: releasedProducts || [],
         storeNetwork,
+        triggeredEvents: triggeredEraEvents || [],
       });
       toast.success('Game saved successfully!');
       setShowNewSave(false);
@@ -75,6 +76,9 @@ export default function SaveSlotsPanel() {
         // Load store network with safe defaults for older saves
         const loadedStoreNetwork = save.storeNetwork || createEmptyStoreNetwork();
         initializeFromSave(loadedStoreNetwork);
+        
+        // Load triggered era events with safe default for older saves
+        setTriggeredEraEvents(save.triggeredEvents || []);
         
         toast.success('Game loaded successfully!');
       }

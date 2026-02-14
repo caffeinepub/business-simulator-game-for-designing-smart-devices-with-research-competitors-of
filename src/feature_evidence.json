@@ -2,13 +2,13 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-extend-the-saved-game-data-model-to-include-a-player-built-store-network-where-each-store-is-tied-to-a-specific-country-and-contributes-to-two-computed-modifiers-1-a-productivity-bonus-and-2-a-product-attraction-bonus-ensure-this-data-round-trips-correctly-through-cloud-saves-create-load-and-local-persisted-state",
-      "featureTitle": "Extend the saved game data model to include a player-built store network, where each store is tied to a specific country and contributes to two computed modifiers: (1) a productivity bonus and (2) a product attraction bonus; ensure this data round-trips correctly through Cloud Saves (create/load) and local persisted state.",
+      "featureId": "feature-add-customizable-office-room-finishes-to-the-office-3d-scene-1-wall-color-and-or-wallpaper-style-and-2-wooden-floor-style-and-ensure-these-settings-affect-the-materials-used-in-the-office3dviewer-scene-rendering",
+      "featureTitle": "Add customizable office room finishes to the Office 3D scene: (1) wall color and/or wallpaper style, and (2) wooden floor style, and ensure these settings affect the materials used in the Office3DViewer scene rendering.",
       "files": [
-        "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
-        "frontend/src/features/stores/storeNetworkModel.ts",
-        "frontend/src/features/stores/storeNetworkStore.ts",
-        "frontend/src/state/saveGameStore.ts"
+        "frontend/src/features/office/Office3DViewer.tsx",
+        "frontend/src/features/office/officeDecorOptions.ts",
+        "frontend/src/features/office/officeDecorTextures.ts",
+        "frontend/src/features/office/officeMaterials.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -20,17 +20,16 @@
         "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-21"
+        "REQ-62"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-stores-build-action-in-the-investments-area-that-lets-the-player-select-a-country-and-build-a-store-if-they-have-enough-cash-then-records-the-action-and-updates-game-state-accordingly",
-      "featureTitle": "Add a \"Stores\" build action in the Investments area that lets the player select a country and build a store if they have enough cash, then records the action and updates game state accordingly.",
+      "featureId": "feature-add-architectural-elements-to-the-office-3d-scene-windows-and-a-door-rendered-as-part-of-the-office-room-shell-not-as-loose-furniture-props-with-sizing-placement-that-adapts-to-the-preset-floor-dimensions-in-officescenepresets",
+      "featureTitle": "Add architectural elements to the Office 3D scene: windows and a door, rendered as part of the office room shell (not as loose furniture props), with sizing/placement that adapts to the preset floor dimensions in officeScenePresets.",
       "files": [
-        "frontend/src/features/investments/InvestmentsActionsPanel.tsx",
-        "frontend/src/features/investments/InvestmentsLog.tsx",
-        "frontend/src/features/stores/StoresBuildCard.tsx"
+        "frontend/src/features/office/Office3DViewer.tsx",
+        "frontend/src/features/office/officeArchitecture.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -42,17 +41,17 @@
         "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-22"
+        "REQ-63"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-expose-the-current-store-network-and-its-effects-in-the-ui-by-showing-number-of-stores-the-list-of-countries-with-stores-and-the-current-productivity-and-attraction-bonuses-on-at-least-one-primary-management-surface-investments-and-or-dashboard",
-      "featureTitle": "Expose the current store network and its effects in the UI by showing: number of stores, the list of countries with stores, and the current productivity and attraction bonuses on at least one primary management surface (Investments and/or Dashboard).",
+      "featureId": "feature-provide-an-office-customization-ui-on-the-office-management-page-that-lets-the-player-choose-the-wall-finish-color-wallpaper-and-floor-wood-style-and-persist-these-choices-locally-using-the-existing-persisted-office-store",
+      "featureTitle": "Provide an Office customization UI on the Office Management page that lets the player choose the wall finish (color/wallpaper) and floor wood style, and persist these choices locally using the existing persisted office store.",
       "files": [
-        "frontend/src/features/stores/StoreNetworkSummaryPanel.tsx",
-        "frontend/src/pages/DashboardPage.tsx",
-        "frontend/src/pages/InvestmentsPage.tsx"
+        "frontend/src/features/office/OfficeDecorPanel.tsx",
+        "frontend/src/features/office/officeStore.ts",
+        "frontend/src/pages/OfficePage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -64,29 +63,7 @@
         "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-23"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-apply-store-derived-modifiers-to-the-product-release-flow-so-that-a-productivity-affects-the-effective-production-cost-and-or-production-outcome-and-b-attraction-affects-the-released-product-s-resulting-sales-and-or-rating-calculation-in-a-deterministic-clearly-communicated-way-in-the-release-product-modal",
-      "featureTitle": "Apply store-derived modifiers to the product release flow so that (a) productivity affects the effective production cost and/or production outcome and (b) attraction affects the released product’s resulting sales and/or rating calculation, in a deterministic, clearly communicated way in the Release Product modal.",
-      "files": [
-        "frontend/src/features/dashboard/releasedProductModel.ts",
-        "frontend/src/features/products/ReleaseProductModal.tsx",
-        "frontend/src/features/products/releaseModifiers.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-24"
+        "REQ-64"
       ],
       "confidence": "high"
     }

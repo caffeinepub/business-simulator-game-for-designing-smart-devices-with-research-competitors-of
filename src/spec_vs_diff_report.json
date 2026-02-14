@@ -1,39 +1,45 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-14T04:41:55.957Z",
-  "summary": "Diff adds a frontend store-network system (model, persisted Zustand store, Investments build UI, summary panels on Dashboard/Investments) and applies store-derived modifiers to product release calculations. Cloud save UI now includes storeNetwork in create/load flows with backward-compatible defaults. Backend changes are truncated, so persistence/types round-trip cannot be fully verified from provided evidence.",
+  "generatedAt": "2026-02-14T14:43:24.767Z",
+  "summary": "REQ-63 and REQ-64 appear implemented via a new RoomShell (walls/floor + window/door) wired into Office3DViewer and a new OfficeDecorPanel persisted in the existing office-storage Zustand store. REQ-62 is mostly implemented (wallpaper + wood floor materials), but the wood texture generation uses randomness, which conflicts with the requirement for deterministic updates/appearance.",
   "missing_requirements": [
     {
-      "id": "REQ-21",
-      "requirement": "Extend the saved game data model to include a player-built store network in shared types and ensure it round-trips through Cloud Saves (create/load) and backend persisted state.",
-      "reason": "Frontend now sends/reads `storeNetwork` in cloud save payloads, but the diff summary does not show (due to backend truncation) that the backend save-slot types/storage actually include `storeNetwork`, nor that shared types exported from the backend include the required Store/StoreNetwork structures.",
+      "id": "REQ-62",
+      "requirement": "Changing wall/floor finish settings updates the 3D scene deterministically and immediately (no refresh required).",
+      "reason": "The procedural wood floor texture generation uses Math.random() while drawing grain/plank separators, which makes the resulting texture non-deterministic across mounts/reloads (and potentially across regenerations). This violates the 'deterministically' aspect even if updates are immediate.",
       "evidence": [
-        "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
-        "backend/main.mo (truncated)",
-        "backend/migration.mo (truncated)"
+        "frontend/src/features/office/officeDecorTextures.ts"
       ]
     }
   ],
-  "hallucinated_features": [],
-  "confidence": 0.62,
+  "hallucinated_features": [
+    {
+      "description": "Changes to officeScenePresets including expanded granular level progression and updated prop descriptors beyond adding decor/windows/door.",
+      "reason": "The BuildRequest explicitly constrained preserving existing office level progression logic and deterministic preset selection behavior in getOfficeScenePresetForLevel(level). The diff summary indicates officeScenePresets were expanded/changed, which goes beyond the requested decor/architecture/UI additions.",
+      "evidence": [
+        "frontend-file-summaries.txt (entry for \"frontend/src/features/office/officeScenePresets.ts\")"
+      ]
+    },
+    {
+      "description": "Unrelated dashboard/product/branding/cloud-save/navigation changes (e.g., Best Product of the Year year label changes, logo components, store network panels, cloud save triggered event persistence).",
+      "reason": "These changes are not requested by the BuildRequest, which is specifically about Office 3D decor customization and adding windows/door plus Office page UI and local persistence for decor.",
+      "evidence": [
+        "frontend-file-summaries.txt (multiple entries: DashboardPage.tsx, BestProductsOfYearPanel.tsx, releasedProductModel.ts, bestProductScoring.ts, SaveSlotsPanel.tsx, NewGameModal.tsx, LogoCreator.tsx, MainNav.tsx, etc.)"
+      ]
+    }
+  ],
+  "confidence": 0.72,
   "changed_files": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
-    "frontend/src/features/dashboard/releasedProductModel.ts",
-    "frontend/src/features/investments/InvestmentsActionsPanel.tsx",
-    "frontend/src/features/investments/InvestmentsLog.tsx",
-    "frontend/src/features/products/ReleaseProductModal.tsx",
-    "frontend/src/features/products/releaseModifiers.ts",
-    "frontend/src/features/stores/StoreNetworkSummaryPanel.tsx",
-    "frontend/src/features/stores/StoresBuildCard.tsx",
-    "frontend/src/features/stores/storeNetworkModel.ts",
-    "frontend/src/features/stores/storeNetworkStore.ts",
-    "frontend/src/pages/DashboardPage.tsx",
-    "frontend/src/pages/InvestmentsPage.tsx",
-    "frontend/src/state/saveGameStore.ts",
+    "frontend/src/features/office/Office3DViewer.tsx",
+    "frontend/src/features/office/OfficeDecorPanel.tsx",
+    "frontend/src/features/office/officeArchitecture.tsx",
+    "frontend/src/features/office/officeDecorOptions.ts",
+    "frontend/src/features/office/officeDecorTextures.ts",
+    "frontend/src/features/office/officeMaterials.ts",
+    "frontend/src/features/office/officeStore.ts",
+    "frontend/src/pages/OfficePage.tsx",
     "project_state.json"
   ]
 }

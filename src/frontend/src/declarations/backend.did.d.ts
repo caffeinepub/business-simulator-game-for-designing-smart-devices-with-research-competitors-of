@@ -25,6 +25,8 @@ export interface Battery {
   'connector' : string,
   'capacity' : bigint,
 }
+export type BlueprintSubmissionResult = { 'success' : DeviceBlueprintId } |
+  { 'premiumFeatureRequired' : null };
 export interface Branding {
   'productLogo' : string,
   'productName' : string,
@@ -50,6 +52,7 @@ export interface DeviceBlueprint {
   'processingUnit' : ProcessingUnit,
   'connections' : DeviceConnections,
   'wirelessPowerTransfer' : Array<string>,
+  'foldableCharacteristics' : [] | [FoldableCharacteristics],
   'coating' : string,
   'finalized' : boolean,
   'category' : DeviceCategory,
@@ -87,6 +90,30 @@ export interface DisplayUnit {
   'details' : string,
   'energyConsumption' : [] | [bigint],
   'width' : bigint,
+}
+export interface FoldableCharacteristics {
+  'weight' : bigint,
+  'wirelessChargingSupport' : boolean,
+  'hingeMaterial' : string,
+  'foldAngle' : number,
+  'hingeDurability' : bigint,
+  'facePrintResistance' : bigint,
+  'thickness' : number,
+  'magneticLock' : boolean,
+  'resistanceRating' : string,
+  'fingerprintResistance' : boolean,
+  'multiAngleSupport' : boolean,
+  'outerDisplaySize' : [] | [number],
+  'hingeType' : string,
+  'finalized' : boolean,
+  'coatingType' : string,
+  'shockproofRating' : string,
+  'displayTechnology' : string,
+  'outerDisplay' : boolean,
+  'creaseVisibility' : bigint,
+  'price' : bigint,
+  'foldType' : string,
+  'waterproofRating' : string,
 }
 export interface GameState {
   'cash' : bigint,
@@ -176,6 +203,7 @@ export interface SavedGame {
   'saveId' : string,
   'name' : string,
   'lastModified' : bigint,
+  'triggeredEvents' : Array<string>,
   'gameState' : GameState,
   'branding' : Branding,
   'releasedProducts' : Array<ReleasedProduct>,
@@ -274,13 +302,17 @@ export interface _SERVICE {
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'activatePremiumUnlock' : ActorMethod<[], undefined>,
   'addReleasedProductToSave' : ActorMethod<
     [string, ReleasedProduct],
     undefined
   >,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'completeResearchEntry' : ActorMethod<[PlayerResearch], undefined>,
-  'createDeviceBlueprint' : ActorMethod<[DeviceBlueprint], DeviceBlueprintId>,
+  'createDeviceBlueprint' : ActorMethod<
+    [DeviceBlueprint],
+    BlueprintSubmissionResult
+  >,
   'getActiveTechnologyResearch' : ActorMethod<[], [] | [PlayerResearch]>,
   'getAllDeviceBlueprints' : ActorMethod<[], Array<DeviceBlueprint>>,
   'getAllDeviceCategories' : ActorMethod<[], DeviceCategory>,
@@ -290,6 +322,7 @@ export interface _SERVICE {
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getSaveSlotInfos' : ActorMethod<[], Array<SaveSlot>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'hasPremiumUnlock' : ActorMethod<[], boolean>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'loadSaveSlot' : ActorMethod<[string], [] | [SavedGame]>,
   'processInput' : ActorMethod<[Uint8Array], string>,

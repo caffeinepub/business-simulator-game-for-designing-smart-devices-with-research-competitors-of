@@ -181,6 +181,30 @@ export interface PlayerResearch {
     researchLevel: bigint;
     researchState: bigint;
 }
+export interface FoldableCharacteristics {
+    weight: bigint;
+    wirelessChargingSupport: boolean;
+    hingeMaterial: string;
+    foldAngle: number;
+    hingeDurability: bigint;
+    facePrintResistance: bigint;
+    thickness: number;
+    magneticLock: boolean;
+    resistanceRating: string;
+    fingerprintResistance: boolean;
+    multiAngleSupport: boolean;
+    outerDisplaySize?: number;
+    hingeType: string;
+    finalized: boolean;
+    coatingType: string;
+    shockproofRating: string;
+    displayTechnology: string;
+    outerDisplay: boolean;
+    creaseVisibility: bigint;
+    price: bigint;
+    foldType: string;
+    waterproofRating: string;
+}
 export interface Battery {
     voltage: number;
     model: string;
@@ -249,6 +273,7 @@ export interface SavedGame {
     saveId: string;
     name: string;
     lastModified: bigint;
+    triggeredEvents: Array<string>;
     gameState: GameState;
     branding: Branding;
     releasedProducts: Array<ReleasedProduct>;
@@ -272,6 +297,7 @@ export interface DeviceBlueprint {
     processingUnit: ProcessingUnit;
     connections: DeviceConnections;
     wirelessPowerTransfer: Array<string>;
+    foldableCharacteristics?: FoldableCharacteristics;
     coating: string;
     finalized: boolean;
     category: DeviceCategory;
@@ -299,6 +325,13 @@ export interface GameState {
     researchedTechs: Array<string>;
     products: Array<string>;
 }
+export type BlueprintSubmissionResult = {
+    __kind__: "success";
+    success: DeviceBlueprintId;
+} | {
+    __kind__: "premiumFeatureRequired";
+    premiumFeatureRequired: null;
+};
 export interface RAM {
     id: bigint;
     manufacturer: string;
@@ -358,10 +391,11 @@ export interface backendInterface {
     _caffeineStorageRefillCashier(refillInformation: _CaffeineStorageRefillInformation | null): Promise<_CaffeineStorageRefillResult>;
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
+    activatePremiumUnlock(): Promise<void>;
     addReleasedProductToSave(slotId: string, product: ReleasedProduct): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     completeResearchEntry(researchEntry: PlayerResearch): Promise<void>;
-    createDeviceBlueprint(blueprint: DeviceBlueprint): Promise<DeviceBlueprintId>;
+    createDeviceBlueprint(blueprint: DeviceBlueprint): Promise<BlueprintSubmissionResult>;
     getActiveTechnologyResearch(): Promise<PlayerResearch | null>;
     getAllDeviceBlueprints(): Promise<Array<DeviceBlueprint>>;
     getAllDeviceCategories(): Promise<DeviceCategory>;
@@ -371,6 +405,7 @@ export interface backendInterface {
     getCallerUserRole(): Promise<UserRole>;
     getSaveSlotInfos(): Promise<Array<SaveSlot>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
+    hasPremiumUnlock(): Promise<boolean>;
     isCallerAdmin(): Promise<boolean>;
     loadSaveSlot(slotId: string): Promise<SavedGame | null>;
     processInput(inputData: Uint8Array): Promise<string>;
@@ -378,7 +413,7 @@ export interface backendInterface {
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     saveGameToSlot(newSave: SavedGame): Promise<void>;
 }
-import type { AudioDevice as _AudioDevice, Battery as _Battery, Camera as _Camera, DeviceBlueprint as _DeviceBlueprint, DeviceCategory as _DeviceCategory, DeviceConnections as _DeviceConnections, DeviceSlot as _DeviceSlot, DisplayUnit as _DisplayUnit, Motherboard as _Motherboard, PlayerResearch as _PlayerResearch, ProcessingUnit as _ProcessingUnit, Protection as _Protection, RAM as _RAM, Requirements as _Requirements, ResearchStatus as _ResearchStatus, SavedGame as _SavedGame, Storage as _Storage, Technology as _Technology, UserProfile as _UserProfile, UserRole as _UserRole, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
+import type { AudioDevice as _AudioDevice, Battery as _Battery, BlueprintSubmissionResult as _BlueprintSubmissionResult, Camera as _Camera, DeviceBlueprint as _DeviceBlueprint, DeviceBlueprintId as _DeviceBlueprintId, DeviceCategory as _DeviceCategory, DeviceConnections as _DeviceConnections, DeviceSlot as _DeviceSlot, DisplayUnit as _DisplayUnit, FoldableCharacteristics as _FoldableCharacteristics, Motherboard as _Motherboard, PlayerResearch as _PlayerResearch, ProcessingUnit as _ProcessingUnit, Protection as _Protection, RAM as _RAM, Requirements as _Requirements, ResearchStatus as _ResearchStatus, SavedGame as _SavedGame, Storage as _Storage, Technology as _Technology, UserProfile as _UserProfile, UserRole as _UserRole, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _caffeineStorageBlobIsLive(arg0: Uint8Array): Promise<boolean> {
@@ -479,6 +514,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async activatePremiumUnlock(): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.activatePremiumUnlock();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.activatePremiumUnlock();
+            return result;
+        }
+    }
     async addReleasedProductToSave(arg0: string, arg1: ReleasedProduct): Promise<void> {
         if (this.processError) {
             try {
@@ -521,60 +570,60 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async createDeviceBlueprint(arg0: DeviceBlueprint): Promise<DeviceBlueprintId> {
+    async createDeviceBlueprint(arg0: DeviceBlueprint): Promise<BlueprintSubmissionResult> {
         if (this.processError) {
             try {
                 const result = await this.actor.createDeviceBlueprint(to_candid_DeviceBlueprint_n10(this._uploadFile, this._downloadFile, arg0));
-                return result;
+                return from_candid_BlueprintSubmissionResult_n23(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.createDeviceBlueprint(to_candid_DeviceBlueprint_n10(this._uploadFile, this._downloadFile, arg0));
-            return result;
+            return from_candid_BlueprintSubmissionResult_n23(this._uploadFile, this._downloadFile, result);
         }
     }
     async getActiveTechnologyResearch(): Promise<PlayerResearch | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getActiveTechnologyResearch();
-                return from_candid_opt_n21(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n25(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getActiveTechnologyResearch();
-            return from_candid_opt_n21(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n25(this._uploadFile, this._downloadFile, result);
         }
     }
     async getAllDeviceBlueprints(): Promise<Array<DeviceBlueprint>> {
         if (this.processError) {
             try {
                 const result = await this.actor.getAllDeviceBlueprints();
-                return from_candid_vec_n22(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n26(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getAllDeviceBlueprints();
-            return from_candid_vec_n22(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n26(this._uploadFile, this._downloadFile, result);
         }
     }
     async getAllDeviceCategories(): Promise<DeviceCategory> {
         if (this.processError) {
             try {
                 const result = await this.actor.getAllDeviceCategories();
-                return from_candid_DeviceCategory_n27(this._uploadFile, this._downloadFile, result);
+                return from_candid_DeviceCategory_n35(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getAllDeviceCategories();
-            return from_candid_DeviceCategory_n27(this._uploadFile, this._downloadFile, result);
+            return from_candid_DeviceCategory_n35(this._uploadFile, this._downloadFile, result);
         }
     }
     async getAllReleasedProducts(): Promise<Array<ReleasedProduct>> {
@@ -595,42 +644,42 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getAllTechnologies();
-                return from_candid_vec_n34(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n42(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getAllTechnologies();
-            return from_candid_vec_n34(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n42(this._uploadFile, this._downloadFile, result);
         }
     }
     async getCallerUserProfile(): Promise<UserProfile | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getCallerUserProfile();
-                return from_candid_opt_n43(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n51(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getCallerUserProfile();
-            return from_candid_opt_n43(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n51(this._uploadFile, this._downloadFile, result);
         }
     }
     async getCallerUserRole(): Promise<UserRole> {
         if (this.processError) {
             try {
                 const result = await this.actor.getCallerUserRole();
-                return from_candid_UserRole_n47(this._uploadFile, this._downloadFile, result);
+                return from_candid_UserRole_n55(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getCallerUserRole();
-            return from_candid_UserRole_n47(this._uploadFile, this._downloadFile, result);
+            return from_candid_UserRole_n55(this._uploadFile, this._downloadFile, result);
         }
     }
     async getSaveSlotInfos(): Promise<Array<SaveSlot>> {
@@ -651,14 +700,28 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getUserProfile(arg0);
-                return from_candid_opt_n43(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n51(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getUserProfile(arg0);
-            return from_candid_opt_n43(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n51(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async hasPremiumUnlock(): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.hasPremiumUnlock();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.hasPremiumUnlock();
+            return result;
         }
     }
     async isCallerAdmin(): Promise<boolean> {
@@ -679,14 +742,14 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.loadSaveSlot(arg0);
-                return from_candid_opt_n49(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n57(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.loadSaveSlot(arg0);
-            return from_candid_opt_n49(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n57(this._uploadFile, this._downloadFile, result);
         }
     }
     async processInput(arg0: Uint8Array): Promise<string> {
@@ -720,14 +783,14 @@ export class Backend implements backendInterface {
     async saveCallerUserProfile(arg0: UserProfile): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.saveCallerUserProfile(to_candid_UserProfile_n50(this._uploadFile, this._downloadFile, arg0));
+                const result = await this.actor.saveCallerUserProfile(to_candid_UserProfile_n58(this._uploadFile, this._downloadFile, arg0));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.saveCallerUserProfile(to_candid_UserProfile_n50(this._uploadFile, this._downloadFile, arg0));
+            const result = await this.actor.saveCallerUserProfile(to_candid_UserProfile_n58(this._uploadFile, this._downloadFile, arg0));
             return result;
         }
     }
@@ -746,55 +809,67 @@ export class Backend implements backendInterface {
         }
     }
 }
-function from_candid_DeviceBlueprint_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _DeviceBlueprint): DeviceBlueprint {
-    return from_candid_record_n24(_uploadFile, _downloadFile, value);
+function from_candid_BlueprintSubmissionResult_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _BlueprintSubmissionResult): BlueprintSubmissionResult {
+    return from_candid_variant_n24(_uploadFile, _downloadFile, value);
 }
-function from_candid_DeviceCategory_n27(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _DeviceCategory): DeviceCategory {
-    return from_candid_variant_n28(_uploadFile, _downloadFile, value);
+function from_candid_DeviceBlueprint_n27(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _DeviceBlueprint): DeviceBlueprint {
+    return from_candid_record_n28(_uploadFile, _downloadFile, value);
 }
-function from_candid_DisplayUnit_n29(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _DisplayUnit): DisplayUnit {
-    return from_candid_record_n30(_uploadFile, _downloadFile, value);
+function from_candid_DeviceCategory_n35(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _DeviceCategory): DeviceCategory {
+    return from_candid_variant_n36(_uploadFile, _downloadFile, value);
 }
-function from_candid_ProcessingUnit_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ProcessingUnit): ProcessingUnit {
-    return from_candid_record_n26(_uploadFile, _downloadFile, value);
+function from_candid_DisplayUnit_n37(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _DisplayUnit): DisplayUnit {
+    return from_candid_record_n38(_uploadFile, _downloadFile, value);
 }
-function from_candid_Requirements_n40(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Requirements): Requirements {
-    return from_candid_record_n41(_uploadFile, _downloadFile, value);
-}
-function from_candid_ResearchStatus_n37(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ResearchStatus): ResearchStatus {
-    return from_candid_variant_n38(_uploadFile, _downloadFile, value);
-}
-function from_candid_Storage_n32(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Storage): Storage {
+function from_candid_FoldableCharacteristics_n32(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _FoldableCharacteristics): FoldableCharacteristics {
     return from_candid_record_n33(_uploadFile, _downloadFile, value);
 }
-function from_candid_Technology_n35(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Technology): Technology {
-    return from_candid_record_n36(_uploadFile, _downloadFile, value);
+function from_candid_ProcessingUnit_n29(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ProcessingUnit): ProcessingUnit {
+    return from_candid_record_n30(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserProfile_n44(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserProfile): UserProfile {
-    return from_candid_record_n45(_uploadFile, _downloadFile, value);
+function from_candid_Requirements_n48(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Requirements): Requirements {
+    return from_candid_record_n49(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserRole_n47(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
-    return from_candid_variant_n48(_uploadFile, _downloadFile, value);
+function from_candid_ResearchStatus_n45(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ResearchStatus): ResearchStatus {
+    return from_candid_variant_n46(_uploadFile, _downloadFile, value);
+}
+function from_candid_Storage_n40(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Storage): Storage {
+    return from_candid_record_n41(_uploadFile, _downloadFile, value);
+}
+function from_candid_Technology_n43(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Technology): Technology {
+    return from_candid_record_n44(_uploadFile, _downloadFile, value);
+}
+function from_candid_UserProfile_n52(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserProfile): UserProfile {
+    return from_candid_record_n53(_uploadFile, _downloadFile, value);
+}
+function from_candid_UserRole_n55(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
+    return from_candid_variant_n56(_uploadFile, _downloadFile, value);
 }
 function from_candid__CaffeineStorageRefillResult_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: __CaffeineStorageRefillResult): _CaffeineStorageRefillResult {
     return from_candid_record_n5(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n21(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_PlayerResearch]): PlayerResearch | null {
+function from_candid_opt_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_PlayerResearch]): PlayerResearch | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n39(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Requirements]): Requirements | null {
-    return value.length === 0 ? null : from_candid_Requirements_n40(_uploadFile, _downloadFile, value[0]);
+function from_candid_opt_n31(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_FoldableCharacteristics]): FoldableCharacteristics | null {
+    return value.length === 0 ? null : from_candid_FoldableCharacteristics_n32(_uploadFile, _downloadFile, value[0]);
 }
-function from_candid_opt_n42(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [Array<string>]): Array<string> | null {
+function from_candid_opt_n34(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [number]): number | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n43(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
-    return value.length === 0 ? null : from_candid_UserProfile_n44(_uploadFile, _downloadFile, value[0]);
+function from_candid_opt_n47(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Requirements]): Requirements | null {
+    return value.length === 0 ? null : from_candid_Requirements_n48(_uploadFile, _downloadFile, value[0]);
 }
-function from_candid_opt_n46(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
+function from_candid_opt_n50(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [Array<string>]): Array<string> | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n49(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_SavedGame]): SavedGame | null {
+function from_candid_opt_n51(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
+    return value.length === 0 ? null : from_candid_UserProfile_n52(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n54(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n57(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_SavedGame]): SavedGame | null {
     return value.length === 0 ? null : value[0];
 }
 function from_candid_opt_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [boolean]): boolean | null {
@@ -803,7 +878,7 @@ function from_candid_opt_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Ar
 function from_candid_opt_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [bigint]): bigint | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_record_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n28(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     weight: bigint;
     impedance: bigint;
     name: string;
@@ -814,6 +889,7 @@ function from_candid_record_n24(_uploadFile: (file: ExternalBlob) => Promise<Uin
     processingUnit: _ProcessingUnit;
     connections: _DeviceConnections;
     wirelessPowerTransfer: Array<string>;
+    foldableCharacteristics: [] | [_FoldableCharacteristics];
     coating: string;
     finalized: boolean;
     category: _DeviceCategory;
@@ -839,6 +915,7 @@ function from_candid_record_n24(_uploadFile: (file: ExternalBlob) => Promise<Uin
     processingUnit: ProcessingUnit;
     connections: DeviceConnections;
     wirelessPowerTransfer: Array<string>;
+    foldableCharacteristics?: FoldableCharacteristics;
     coating: string;
     finalized: boolean;
     category: DeviceCategory;
@@ -862,26 +939,27 @@ function from_candid_record_n24(_uploadFile: (file: ExternalBlob) => Promise<Uin
         protection: value.protection,
         deviceSlots: value.deviceSlots,
         resistanceRating: value.resistanceRating,
-        processingUnit: from_candid_ProcessingUnit_n25(_uploadFile, _downloadFile, value.processingUnit),
+        processingUnit: from_candid_ProcessingUnit_n29(_uploadFile, _downloadFile, value.processingUnit),
         connections: value.connections,
         wirelessPowerTransfer: value.wirelessPowerTransfer,
+        foldableCharacteristics: record_opt_to_undefined(from_candid_opt_n31(_uploadFile, _downloadFile, value.foldableCharacteristics)),
         coating: value.coating,
         finalized: value.finalized,
-        category: from_candid_DeviceCategory_n27(_uploadFile, _downloadFile, value.category),
+        category: from_candid_DeviceCategory_n35(_uploadFile, _downloadFile, value.category),
         comfortRating: value.comfortRating,
-        display: from_candid_DisplayUnit_n29(_uploadFile, _downloadFile, value.display),
+        display: from_candid_DisplayUnit_n37(_uploadFile, _downloadFile, value.display),
         motherboard: value.motherboard,
         ports: value.ports,
         certifications: value.certifications,
         price: value.price,
         battery: value.battery,
         technologyRatingSystem: value.technologyRatingSystem,
-        storages: from_candid_vec_n31(_uploadFile, _downloadFile, value.storages),
+        storages: from_candid_vec_n39(_uploadFile, _downloadFile, value.storages),
         audioDevices: value.audioDevices,
         cameras: value.cameras
     };
 }
-function from_candid_record_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n30(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     manufacturer: string;
     clockSpeed: [] | [bigint];
     coreType: string;
@@ -914,7 +992,79 @@ function from_candid_record_n26(_uploadFile: (file: ExternalBlob) => Promise<Uin
         energyConsumption: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.energyConsumption))
     };
 }
-function from_candid_record_n30(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n33(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    weight: bigint;
+    wirelessChargingSupport: boolean;
+    hingeMaterial: string;
+    foldAngle: number;
+    hingeDurability: bigint;
+    facePrintResistance: bigint;
+    thickness: number;
+    magneticLock: boolean;
+    resistanceRating: string;
+    fingerprintResistance: boolean;
+    multiAngleSupport: boolean;
+    outerDisplaySize: [] | [number];
+    hingeType: string;
+    finalized: boolean;
+    coatingType: string;
+    shockproofRating: string;
+    displayTechnology: string;
+    outerDisplay: boolean;
+    creaseVisibility: bigint;
+    price: bigint;
+    foldType: string;
+    waterproofRating: string;
+}): {
+    weight: bigint;
+    wirelessChargingSupport: boolean;
+    hingeMaterial: string;
+    foldAngle: number;
+    hingeDurability: bigint;
+    facePrintResistance: bigint;
+    thickness: number;
+    magneticLock: boolean;
+    resistanceRating: string;
+    fingerprintResistance: boolean;
+    multiAngleSupport: boolean;
+    outerDisplaySize?: number;
+    hingeType: string;
+    finalized: boolean;
+    coatingType: string;
+    shockproofRating: string;
+    displayTechnology: string;
+    outerDisplay: boolean;
+    creaseVisibility: bigint;
+    price: bigint;
+    foldType: string;
+    waterproofRating: string;
+} {
+    return {
+        weight: value.weight,
+        wirelessChargingSupport: value.wirelessChargingSupport,
+        hingeMaterial: value.hingeMaterial,
+        foldAngle: value.foldAngle,
+        hingeDurability: value.hingeDurability,
+        facePrintResistance: value.facePrintResistance,
+        thickness: value.thickness,
+        magneticLock: value.magneticLock,
+        resistanceRating: value.resistanceRating,
+        fingerprintResistance: value.fingerprintResistance,
+        multiAngleSupport: value.multiAngleSupport,
+        outerDisplaySize: record_opt_to_undefined(from_candid_opt_n34(_uploadFile, _downloadFile, value.outerDisplaySize)),
+        hingeType: value.hingeType,
+        finalized: value.finalized,
+        coatingType: value.coatingType,
+        shockproofRating: value.shockproofRating,
+        displayTechnology: value.displayTechnology,
+        outerDisplay: value.outerDisplay,
+        creaseVisibility: value.creaseVisibility,
+        price: value.price,
+        foldType: value.foldType,
+        waterproofRating: value.waterproofRating
+    };
+}
+function from_candid_record_n38(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     height: bigint;
     manufacturer: string;
     displayType: string;
@@ -944,7 +1094,7 @@ function from_candid_record_n30(_uploadFile: (file: ExternalBlob) => Promise<Uin
         width: value.width
     };
 }
-function from_candid_record_n33(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n41(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: bigint;
     manufacturer: string;
     writeSpeed: [] | [bigint];
@@ -986,7 +1136,7 @@ function from_candid_record_n33(_uploadFile: (file: ExternalBlob) => Promise<Uin
         isSolidState: record_opt_to_undefined(from_candid_opt_n6(_uploadFile, _downloadFile, value.isSolidState))
     };
 }
-function from_candid_record_n36(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n44(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     status: _ResearchStatus;
     effectedTestProps: Array<string>;
     isCompleted: boolean;
@@ -1014,7 +1164,7 @@ function from_candid_record_n36(_uploadFile: (file: ExternalBlob) => Promise<Uin
     requirements?: Requirements;
 } {
     return {
-        status: from_candid_ResearchStatus_n37(_uploadFile, _downloadFile, value.status),
+        status: from_candid_ResearchStatus_n45(_uploadFile, _downloadFile, value.status),
         effectedTestProps: value.effectedTestProps,
         isCompleted: value.isCompleted,
         cost: value.cost,
@@ -1025,10 +1175,10 @@ function from_candid_record_n36(_uploadFile: (file: ExternalBlob) => Promise<Uin
         researchId: value.researchId,
         category: value.category,
         price: value.price,
-        requirements: record_opt_to_undefined(from_candid_opt_n39(_uploadFile, _downloadFile, value.requirements))
+        requirements: record_opt_to_undefined(from_candid_opt_n47(_uploadFile, _downloadFile, value.requirements))
     };
 }
-function from_candid_record_n41(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n49(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     cash: [] | [bigint];
     researchedTechnologies: [] | [Array<string>];
 }): {
@@ -1037,22 +1187,7 @@ function from_candid_record_n41(_uploadFile: (file: ExternalBlob) => Promise<Uin
 } {
     return {
         cash: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.cash)),
-        researchedTechnologies: record_opt_to_undefined(from_candid_opt_n42(_uploadFile, _downloadFile, value.researchedTechnologies))
-    };
-}
-function from_candid_record_n45(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    name: string;
-    totalPlayTime: bigint;
-    preferredDifficulty: [] | [string];
-}): {
-    name: string;
-    totalPlayTime: bigint;
-    preferredDifficulty?: string;
-} {
-    return {
-        name: value.name,
-        totalPlayTime: value.totalPlayTime,
-        preferredDifficulty: record_opt_to_undefined(from_candid_opt_n46(_uploadFile, _downloadFile, value.preferredDifficulty))
+        researchedTechnologies: record_opt_to_undefined(from_candid_opt_n50(_uploadFile, _downloadFile, value.researchedTechnologies))
     };
 }
 function from_candid_record_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
@@ -1067,7 +1202,41 @@ function from_candid_record_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint
         topped_up_amount: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.topped_up_amount))
     };
 }
-function from_candid_variant_n28(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n53(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    name: string;
+    totalPlayTime: bigint;
+    preferredDifficulty: [] | [string];
+}): {
+    name: string;
+    totalPlayTime: bigint;
+    preferredDifficulty?: string;
+} {
+    return {
+        name: value.name,
+        totalPlayTime: value.totalPlayTime,
+        preferredDifficulty: record_opt_to_undefined(from_candid_opt_n54(_uploadFile, _downloadFile, value.preferredDifficulty))
+    };
+}
+function from_candid_variant_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    success: _DeviceBlueprintId;
+} | {
+    premiumFeatureRequired: null;
+}): {
+    __kind__: "success";
+    success: DeviceBlueprintId;
+} | {
+    __kind__: "premiumFeatureRequired";
+    premiumFeatureRequired: null;
+} {
+    return "success" in value ? {
+        __kind__: "success",
+        success: value.success
+    } : "premiumFeatureRequired" in value ? {
+        __kind__: "premiumFeatureRequired",
+        premiumFeatureRequired: value.premiumFeatureRequired
+    } : value;
+}
+function from_candid_variant_n36(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     singleCategory: string;
 } | {
     categoryList: Array<string>;
@@ -1086,7 +1255,7 @@ function from_candid_variant_n28(_uploadFile: (file: ExternalBlob) => Promise<Ui
         categoryList: value.categoryList
     } : value;
 }
-function from_candid_variant_n38(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n46(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     notStarted: null;
 } | {
     completed: null;
@@ -1113,7 +1282,7 @@ function from_candid_variant_n38(_uploadFile: (file: ExternalBlob) => Promise<Ui
         inProgress: value.inProgress
     } : value;
 }
-function from_candid_variant_n48(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n56(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     admin: null;
 } | {
     user: null;
@@ -1122,32 +1291,35 @@ function from_candid_variant_n48(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }): UserRole {
     return "admin" in value ? UserRole.admin : "user" in value ? UserRole.user : "guest" in value ? UserRole.guest : value;
 }
-function from_candid_vec_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_DeviceBlueprint>): Array<DeviceBlueprint> {
-    return value.map((x)=>from_candid_DeviceBlueprint_n23(_uploadFile, _downloadFile, x));
+function from_candid_vec_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_DeviceBlueprint>): Array<DeviceBlueprint> {
+    return value.map((x)=>from_candid_DeviceBlueprint_n27(_uploadFile, _downloadFile, x));
 }
-function from_candid_vec_n31(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Storage>): Array<Storage> {
-    return value.map((x)=>from_candid_Storage_n32(_uploadFile, _downloadFile, x));
+function from_candid_vec_n39(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Storage>): Array<Storage> {
+    return value.map((x)=>from_candid_Storage_n40(_uploadFile, _downloadFile, x));
 }
-function from_candid_vec_n34(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Technology>): Array<Technology> {
-    return value.map((x)=>from_candid_Technology_n35(_uploadFile, _downloadFile, x));
+function from_candid_vec_n42(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Technology>): Array<Technology> {
+    return value.map((x)=>from_candid_Technology_n43(_uploadFile, _downloadFile, x));
 }
 function to_candid_DeviceBlueprint_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: DeviceBlueprint): _DeviceBlueprint {
     return to_candid_record_n11(_uploadFile, _downloadFile, value);
 }
-function to_candid_DeviceCategory_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: DeviceCategory): _DeviceCategory {
-    return to_candid_variant_n15(_uploadFile, _downloadFile, value);
+function to_candid_DeviceCategory_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: DeviceCategory): _DeviceCategory {
+    return to_candid_variant_n17(_uploadFile, _downloadFile, value);
 }
-function to_candid_DisplayUnit_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: DisplayUnit): _DisplayUnit {
-    return to_candid_record_n17(_uploadFile, _downloadFile, value);
+function to_candid_DisplayUnit_n18(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: DisplayUnit): _DisplayUnit {
+    return to_candid_record_n19(_uploadFile, _downloadFile, value);
+}
+function to_candid_FoldableCharacteristics_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: FoldableCharacteristics): _FoldableCharacteristics {
+    return to_candid_record_n15(_uploadFile, _downloadFile, value);
 }
 function to_candid_ProcessingUnit_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ProcessingUnit): _ProcessingUnit {
     return to_candid_record_n13(_uploadFile, _downloadFile, value);
 }
-function to_candid_Storage_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Storage): _Storage {
-    return to_candid_record_n20(_uploadFile, _downloadFile, value);
+function to_candid_Storage_n21(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Storage): _Storage {
+    return to_candid_record_n22(_uploadFile, _downloadFile, value);
 }
-function to_candid_UserProfile_n50(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserProfile): _UserProfile {
-    return to_candid_record_n51(_uploadFile, _downloadFile, value);
+function to_candid_UserProfile_n58(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserProfile): _UserProfile {
+    return to_candid_record_n59(_uploadFile, _downloadFile, value);
 }
 function to_candid_UserRole_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): _UserRole {
     return to_candid_variant_n9(_uploadFile, _downloadFile, value);
@@ -1169,6 +1341,7 @@ function to_candid_record_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8
     processingUnit: ProcessingUnit;
     connections: DeviceConnections;
     wirelessPowerTransfer: Array<string>;
+    foldableCharacteristics?: FoldableCharacteristics;
     coating: string;
     finalized: boolean;
     category: DeviceCategory;
@@ -1194,6 +1367,7 @@ function to_candid_record_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8
     processingUnit: _ProcessingUnit;
     connections: _DeviceConnections;
     wirelessPowerTransfer: Array<string>;
+    foldableCharacteristics: [] | [_FoldableCharacteristics];
     coating: string;
     finalized: boolean;
     category: _DeviceCategory;
@@ -1220,18 +1394,19 @@ function to_candid_record_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8
         processingUnit: to_candid_ProcessingUnit_n12(_uploadFile, _downloadFile, value.processingUnit),
         connections: value.connections,
         wirelessPowerTransfer: value.wirelessPowerTransfer,
+        foldableCharacteristics: value.foldableCharacteristics ? candid_some(to_candid_FoldableCharacteristics_n14(_uploadFile, _downloadFile, value.foldableCharacteristics)) : candid_none(),
         coating: value.coating,
         finalized: value.finalized,
-        category: to_candid_DeviceCategory_n14(_uploadFile, _downloadFile, value.category),
+        category: to_candid_DeviceCategory_n16(_uploadFile, _downloadFile, value.category),
         comfortRating: value.comfortRating,
-        display: to_candid_DisplayUnit_n16(_uploadFile, _downloadFile, value.display),
+        display: to_candid_DisplayUnit_n18(_uploadFile, _downloadFile, value.display),
         motherboard: value.motherboard,
         ports: value.ports,
         certifications: value.certifications,
         price: value.price,
         battery: value.battery,
         technologyRatingSystem: value.technologyRatingSystem,
-        storages: to_candid_vec_n18(_uploadFile, _downloadFile, value.storages),
+        storages: to_candid_vec_n20(_uploadFile, _downloadFile, value.storages),
         audioDevices: value.audioDevices,
         cameras: value.cameras
     };
@@ -1269,7 +1444,79 @@ function to_candid_record_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8
         energyConsumption: value.energyConsumption ? candid_some(value.energyConsumption) : candid_none()
     };
 }
-function to_candid_record_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function to_candid_record_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    weight: bigint;
+    wirelessChargingSupport: boolean;
+    hingeMaterial: string;
+    foldAngle: number;
+    hingeDurability: bigint;
+    facePrintResistance: bigint;
+    thickness: number;
+    magneticLock: boolean;
+    resistanceRating: string;
+    fingerprintResistance: boolean;
+    multiAngleSupport: boolean;
+    outerDisplaySize?: number;
+    hingeType: string;
+    finalized: boolean;
+    coatingType: string;
+    shockproofRating: string;
+    displayTechnology: string;
+    outerDisplay: boolean;
+    creaseVisibility: bigint;
+    price: bigint;
+    foldType: string;
+    waterproofRating: string;
+}): {
+    weight: bigint;
+    wirelessChargingSupport: boolean;
+    hingeMaterial: string;
+    foldAngle: number;
+    hingeDurability: bigint;
+    facePrintResistance: bigint;
+    thickness: number;
+    magneticLock: boolean;
+    resistanceRating: string;
+    fingerprintResistance: boolean;
+    multiAngleSupport: boolean;
+    outerDisplaySize: [] | [number];
+    hingeType: string;
+    finalized: boolean;
+    coatingType: string;
+    shockproofRating: string;
+    displayTechnology: string;
+    outerDisplay: boolean;
+    creaseVisibility: bigint;
+    price: bigint;
+    foldType: string;
+    waterproofRating: string;
+} {
+    return {
+        weight: value.weight,
+        wirelessChargingSupport: value.wirelessChargingSupport,
+        hingeMaterial: value.hingeMaterial,
+        foldAngle: value.foldAngle,
+        hingeDurability: value.hingeDurability,
+        facePrintResistance: value.facePrintResistance,
+        thickness: value.thickness,
+        magneticLock: value.magneticLock,
+        resistanceRating: value.resistanceRating,
+        fingerprintResistance: value.fingerprintResistance,
+        multiAngleSupport: value.multiAngleSupport,
+        outerDisplaySize: value.outerDisplaySize ? candid_some(value.outerDisplaySize) : candid_none(),
+        hingeType: value.hingeType,
+        finalized: value.finalized,
+        coatingType: value.coatingType,
+        shockproofRating: value.shockproofRating,
+        displayTechnology: value.displayTechnology,
+        outerDisplay: value.outerDisplay,
+        creaseVisibility: value.creaseVisibility,
+        price: value.price,
+        foldType: value.foldType,
+        waterproofRating: value.waterproofRating
+    };
+}
+function to_candid_record_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     height: bigint;
     manufacturer: string;
     displayType: string;
@@ -1299,7 +1546,7 @@ function to_candid_record_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8
         width: value.width
     };
 }
-function to_candid_record_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function to_candid_record_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: bigint;
     manufacturer: string;
     writeSpeed?: bigint;
@@ -1350,7 +1597,7 @@ function to_candid_record_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
         proposed_top_up_amount: value.proposed_top_up_amount ? candid_some(value.proposed_top_up_amount) : candid_none()
     };
 }
-function to_candid_record_n51(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function to_candid_record_n59(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     name: string;
     totalPlayTime: bigint;
     preferredDifficulty?: string;
@@ -1365,7 +1612,7 @@ function to_candid_record_n51(_uploadFile: (file: ExternalBlob) => Promise<Uint8
         preferredDifficulty: value.preferredDifficulty ? candid_some(value.preferredDifficulty) : candid_none()
     };
 }
-function to_candid_variant_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function to_candid_variant_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     __kind__: "singleCategory";
     singleCategory: string;
 } | {
@@ -1397,8 +1644,8 @@ function to_candid_variant_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8
         guest: null
     } : value;
 }
-function to_candid_vec_n18(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<Storage>): Array<_Storage> {
-    return value.map((x)=>to_candid_Storage_n19(_uploadFile, _downloadFile, x));
+function to_candid_vec_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<Storage>): Array<_Storage> {
+    return value.map((x)=>to_candid_Storage_n21(_uploadFile, _downloadFile, x));
 }
 export interface CreateActorOptions {
     agent?: Agent;

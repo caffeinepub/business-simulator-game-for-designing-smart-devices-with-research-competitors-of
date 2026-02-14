@@ -112,6 +112,30 @@ export const DeviceConnections = IDL.Record({
   'portConnections' : IDL.Vec(PortConnection),
   'smartConnections' : IDL.Vec(SmartConnection),
 });
+export const FoldableCharacteristics = IDL.Record({
+  'weight' : IDL.Nat,
+  'wirelessChargingSupport' : IDL.Bool,
+  'hingeMaterial' : IDL.Text,
+  'foldAngle' : IDL.Float64,
+  'hingeDurability' : IDL.Nat,
+  'facePrintResistance' : IDL.Int,
+  'thickness' : IDL.Float64,
+  'magneticLock' : IDL.Bool,
+  'resistanceRating' : IDL.Text,
+  'fingerprintResistance' : IDL.Bool,
+  'multiAngleSupport' : IDL.Bool,
+  'outerDisplaySize' : IDL.Opt(IDL.Float64),
+  'hingeType' : IDL.Text,
+  'finalized' : IDL.Bool,
+  'coatingType' : IDL.Text,
+  'shockproofRating' : IDL.Text,
+  'displayTechnology' : IDL.Text,
+  'outerDisplay' : IDL.Bool,
+  'creaseVisibility' : IDL.Nat,
+  'price' : IDL.Nat,
+  'foldType' : IDL.Text,
+  'waterproofRating' : IDL.Text,
+});
 export const DeviceCategory = IDL.Variant({
   'singleCategory' : IDL.Text,
   'categoryList' : IDL.Vec(IDL.Text),
@@ -178,6 +202,7 @@ export const DeviceBlueprint = IDL.Record({
   'processingUnit' : ProcessingUnit,
   'connections' : DeviceConnections,
   'wirelessPowerTransfer' : IDL.Vec(IDL.Text),
+  'foldableCharacteristics' : IDL.Opt(FoldableCharacteristics),
   'coating' : IDL.Text,
   'finalized' : IDL.Bool,
   'category' : DeviceCategory,
@@ -194,6 +219,10 @@ export const DeviceBlueprint = IDL.Record({
   'cameras' : IDL.Vec(Camera),
 });
 export const DeviceBlueprintId = IDL.Nat;
+export const BlueprintSubmissionResult = IDL.Variant({
+  'success' : DeviceBlueprintId,
+  'premiumFeatureRequired' : IDL.Null,
+});
 export const ResearchStatus = IDL.Variant({
   'notStarted' : IDL.Null,
   'completed' : IDL.Null,
@@ -256,6 +285,7 @@ export const SavedGame = IDL.Record({
   'saveId' : IDL.Text,
   'name' : IDL.Text,
   'lastModified' : IDL.Nat,
+  'triggeredEvents' : IDL.Vec(IDL.Text),
   'gameState' : GameState,
   'branding' : Branding,
   'releasedProducts' : IDL.Vec(ReleasedProduct),
@@ -290,12 +320,13 @@ export const idlService = IDL.Service({
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'activatePremiumUnlock' : IDL.Func([], [], []),
   'addReleasedProductToSave' : IDL.Func([IDL.Text, ReleasedProduct], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'completeResearchEntry' : IDL.Func([PlayerResearch], [], []),
   'createDeviceBlueprint' : IDL.Func(
       [DeviceBlueprint],
-      [DeviceBlueprintId],
+      [BlueprintSubmissionResult],
       [],
     ),
   'getActiveTechnologyResearch' : IDL.Func(
@@ -323,6 +354,7 @@ export const idlService = IDL.Service({
       [IDL.Opt(UserProfile)],
       ['query'],
     ),
+  'hasPremiumUnlock' : IDL.Func([], [IDL.Bool], ['query']),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'loadSaveSlot' : IDL.Func([IDL.Text], [IDL.Opt(SavedGame)], []),
   'processInput' : IDL.Func([IDL.Vec(IDL.Nat8)], [IDL.Text], []),
@@ -438,6 +470,30 @@ export const idlFactory = ({ IDL }) => {
     'portConnections' : IDL.Vec(PortConnection),
     'smartConnections' : IDL.Vec(SmartConnection),
   });
+  const FoldableCharacteristics = IDL.Record({
+    'weight' : IDL.Nat,
+    'wirelessChargingSupport' : IDL.Bool,
+    'hingeMaterial' : IDL.Text,
+    'foldAngle' : IDL.Float64,
+    'hingeDurability' : IDL.Nat,
+    'facePrintResistance' : IDL.Int,
+    'thickness' : IDL.Float64,
+    'magneticLock' : IDL.Bool,
+    'resistanceRating' : IDL.Text,
+    'fingerprintResistance' : IDL.Bool,
+    'multiAngleSupport' : IDL.Bool,
+    'outerDisplaySize' : IDL.Opt(IDL.Float64),
+    'hingeType' : IDL.Text,
+    'finalized' : IDL.Bool,
+    'coatingType' : IDL.Text,
+    'shockproofRating' : IDL.Text,
+    'displayTechnology' : IDL.Text,
+    'outerDisplay' : IDL.Bool,
+    'creaseVisibility' : IDL.Nat,
+    'price' : IDL.Nat,
+    'foldType' : IDL.Text,
+    'waterproofRating' : IDL.Text,
+  });
   const DeviceCategory = IDL.Variant({
     'singleCategory' : IDL.Text,
     'categoryList' : IDL.Vec(IDL.Text),
@@ -504,6 +560,7 @@ export const idlFactory = ({ IDL }) => {
     'processingUnit' : ProcessingUnit,
     'connections' : DeviceConnections,
     'wirelessPowerTransfer' : IDL.Vec(IDL.Text),
+    'foldableCharacteristics' : IDL.Opt(FoldableCharacteristics),
     'coating' : IDL.Text,
     'finalized' : IDL.Bool,
     'category' : DeviceCategory,
@@ -520,6 +577,10 @@ export const idlFactory = ({ IDL }) => {
     'cameras' : IDL.Vec(Camera),
   });
   const DeviceBlueprintId = IDL.Nat;
+  const BlueprintSubmissionResult = IDL.Variant({
+    'success' : DeviceBlueprintId,
+    'premiumFeatureRequired' : IDL.Null,
+  });
   const ResearchStatus = IDL.Variant({
     'notStarted' : IDL.Null,
     'completed' : IDL.Null,
@@ -582,6 +643,7 @@ export const idlFactory = ({ IDL }) => {
     'saveId' : IDL.Text,
     'name' : IDL.Text,
     'lastModified' : IDL.Nat,
+    'triggeredEvents' : IDL.Vec(IDL.Text),
     'gameState' : GameState,
     'branding' : Branding,
     'releasedProducts' : IDL.Vec(ReleasedProduct),
@@ -616,12 +678,13 @@ export const idlFactory = ({ IDL }) => {
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'activatePremiumUnlock' : IDL.Func([], [], []),
     'addReleasedProductToSave' : IDL.Func([IDL.Text, ReleasedProduct], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'completeResearchEntry' : IDL.Func([PlayerResearch], [], []),
     'createDeviceBlueprint' : IDL.Func(
         [DeviceBlueprint],
-        [DeviceBlueprintId],
+        [BlueprintSubmissionResult],
         [],
       ),
     'getActiveTechnologyResearch' : IDL.Func(
@@ -649,6 +712,7 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Opt(UserProfile)],
         ['query'],
       ),
+    'hasPremiumUnlock' : IDL.Func([], [IDL.Bool], ['query']),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'loadSaveSlot' : IDL.Func([IDL.Text], [IDL.Opt(SavedGame)], []),
     'processInput' : IDL.Func([IDL.Vec(IDL.Nat8)], [IDL.Text], []),

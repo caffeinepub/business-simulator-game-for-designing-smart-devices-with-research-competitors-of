@@ -7,6 +7,7 @@ import type {
   PlayerResearch,
   SavedGame,
   ReleasedProduct,
+  DeviceCategory,
 } from '../backend';
 
 export function useGetCallerUserProfile() {
@@ -67,6 +68,48 @@ export function useCreateDeviceBlueprint() {
       return actor.createDeviceBlueprint(blueprint);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['deviceBlueprints'] });
+    },
+  });
+}
+
+export function useGetAllDeviceCategories() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<DeviceCategory>({
+    queryKey: ['deviceCategories'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.getAllDeviceCategories();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useGetPremiumUnlock() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<boolean>({
+    queryKey: ['premiumUnlock'],
+    queryFn: async () => {
+      if (!actor) return false;
+      return actor.hasPremiumUnlock();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useActivatePremiumUnlock() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.activatePremiumUnlock();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['premiumUnlock'] });
       queryClient.invalidateQueries({ queryKey: ['deviceBlueprints'] });
     },
   });

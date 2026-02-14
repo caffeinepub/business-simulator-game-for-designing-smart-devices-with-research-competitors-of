@@ -1,92 +1,75 @@
 {
   "kind": "build_request",
-  "title": "Add country store expansion system that boosts productivity and product attraction",
+  "title": "Office 3D scene: add decor customization (wallpaper/wall color, wood floor) and architectural elements (windows + door)",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-21",
-      "text": "Extend the saved game data model to include a player-built store network, where each store is tied to a specific country and contributes to two computed modifiers: (1) a productivity bonus and (2) a product attraction bonus; ensure this data round-trips correctly through Cloud Saves (create/load) and local persisted state.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "allow the user to build stores in countries to increase productivity and increase attraction for the product."
-        ]
-      },
-      "acceptanceCriteria": [
-        "A new store-network structure exists in the shared types so it can be stored inside a save slot and restored on load.",
-        "Loading an older save (without store data) does not crash; missing store data defaults to an empty store list and zero/neutral modifiers.",
-        "Creating a cloud save, then loading it, preserves the list of built stores and the derived modifiers."
-      ]
-    },
-    {
-      "id": "REQ-22",
-      "text": "Add a \"Stores\" build action in the Investments area that lets the player select a country and build a store if they have enough cash, then records the action and updates game state accordingly.",
+      "id": "REQ-62",
+      "text": "Add customizable office room finishes to the Office 3D scene: (1) wall color and/or wallpaper style, and (2) wooden floor style, and ensure these settings affect the materials used in the Office3DViewer scene rendering.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "allow the user to build stores in countries to increase productivity and increase attraction for the product."
+          "Yes as well as wall color/wallpaper,floor wood and windows and a door"
         ]
       },
       "acceptanceCriteria": [
-        "The Investments screen includes a new card/panel to build a store with at least: country selection, displayed cost, and a \"Build Store\" action.",
-        "Attempting to build a store with insufficient funds shows an error and does not change cash or store state.",
-        "Building a store deducts cash, appends the store to the store network state, and adds an entry to the existing investments log.",
-        "The UI prevents or clearly handles building a duplicate store in the same country (either disallow or treat as an upgrade level), and the behavior is consistent and persisted."
+        "Office3DViewer no longer renders the floor as a single flat color only; it supports at least 3 distinct wood floor looks (e.g., light oak, walnut, dark stained) that are visually different.",
+        "Office3DViewer supports both a solid wall color option and at least 2 wallpaper/pattern options that are visually distinct.",
+        "Changing wall/floor finish settings updates the 3D scene deterministically and immediately (no refresh required).",
+        "All finishes render correctly in both light and dark UI themes (no blown-out whites / unreadable near-black surfaces)."
       ]
     },
     {
-      "id": "REQ-23",
-      "text": "Expose the current store network and its effects in the UI by showing: number of stores, the list of countries with stores, and the current productivity and attraction bonuses on at least one primary management surface (Investments and/or Dashboard).",
+      "id": "REQ-63",
+      "text": "Add architectural elements to the Office 3D scene: windows and a door, rendered as part of the office room shell (not as loose furniture props), with sizing/placement that adapts to the preset floor dimensions in officeScenePresets.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "allow the user to build stores in countries to increase productivity and increase attraction for the product."
+          "Yes as well as wall color/wallpaper,floor wood and windows and a door"
         ]
       },
       "acceptanceCriteria": [
-        "The player can see an up-to-date list of built store countries somewhere in the app without opening developer tools.",
-        "The UI displays the computed productivity bonus and attraction bonus values derived from the store network.",
-        "After building a store, the displayed list and bonus values update immediately."
+        "Office3DViewer shows at least one door and at least one window in the scene at every office level.",
+        "Door and window placement scales/positions correctly as preset.floorSize changes (e.g., levels that use 8x8 vs 14x14 do not have floating or intersecting door/window geometry).",
+        "Door/window materials participate in lighting (receive/cast shadows where appropriate) and do not introduce major z-fighting artifacts with walls.",
+        "The new architectural meshes do not break OrbitControls interaction or cause runtime errors/warnings in the console during normal use."
       ]
     },
     {
-      "id": "REQ-24",
-      "text": "Apply store-derived modifiers to the product release flow so that (a) productivity affects the effective production cost and/or production outcome and (b) attraction affects the released product’s resulting sales and/or rating calculation, in a deterministic, clearly communicated way in the Release Product modal.",
+      "id": "REQ-64",
+      "text": "Provide an Office customization UI on the Office Management page that lets the player choose the wall finish (color/wallpaper) and floor wood style, and persist these choices locally using the existing persisted office store.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "allow the user to build stores in countries to increase productivity and increase attraction for the product."
+          "Yes as well as wall color/wallpaper,floor wood and windows and a door"
         ]
       },
       "acceptanceCriteria": [
-        "The Release Product modal shows how productivity and attraction are affecting the calculated totals/outcomes (e.g., shows a bonus line or adjusted totals).",
-        "Releasing the same product inputs with more stores built results in a measurably better outcome (lower cost and/or higher sales/rating) than with zero stores, without requiring randomness.",
-        "The release flow still validates cash correctly using the adjusted total cost, and does not allow releasing if the player cannot afford it."
+        "OfficePage includes a clearly labeled section (e.g., \"Office Decor\") with controls to select: wall finish (solid vs wallpaper) and floor wood style.",
+        "Selections persist across page reloads via the existing office-storage persisted Zustand store (frontend/src/features/office/officeStore.ts).",
+        "Defaults are sensible for new users (no empty/undefined material selections) and do not change existing office level progression behavior.",
+        "User-facing labels for the decor controls are in English."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
-    "If changing stable/persisted backend state requires an upgrade path, add backend/migration.mo following the project’s conditional migration policy so existing deployed data is not lost.",
-    "Do not edit frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui."
+    "Do not modify files under frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
+    "Keep the backend unchanged; implement this request entirely in the frontend unless a backend change becomes strictly necessary.",
+    "Preserve the existing office level progression logic and deterministic preset selection behavior in getOfficeScenePresetForLevel(level)."
   ],
   "nonGoals": [
-    "Implementing a full geographic simulation (taxes, logistics, tariffs, shipping times, localization).",
-    "Adding real-world map UI, geolocation, or third-party country APIs.",
-    "Implementing hiring/workers (this request is only for stores).",
-    "Adding new authentication methods beyond Internet Identity."
+    "Adding backend/cloud-save persistence for office decor settings (store locally only via the persisted office store).",
+    "Adding new gameplay bonuses tied to wallpapers/flooring/windows/door.",
+    "Adding external 3D model assets; use Three.js primitives/procedural geometry consistent with the current office props approach."
   ],
   "imageRequirements": {
     "required": [],

@@ -1,22 +1,20 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import DeviceBlueprintEditor from '@/features/device-studio/DeviceBlueprintEditor';
 import BlueprintList from '@/features/device-studio/BlueprintList';
 import { Cpu } from 'lucide-react';
+import PageHeader from '@/components/layout/PageHeader';
 
 export default function DeviceStudioPage() {
   const [selectedBlueprintId, setSelectedBlueprintId] = useState<number | null>(null);
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Cpu className="h-8 w-8 text-primary" />
-        <div>
-          <h1 className="text-3xl font-bold">Device Studio</h1>
-          <p className="text-muted-foreground">Design and create your next breakthrough device</p>
-        </div>
-      </div>
+      <PageHeader
+        icon={Cpu}
+        title="Device Studio"
+        subtitle="Design and create your next breakthrough device"
+      />
 
       <Tabs defaultValue="editor" className="w-full">
         <TabsList className="grid w-full max-w-md grid-cols-2">

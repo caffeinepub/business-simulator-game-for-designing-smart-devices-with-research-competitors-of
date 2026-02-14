@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useGetAllDeviceBlueprints } from '@/hooks/useQueries';
-import { Edit, Rocket } from 'lucide-react';
+import { Rocket } from 'lucide-react';
 import { useState } from 'react';
 import ReleaseProductModal from '../products/ReleaseProductModal';
 
@@ -28,6 +28,22 @@ export default function BlueprintList({ onEdit }: BlueprintListProps) {
     );
   }
 
+  const getCategoryIcon = (category: string) => {
+    if (category === 'foldables') {
+      return (
+        <img 
+          src="/assets/generated/foldable-icon.dim_128x128.png"
+          alt="Foldable"
+          className="w-4 h-4 inline-block mr-1"
+          onError={(e) => {
+            e.currentTarget.style.display = 'none';
+          }}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -37,6 +53,8 @@ export default function BlueprintList({ onEdit }: BlueprintListProps) {
               ? blueprint.category.singleCategory
               : blueprint.category.categoryList[0];
 
+          const isFoldable = category === 'foldables';
+
           return (
             <Card key={index}>
               <CardHeader>
@@ -44,6 +62,7 @@ export default function BlueprintList({ onEdit }: BlueprintListProps) {
                   <div>
                     <CardTitle className="text-lg">{blueprint.name}</CardTitle>
                     <Badge variant="secondary" className="mt-2">
+                      {getCategoryIcon(category)}
                       {category}
                     </Badge>
                   </div>
@@ -63,6 +82,18 @@ export default function BlueprintList({ onEdit }: BlueprintListProps) {
                     <span className="text-muted-foreground">Storage:</span>
                     <span className="font-medium">{blueprint.storages[0]?.capacity.toString() || '0'} GB</span>
                   </div>
+                  {isFoldable && blueprint.foldableCharacteristics && (
+                    <>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Fold Type:</span>
+                        <span className="font-medium capitalize">{blueprint.foldableCharacteristics.foldType}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Hinge:</span>
+                        <span className="font-medium capitalize">{blueprint.foldableCharacteristics.hingeType}</span>
+                      </div>
+                    </>
+                  )}
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Price:</span>
                     <span className="font-medium">${blueprint.price.toString()}</span>

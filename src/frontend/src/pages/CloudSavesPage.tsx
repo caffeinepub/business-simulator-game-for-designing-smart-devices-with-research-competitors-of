@@ -4,6 +4,7 @@ import SaveSlotsPanel from '@/features/cloud-saves/SaveSlotsPanel';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import LoginButton from '@/components/auth/LoginButton';
+import PageHeader from '@/components/layout/PageHeader';
 
 export default function CloudSavesPage() {
   const { identity } = useInternetIdentity();
@@ -11,13 +12,11 @@ export default function CloudSavesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Cloud className="h-8 w-8 text-primary" />
-        <div>
-          <h1 className="text-3xl font-bold">Cloud Saves</h1>
-          <p className="text-muted-foreground">Sync your progress across devices</p>
-        </div>
-      </div>
+      <PageHeader
+        icon={Cloud}
+        title="Cloud Saves"
+        subtitle="Sync your progress across devices"
+      />
 
       {!isAuthenticated ? (
         <Alert>

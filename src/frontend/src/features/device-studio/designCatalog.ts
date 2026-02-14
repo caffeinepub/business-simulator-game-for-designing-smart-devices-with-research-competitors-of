@@ -25,4 +25,18 @@ export const designCatalog: Record<string, Array<{ id: string; name: string; sty
     { id: 'design-3', name: 'Professional', style: 'Business', icon: '👓' },
     { id: 'design-4', name: 'Fashion', style: 'Trendy', icon: '😎' },
   ],
+  laptops: [
+    { id: 'design-1', name: 'Ultrabook', style: 'Portable', icon: '💻' },
+    { id: 'design-2', name: 'Gaming', style: 'Performance', icon: '🎮' },
+    { id: 'design-3', name: 'Workstation', style: 'Professional', icon: '🖥️' },
+    { id: 'design-4', name: 'Creator', style: 'Creative', icon: '🎨' },
+  ],
+  foldables: [
+    { id: 'design-1', name: 'Book Fold', style: 'Classic', icon: '📖' },
+    { id: 'design-2', name: 'Clamshell', style: 'Compact', icon: '📱' },
+    { id: 'design-3', name: 'Tri-Fold', style: 'Advanced', icon: '📐' },
+    { id: 'design-4', name: 'Rollable', style: 'Futuristic', icon: '🌀' },
+    { id: 'design-5', name: 'Dual-Fold', style: 'Premium', icon: '💎' },
+    { id: 'design-6', name: 'Flex', style: 'Versatile', icon: '🔄' },
+  ],
 };

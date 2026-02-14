@@ -92,6 +92,30 @@ export interface PlayerResearch {
     researchLevel: bigint;
     researchState: bigint;
 }
+export interface FoldableCharacteristics {
+    weight: bigint;
+    wirelessChargingSupport: boolean;
+    hingeMaterial: string;
+    foldAngle: number;
+    hingeDurability: bigint;
+    facePrintResistance: bigint;
+    thickness: number;
+    magneticLock: boolean;
+    resistanceRating: string;
+    fingerprintResistance: boolean;
+    multiAngleSupport: boolean;
+    outerDisplaySize?: number;
+    hingeType: string;
+    finalized: boolean;
+    coatingType: string;
+    shockproofRating: string;
+    displayTechnology: string;
+    outerDisplay: boolean;
+    creaseVisibility: bigint;
+    price: bigint;
+    foldType: string;
+    waterproofRating: string;
+}
 export interface Battery {
     voltage: number;
     model: string;
@@ -160,6 +184,7 @@ export interface SavedGame {
     saveId: string;
     name: string;
     lastModified: bigint;
+    triggeredEvents: Array<string>;
     gameState: GameState;
     branding: Branding;
     releasedProducts: Array<ReleasedProduct>;
@@ -183,6 +208,7 @@ export interface DeviceBlueprint {
     processingUnit: ProcessingUnit;
     connections: DeviceConnections;
     wirelessPowerTransfer: Array<string>;
+    foldableCharacteristics?: FoldableCharacteristics;
     coating: string;
     finalized: boolean;
     category: DeviceCategory;
@@ -210,6 +236,13 @@ export interface GameState {
     researchedTechs: Array<string>;
     products: Array<string>;
 }
+export type BlueprintSubmissionResult = {
+    __kind__: "success";
+    success: DeviceBlueprintId;
+} | {
+    __kind__: "premiumFeatureRequired";
+    premiumFeatureRequired: null;
+};
 export interface RAM {
     id: bigint;
     manufacturer: string;
@@ -258,10 +291,11 @@ export enum UserRole {
     guest = "guest"
 }
 export interface backendInterface {
+    activatePremiumUnlock(): Promise<void>;
     addReleasedProductToSave(slotId: string, product: ReleasedProduct): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     completeResearchEntry(researchEntry: PlayerResearch): Promise<void>;
-    createDeviceBlueprint(blueprint: DeviceBlueprint): Promise<DeviceBlueprintId>;
+    createDeviceBlueprint(blueprint: DeviceBlueprint): Promise<BlueprintSubmissionResult>;
     getActiveTechnologyResearch(): Promise<PlayerResearch | null>;
     getAllDeviceBlueprints(): Promise<Array<DeviceBlueprint>>;
     getAllDeviceCategories(): Promise<DeviceCategory>;
@@ -271,6 +305,7 @@ export interface backendInterface {
     getCallerUserRole(): Promise<UserRole>;
     getSaveSlotInfos(): Promise<Array<SaveSlot>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
+    hasPremiumUnlock(): Promise<boolean>;
     isCallerAdmin(): Promise<boolean>;
     loadSaveSlot(slotId: string): Promise<SavedGame | null>;
     processInput(inputData: Uint8Array): Promise<string>;

@@ -1,115 +1,86 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Country store expansion system (stores network, UI, and release modifiers)",
+  "title": "Office 3D decor customization and architectural shell elements (windows + door)",
   "requirements": [
     {
-      "id": "REQ-21",
-      "summary": "Persist a player-built country store network in local state and include it in cloud save create/load with safe defaults for older saves.",
+      "id": "REQ-62",
+      "summary": "Add selectable wall finishes (solid color or wallpaper) and multiple wood floor looks that immediately update Office3DViewer materials.",
       "acceptanceCriteria": [
-        "A new store-network structure exists in the shared types so it can be stored inside a save slot and restored on load.",
-        "Loading an older save (without store data) does not crash; missing store data defaults to an empty store list and zero/neutral modifiers.",
-        "Creating a cloud save, then loading it, preserves the list of built stores and the derived modifiers."
+        "Office3DViewer no longer renders the floor as a single flat color only; it supports at least 3 distinct wood floor looks (e.g., light oak, walnut, dark stained) that are visually different.",
+        "Office3DViewer supports both a solid wall color option and at least 2 wallpaper/pattern options that are visually distinct.",
+        "Changing wall/floor finish settings updates the 3D scene deterministically and immediately (no refresh required).",
+        "All finishes render correctly in both light and dark UI themes (no blown-out whites / unreadable near-black surfaces)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/features/stores/storeNetworkModel.ts",
+          "path": "frontend/src/features/office/officeDecorOptions.ts",
           "operation": "create",
-          "description": "Create store-network domain helpers: define default empty StoreNetwork, a deterministic bonus computation (productivity + attraction) derived from the stores list, and helpers to add/validate a store for a given country."
+          "description": "Define decor option enums/IDs and curated option lists for: wall solid colors, wallpaper patterns (>=2), and wood floor styles (>=3). Include display labels and safe default selections (no undefined)."
         },
         {
-          "path": "frontend/src/features/stores/storeNetworkStore.ts",
+          "path": "frontend/src/features/office/officeDecorTextures.ts",
           "operation": "create",
-          "description": "Create a persisted Zustand store for store network state (stores list + computed bonuses). Expose actions to initialize/replace from a loaded save and to build a store. Use the helpers from storeNetworkModel.ts."
+          "description": "Implement procedural, deterministic Three.js texture helpers for wallpaper patterns and wood floor looks (e.g., CanvasTexture-based), including repeat/anisotropy settings to avoid blur and banding."
         },
         {
-          "path": "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
+          "path": "frontend/src/features/office/officeMaterials.ts",
           "operation": "modify",
-          "description": "Include storeNetwork when creating a cloud save and restore it on load. When a loaded save has missing storeNetwork, initialize the store network store with an empty network and neutral modifiers to avoid crashes."
+          "description": "Extend material/palette utilities to support decor-driven wall/floor materials (solid color and patterned wallpaper; multiple wood floor styles). Ensure roughness/metalness values remain readable under the existing lighting progression and both UI themes."
         },
         {
-          "path": "frontend/src/state/saveGameStore.ts",
+          "path": "frontend/src/features/office/Office3DViewer.tsx",
           "operation": "modify",
-          "description": "Extend local persisted state to also record the currently loaded save's storeNetwork snapshot alongside existing local save data, ensuring local round-trip behavior even without cloud load (when applicable)."
+          "description": "Read wall/floor decor selections from the persisted office store and apply them to the room shell meshes using the new decor material/texture utilities so changes are immediate and deterministic (no reload)."
         }
       ]
     },
     {
-      "id": "REQ-22",
-      "summary": "Add a Stores build action in Investments to select a country, validate funds/duplicates, build the store, deduct cash, and log the investment.",
+      "id": "REQ-63",
+      "summary": "Render windows and a door as part of the office room shell with placement that scales with preset floor dimensions.",
       "acceptanceCriteria": [
-        "The Investments screen includes a new card/panel to build a store with at least: country selection, displayed cost, and a \"Build Store\" action.",
-        "Attempting to build a store with insufficient funds shows an error and does not change cash or store state.",
-        "Building a store deducts cash, appends the store to the store network state, and adds an entry to the existing investments log.",
-        "The UI prevents or clearly handles building a duplicate store in the same country (either disallow or treat as an upgrade level), and the behavior is consistent and persisted."
+        "Office3DViewer shows at least one door and at least one window in the scene at every office level.",
+        "Door and window placement scales/positions correctly as preset.floorSize changes (e.g., levels that use 8x8 vs 14x14 do not have floating or intersecting door/window geometry).",
+        "Door/window materials participate in lighting (receive/cast shadows where appropriate) and do not introduce major z-fighting artifacts with walls.",
+        "The new architectural meshes do not break OrbitControls interaction or cause runtime errors/warnings in the console during normal use."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/features/stores/StoresBuildCard.tsx",
+          "path": "frontend/src/features/office/officeArchitecture.tsx",
           "operation": "create",
-          "description": "Create a new Investments action card for building stores. Use shadcn-ui components (Card, Button, Input/Label, and a country Select) to provide country selection, cost display, and a Build Store action. Verify the component's usage instructions before implementing."
+          "description": "Create room-shell primitives that include: floor, 4 walls, plus integrated architectural elements (>=1 door, >=1 window). Compute door/window placement from the current preset.floorSize so scaling works for 8x8 through 14x14. Use small offsets/thickness to prevent z-fighting and ensure castShadow/receiveShadow are set appropriately."
         },
         {
-          "path": "frontend/src/features/investments/InvestmentsActionsPanel.tsx",
+          "path": "frontend/src/features/office/Office3DViewer.tsx",
           "operation": "modify",
-          "description": "Wire the new StoresBuildCard into the Investments actions grid. Ensure the build handler checks cash, prevents or clearly handles duplicate country builds consistently (e.g., disallow duplicates with an error toast), deducts cash via useGameState.updateCash, updates store network via the storeNetwork store action, and logs via useInvestmentStore.addInvestment."
-        },
-        {
-          "path": "frontend/src/features/investments/InvestmentsLog.tsx",
-          "operation": "modify",
-          "description": "Extend the log icon/type handling to support a new investment type for store building (e.g., 'stores' or 'store') so store build entries render consistently in the history."
+          "description": "Replace the current floor/back-wall-only meshes with the new room shell component that renders walls + windows + door. Ensure it uses the existing preset and keeps OrbitControls behavior unchanged."
         }
       ]
     },
     {
-      "id": "REQ-23",
-      "summary": "Show the store network status and computed effects in the UI (store count, country list, productivity bonus, attraction bonus).",
+      "id": "REQ-64",
+      "summary": "Add an Office Decor customization section on the Office Management page and persist selections in the existing persisted office store.",
       "acceptanceCriteria": [
-        "The player can see an up-to-date list of built store countries somewhere in the app without opening developer tools.",
-        "The UI displays the computed productivity bonus and attraction bonus values derived from the store network.",
-        "After building a store, the displayed list and bonus values update immediately."
+        "OfficePage includes a clearly labeled section (e.g., \"Office Decor\") with controls to select: wall finish (solid vs wallpaper) and floor wood style.",
+        "Selections persist across page reloads via the existing office-storage persisted Zustand store (frontend/src/features/office/officeStore.ts).",
+        "Defaults are sensible for new users (no empty/undefined material selections) and do not change existing office level progression behavior.",
+        "User-facing labels for the decor controls are in English."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/features/stores/StoreNetworkSummaryPanel.tsx",
+          "path": "frontend/src/features/office/officeStore.ts",
+          "operation": "modify",
+          "description": "Extend the persisted Zustand store to include decor state (wall finish mode, selected wall color or wallpaper pattern, selected wood floor style) with sensible defaults. Keep existing level progression logic and upgrade cost behavior unchanged."
+        },
+        {
+          "path": "frontend/src/features/office/OfficeDecorPanel.tsx",
           "operation": "create",
-          "description": "Create a summary panel that reads from the storeNetwork store and displays: number of stores, list of countries with stores, and the computed productivity and attraction bonuses. Use shadcn-ui components (Card/Badge/Separator as needed). Verify the component's usage instructions before implementing."
+          "description": "Add an \"Office Decor\" UI panel that lets the user pick wall finish (solid vs wallpaper), pick a wall color or wallpaper pattern accordingly, and select a wood floor style. Use shadcn-ui components (e.g., Card/Select/Tabs/RadioGroup) to match existing UI patterns. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/pages/InvestmentsPage.tsx",
+          "path": "frontend/src/pages/OfficePage.tsx",
           "operation": "modify",
-          "description": "Add the StoreNetworkSummaryPanel to the Investments page layout (e.g., near the actions or alongside the log) so players can always see store network status while making investment decisions."
-        },
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Expose store network effects on a primary management surface by adding a small store summary card/panel (using StoreNetworkSummaryPanel or a compact variant) so bonuses are visible without navigating away."
-        }
-      ]
-    },
-    {
-      "id": "REQ-24",
-      "summary": "Apply store-derived productivity and attraction modifiers to the Release Product flow with deterministic, clearly shown adjustments and correct affordability validation.",
-      "acceptanceCriteria": [
-        "The Release Product modal shows how productivity and attraction are affecting the calculated totals/outcomes (e.g., shows a bonus line or adjusted totals).",
-        "Releasing the same product inputs with more stores built results in a measurably better outcome (lower cost and/or higher sales/rating) than with zero stores, without requiring randomness.",
-        "The release flow still validates cash correctly using the adjusted total cost, and does not allow releasing if the player cannot afford it."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/features/products/releaseModifiers.ts",
-          "operation": "create",
-          "description": "Create deterministic modifier utilities for the release flow: compute adjusted production cost from productivity bonus and adjusted sales/rating (or sales only) from attraction bonus. Keep the mapping simple, measurable, and explainable in UI."
-        },
-        {
-          "path": "frontend/src/features/dashboard/releasedProductModel.ts",
-          "operation": "modify",
-          "description": "Update released product creation to accept optional modifier inputs (or accept already-adjusted inputs) so attraction can deterministically improve resulting sales and/or rating in a reproducible way."
-        },
-        {
-          "path": "frontend/src/features/products/ReleaseProductModal.tsx",
-          "operation": "modify",
-          "description": "Read current store bonuses from the storeNetwork store and apply them to the release calculations. Show explicit lines for (a) productivity impact on production cost and adjusted total cost and (b) attraction impact on resulting sales/rating. Validate cash using the adjusted total cost and block release if unaffordable."
+          "description": "Wire the new OfficeDecorPanel into the Office Management page layout (alongside/near OfficeUpgradePanel) so users can change decor from this page. Verify the component's usage instructions before implementing."
         }
       ]
     }

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 export interface MarketEvent {
   id: string;
-  type: 'release' | 'price-change' | 'market-shift';
+  type: 'release' | 'price-change' | 'market-shift' | 'era-event';
   title: string;
   description: string;
   day: number;

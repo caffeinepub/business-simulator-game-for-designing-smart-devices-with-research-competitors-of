@@ -2,7 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useMarketFeedStore } from './marketFeedStore';
-import { TrendingUp, TrendingDown, AlertCircle } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertCircle, Calendar } from 'lucide-react';
+import { formatDay } from '@/utils/gameCalendar';
 
 export default function MarketFeed() {
   const { events } = useMarketFeedStore();
@@ -13,8 +14,19 @@ export default function MarketFeed() {
         return <TrendingUp className="h-4 w-4 text-emerald-600" />;
       case 'price-change':
         return <TrendingDown className="h-4 w-4 text-amber-600" />;
+      case 'era-event':
+        return <Calendar className="h-4 w-4 text-purple-600" />;
       default:
         return <AlertCircle className="h-4 w-4 text-blue-600" />;
+    }
+  };
+
+  const getEventBadgeVariant = (type: string) => {
+    switch (type) {
+      case 'era-event':
+        return 'default';
+      default:
+        return 'outline';
     }
   };
 
@@ -35,9 +47,12 @@ export default function MarketFeed() {
                   <div className="flex-1">
                     <div className="flex items-start justify-between mb-1">
                       <p className="font-medium text-sm">{event.title}</p>
-                      <Badge variant="outline" className="text-xs">
-                        Day {event.day}
-                      </Badge>
+                      <div className="flex flex-col items-end gap-1">
+                        <Badge variant={getEventBadgeVariant(event.type)} className="text-xs">
+                          Day {event.day}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">{formatDay(event.day)}</span>
+                      </div>
                     </div>
                     <p className="text-sm text-muted-foreground">{event.description}</p>
                     {event.impact && (

@@ -1,24 +1,22 @@
 import Map "mo:core/Map";
 import Array "mo:core/Array";
-import Iter "mo:core/Iter";
 import Text "mo:core/Text";
+import List "mo:core/List";
 import Order "mo:core/Order";
 import Time "mo:core/Time";
 import Runtime "mo:core/Runtime";
 import Nat "mo:core/Nat";
 import Int "mo:core/Int";
 import Blob "mo:core/Blob";
-import List "mo:core/List";
 import Principal "mo:core/Principal";
 
 import AccessControl "authorization/access-control";
+import Storage "blob-storage/Storage";
 import MixinAuthorization "authorization/MixinAuthorization";
 import MixinStorage "blob-storage/Mixin";
-import Migration "migration";
-import Set "mo:core/Set";
 
-// Enable migration on upgrades
-(with migration = Migration.run)
+
+
 actor {
   include MixinStorage();
 
@@ -199,6 +197,31 @@ actor {
       protectionRating : Text;
     };
 
+    public type FoldableCharacteristics = {
+      foldType : Text;
+      hingeDurability : Nat;
+      creaseVisibility : Nat;
+      outerDisplay : Bool;
+      outerDisplaySize : ?Float;
+      price : Nat;
+      finalized : Bool;
+      hingeMaterial : Text;
+      foldAngle : Float;
+      waterproofRating : Text;
+      shockproofRating : Text;
+      wirelessChargingSupport : Bool;
+      multiAngleSupport : Bool;
+      fingerprintResistance : Bool;
+      facePrintResistance : Int;
+      weight : Nat;
+      displayTechnology : Text;
+      hingeType : Text;
+      thickness : Float;
+      magneticLock : Bool;
+      coatingType : Text;
+      resistanceRating : Text;
+    };
+
     public type DeviceBlueprint = {
       category : DeviceCategory;
       processingUnit : ProcessingUnit;
@@ -224,6 +247,7 @@ actor {
       technologyRatingSystem : Text;
       weight : Nat;
       wirelessPowerTransfer : [Text];
+      foldableCharacteristics : ?FoldableCharacteristics;
     };
 
     public type DeviceBlueprintId = Nat;
@@ -247,16 +271,6 @@ actor {
       features : [Text];
     };
 
-    public type SavedGame = {
-      saveId : Text;
-      name : Text;
-      lastModified : Nat;
-      branding : Branding;
-      gameState : GameState;
-      releasedProducts : [ReleasedProduct];
-      storeNetwork : StoreNetwork;
-    };
-
     public type StoreNetwork = {
       stores : [Store];
       productivityBonus : Nat;
@@ -277,6 +291,17 @@ actor {
       researchedTechs : [Text];
       products : [Text];
       difficulty : Text;
+    };
+
+    public type SavedGame = {
+      saveId : Text;
+      name : Text;
+      lastModified : Nat;
+      branding : Branding;
+      gameState : GameState;
+      releasedProducts : [ReleasedProduct];
+      storeNetwork : StoreNetwork;
+      triggeredEvents : [Text];
     };
   };
 
@@ -308,7 +333,8 @@ actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
-  // User Profile Type
+  // Not used in app state.
+  // Retained for potential future functionality if save replication removed from app.
   public type UserProfile = {
     name : Text;
     preferredDifficulty : ?Text;
@@ -326,6 +352,7 @@ actor {
   let playerResearch = Map.empty<Principal, Types.PlayerResearch>();
   let deviceBlueprints = Map.empty<Principal, Map.Map<Types.DeviceBlueprintId, Types.DeviceBlueprint>>();
   let saveSlots = Map.empty<Principal, [Types.SavedGame]>();
+  let premiumUnlocked = Map.empty<Principal, Bool>();
 
   let deviceCategories = #categoryList([
     "smartphones",
@@ -333,9 +360,11 @@ actor {
     "watches",
     "smart-glasses",
     "laptops",
+    "foldables"
   ]);
 
-  // User Profile Management
+  // Not used in app state.
+  // Retained for potential future functionality if save replication removed from app.
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view profiles");
@@ -343,6 +372,8 @@ actor {
     userProfiles.get(caller);
   };
 
+  // Not used in app state.
+  // Retained for potential future functionality if save replication removed from app.
   public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
     if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Can only view your own profile");
@@ -350,6 +381,8 @@ actor {
     userProfiles.get(user);
   };
 
+  // Not used in app state.
+  // Retained for potential future functionality if save replication removed from app.
   public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can save profiles");
@@ -365,21 +398,75 @@ actor {
     "Processing input: " # inputData.size().toText();
   };
 
-  public shared ({ caller }) func createDeviceBlueprint(blueprint : Types.DeviceBlueprint) : async Types.DeviceBlueprintId {
+  // Device Creation with Free/Premium Feature Split
+  public type BlueprintSubmissionResult = {
+    #success : Types.DeviceBlueprintId;
+    #premiumFeatureRequired;
+  };
+
+  public shared ({ caller }) func createDeviceBlueprint(blueprint : Types.DeviceBlueprint) : async BlueprintSubmissionResult {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can create device blueprints");
     };
 
-    let userBlueprints = switch (deviceBlueprints.get(caller)) {
-      case (null) { Map.empty<Types.DeviceBlueprintId, Types.DeviceBlueprint>() };
-      case (?existing) { existing };
-    };
+    switch (blueprint.category) {
+      case (#singleCategory("foldables")) {
+        let foldChar = switch (blueprint.foldableCharacteristics) {
+          case (null) { return #success(nextDeviceBlueprintId) };
+          case (?fc) { fc };
+        };
 
-    let blueprintId = nextDeviceBlueprintId;
-    userBlueprints.add(blueprintId, blueprint);
-    deviceBlueprints.add(caller, userBlueprints);
-    nextDeviceBlueprintId += 1;
-    blueprintId;
+        // Free features: Only if foldableCharacteristics is specified
+        let allowedFoldTypes = ["book", "clamshell", "standard"];
+        let isAllowedFoldType = allowedFoldTypes.find(func(ft) { ft == foldChar.foldType }) != null;
+        if (isAllowedFoldType) {
+          return #success(nextDeviceBlueprintId);
+        };
+
+        // Premium features: Must have purchased unlock
+        switch (premiumUnlocked.get(caller)) {
+          case (?true) {
+            let userBlueprints = switch (deviceBlueprints.get(caller)) {
+              case (null) { Map.empty<Types.DeviceBlueprintId, Types.DeviceBlueprint>() };
+              case (?existing) { existing };
+            };
+
+            let blueprintId = nextDeviceBlueprintId;
+            userBlueprints.add(blueprintId, blueprint);
+            deviceBlueprints.add(caller, userBlueprints);
+            nextDeviceBlueprintId += 1;
+            return #success(blueprintId);
+          };
+          case (_) { return #premiumFeatureRequired };
+        };
+      };
+      case (_) {
+        let userBlueprints = switch (deviceBlueprints.get(caller)) {
+          case (null) { Map.empty<Types.DeviceBlueprintId, Types.DeviceBlueprint>() };
+          case (?existing) { existing };
+        };
+
+        let blueprintId = nextDeviceBlueprintId;
+        userBlueprints.add(blueprintId, blueprint);
+        deviceBlueprints.add(caller, userBlueprints);
+        nextDeviceBlueprintId += 1;
+        return #success(blueprintId);
+      };
+    };
+  };
+
+  public shared ({ caller }) func activatePremiumUnlock() : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can use this feature");
+    };
+    premiumUnlocked.add(caller, true);
+  };
+
+  public query ({ caller }) func hasPremiumUnlock() : async Bool {
+    switch (premiumUnlocked.get(caller)) {
+      case (?true) { true };
+      case (_) { false };
+    };
   };
 
   public query ({ caller }) func getAllDeviceBlueprints() : async [Types.DeviceBlueprint] {
@@ -459,7 +546,7 @@ actor {
             };
           }
         );
-        infos.sort(SaveSlot.compareByLastModified);
+        infos;
       };
       case (null) { [] };
     };
@@ -501,6 +588,7 @@ actor {
                     gameState = save.gameState;
                     releasedProducts = save.releasedProducts;
                     storeNetwork = save.storeNetwork;
+                    triggeredEvents = save.triggeredEvents;
                   };
                 } else {
                   save;
@@ -554,6 +642,7 @@ actor {
                     gameState = save.gameState;
                     releasedProducts = save.releasedProducts.concat([product]);
                     storeNetwork = save.storeNetwork;
+                    triggeredEvents = save.triggeredEvents;
                   };
                 } else {
                   save;
@@ -568,3 +657,4 @@ actor {
     };
   };
 };
+

@@ -66,7 +66,7 @@ export function createDefaultBlueprint(): DeviceBlueprint {
         isStereo: true,
         isWireless: false,
         manufacturer: 'TechCorp',
-        description: 'High-quality speakers',
+        description: 'High-quality audio',
       },
     ],
     connections: {
@@ -81,7 +81,7 @@ export function createDefaultBlueprint(): DeviceBlueprint {
       smartConnections: [
         {
           manufacturer: 'TechCorp',
-          standard: 'Bluetooth 5.3',
+          standard: 'Bluetooth 5.2',
           transportProtocol: 'BLE',
           encryptionType: 'AES-256',
           interfaceType: 'Wireless',
@@ -105,7 +105,13 @@ export function createDefaultBlueprint(): DeviceBlueprint {
         },
       ],
     },
-    deviceSlots: [],
+    deviceSlots: [
+      {
+        slotType: 'SIM',
+        version: 'Nano',
+        maxCapacity: BigInt(2),
+      },
+    ],
     protection: {
       mechanisms: [
         {
@@ -120,5 +126,6 @@ export function createDefaultBlueprint(): DeviceBlueprint {
       ],
       protectionRating: 'IP68',
     },
+    foldableCharacteristics: undefined,
   };
 }

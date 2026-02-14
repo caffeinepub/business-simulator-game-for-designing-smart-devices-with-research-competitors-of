@@ -1,103 +1,75 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-14T04:41:55.961Z",
+  "generatedAt": "2026-02-14T14:43:24.772Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 4,
+    "total": 3,
+    "implemented": 3,
     "items": [
       {
-        "id": "REQ-21",
-        "summary": "Extend the saved game data model to include a player-built store network, where each store is tied to a specific country and contributes to two computed modifiers: (1) a productivity bonus and (2) a product attraction bonus; ensure this data round-trips correctly through Cloud Saves (create/load) and local persisted state.",
+        "id": "REQ-62",
+        "summary": "Add customizable office room finishes to the Office 3D scene: (1) wall color and/or wallpaper style, and (2) wooden floor style, and ensure these settings affect the materials used in the Office3DViewer scene rendering.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/stores/storeNetworkModel.ts",
-          "frontend/src/features/stores/storeNetworkStore.ts",
-          "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
-          "frontend/src/state/saveGameStore.ts"
+          "frontend/src/features/office/officeDecorOptions.ts",
+          "frontend/src/features/office/officeDecorTextures.ts",
+          "frontend/src/features/office/officeMaterials.ts",
+          "frontend/src/features/office/Office3DViewer.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/stores/storeNetworkModel.ts",
-          "frontend/src/features/stores/storeNetworkStore.ts",
-          "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
-          "frontend/src/state/saveGameStore.ts"
+          "frontend/src/features/office/officeDecorOptions.ts",
+          "frontend/src/features/office/officeDecorTextures.ts",
+          "frontend/src/features/office/officeMaterials.ts",
+          "frontend/src/features/office/Office3DViewer.tsx"
         ]
       },
       {
-        "id": "REQ-22",
-        "summary": "Add a \"Stores\" build action in the Investments area that lets the player select a country and build a store if they have enough cash, then records the action and updates game state accordingly.",
+        "id": "REQ-63",
+        "summary": "Add architectural elements to the Office 3D scene: windows and a door, rendered as part of the office room shell (not as loose furniture props), with sizing/placement that adapts to the preset floor dimensions in officeScenePresets.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/stores/StoresBuildCard.tsx",
-          "frontend/src/features/investments/InvestmentsActionsPanel.tsx",
-          "frontend/src/features/investments/InvestmentsLog.tsx"
+          "frontend/src/features/office/officeArchitecture.tsx",
+          "frontend/src/features/office/Office3DViewer.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/stores/StoresBuildCard.tsx",
-          "frontend/src/features/investments/InvestmentsActionsPanel.tsx",
-          "frontend/src/features/investments/InvestmentsLog.tsx"
+          "frontend/src/features/office/officeArchitecture.tsx",
+          "frontend/src/features/office/Office3DViewer.tsx"
         ]
       },
       {
-        "id": "REQ-23",
-        "summary": "Expose the current store network and its effects in the UI by showing: number of stores, the list of countries with stores, and the current productivity and attraction bonuses on at least one primary management surface (Investments and/or Dashboard).",
+        "id": "REQ-64",
+        "summary": "Provide an Office customization UI on the Office Management page that lets the player choose the wall finish (color/wallpaper) and floor wood style, and persist these choices locally using the existing persisted office store.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/stores/StoreNetworkSummaryPanel.tsx",
-          "frontend/src/pages/InvestmentsPage.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
+          "frontend/src/features/office/officeStore.ts",
+          "frontend/src/features/office/OfficeDecorPanel.tsx",
+          "frontend/src/pages/OfficePage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/stores/StoreNetworkSummaryPanel.tsx",
-          "frontend/src/pages/InvestmentsPage.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-24",
-        "summary": "Apply store-derived modifiers to the product release flow so that (a) productivity affects the effective production cost and/or production outcome and (b) attraction affects the released product’s resulting sales and/or rating calculation, in a deterministic, clearly communicated way in the Release Product modal.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/features/products/releaseModifiers.ts",
-          "frontend/src/features/dashboard/releasedProductModel.ts",
-          "frontend/src/features/products/ReleaseProductModal.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/features/products/releaseModifiers.ts",
-          "frontend/src/features/dashboard/releasedProductModel.ts",
-          "frontend/src/features/products/ReleaseProductModal.tsx"
+          "frontend/src/features/office/officeStore.ts",
+          "frontend/src/features/office/OfficeDecorPanel.tsx",
+          "frontend/src/pages/OfficePage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
-    "frontend/src/features/dashboard/releasedProductModel.ts",
-    "frontend/src/features/investments/InvestmentsActionsPanel.tsx",
-    "frontend/src/features/investments/InvestmentsLog.tsx",
-    "frontend/src/features/products/ReleaseProductModal.tsx",
-    "frontend/src/features/products/releaseModifiers.ts",
-    "frontend/src/features/stores/StoreNetworkSummaryPanel.tsx",
-    "frontend/src/features/stores/StoresBuildCard.tsx",
-    "frontend/src/features/stores/storeNetworkModel.ts",
-    "frontend/src/features/stores/storeNetworkStore.ts",
-    "frontend/src/pages/DashboardPage.tsx",
-    "frontend/src/pages/InvestmentsPage.tsx",
-    "frontend/src/state/saveGameStore.ts",
+    "frontend/src/features/office/Office3DViewer.tsx",
+    "frontend/src/features/office/OfficeDecorPanel.tsx",
+    "frontend/src/features/office/officeArchitecture.tsx",
+    "frontend/src/features/office/officeDecorOptions.ts",
+    "frontend/src/features/office/officeDecorTextures.ts",
+    "frontend/src/features/office/officeMaterials.ts",
+    "frontend/src/features/office/officeStore.ts",
+    "frontend/src/pages/OfficePage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

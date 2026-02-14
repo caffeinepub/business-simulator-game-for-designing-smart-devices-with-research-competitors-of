@@ -1,8 +1,14 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 11,
-  "summary": "Business simulator/economic strategy game where players design and manufacture smart devices, research technologies, compete with AI rivals, manage investments, upgrade offices with 3D models, support cloud sync, and includes optional monetization/quality-of-life features (IAP/ads) plus company/product branding and category awards.",
-  "architectural_notes": [],
+  "projectStateVersion": 27,
+  "summary": "Business/economic strategy simulator expanded to include a video game hardware segment starting in 1980, with an extended calendar timeline and planned era-specific events, alongside device R&D, competitor simulation, investments, 3D office upgrades, cloud sync, branding, and awards/monetization options.",
+  "architectural_notes": [
+    "Consoles/hardware mode starts in year 1980 with industry timeline progression.",
+    "Timeline/calendar system may need to support month/day/year dates over an extended range (1970–5000).",
+    "Plan an era-specific events system that triggers from the calendar/timeline (date/year based) and can apply deterministic effects to simulation variables.",
+    "Consider adding lightweight animation support (micro-interactions/transitions) in the UI/3D scenes to enhance realism without hurting performance.",
+    "Office 3D viewer should support additional environment materials/props (wallpaper/wall color, wood flooring) and structural elements (windows/door) as part of the office scene presets/progression."
+  ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
@@ -197,6 +203,286 @@
         "REQ-24"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-foldable-devices-as-a-first-class-device-category-available-in-device-studio-and-in-the-backend-device-category-list-so-players-can-create-and-save-foldable-device-blueprints",
+      "title": "Add foldable devices as a first-class device category available in Device Studio and in the backend device category list, so players can create and save foldable device blueprints.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-device-blueprint-data-model-to-include-foldable-specific-characteristics-and-persist-them-with-the-blueprint-e-g-fold-type-book-vs-clamshell-hinge-durability-crease-visibility-outer-display-presence-size",
+      "title": "Extend the device blueprint data model to include foldable-specific characteristics and persist them with the blueprint (e.g., fold type/book vs clamshell, hinge durability, crease visibility, outer display presence/size).",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-device-studio-ui-to-expose-foldable-specific-configuration-controls-when-the-selected-category-is-foldable-and-hide-or-disable-these-controls-for-non-foldable-categories",
+      "title": "Update the Device Studio UI to expose foldable-specific configuration controls when the selected category is foldable, and hide or disable these controls for non-foldable categories.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-foldable-design-variants-to-the-existing-design-catalog-and-ensure-designpicker-can-display-foldable-designs-for-the-foldable-category",
+      "title": "Add foldable design variants to the existing design catalog and ensure DesignPicker can display foldable designs for the foldable category.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-foldable-feature-split-where-approximately-half-of-foldable-specific-features-are-available-for-free-and-the-remaining-half-are-gated-behind-a-1-99-unlock-with-clear-in-app-messaging",
+      "title": "Implement a foldable-feature split where approximately half of foldable-specific features are available for free and the remaining half are gated behind a $1.99 unlock, with clear in-app messaging.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-simple-in-app-purchase-simulation-flow-for-the-1-99-foldable-premium-unlock-no-external-payment-provider-integration-that-lets-the-player-activate-the-unlock-and-have-it-persist-for-that-user",
+      "title": "Add a simple in-app purchase simulation flow for the $1.99 foldable premium unlock (no external payment provider integration) that lets the player activate the unlock and have it persist for that user.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-foldable-products-can-be-released-and-recorded-consistently-with-existing-release-product-tracking-category-features-list-scoring-inputs-including-representing-premium-foldable-features-in-the-released-product-s-recorded-feature-list-when-applicable",
+      "title": "Ensure foldable products can be released and recorded consistently with existing release-product tracking (category, features list, scoring inputs), including representing premium foldable features in the released product’s recorded feature list when applicable.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-generated-static-icon-assets-for-the-foldable-category-and-render-them-from-frontend-public-assets-generated-where-the-foldable-category-is-displayed-e-g-in-category-picker-and-or-design-picker-without-serving-images-through-the-backend",
+      "title": "Add generated static icon assets for the foldable category and render them from frontend/public/assets/generated where the foldable category is displayed (e.g., in category picker and/or design picker), without serving images through the backend.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-device-studio-category-selection-and-related-ui-to-allow-creating-and-editing-blueprints-for-the-four-new-categories-home-consoles-portable-consoles-gamepads-vr-headsets-using-the-existing-device-studio-page-flows",
+      "title": "Update the frontend Device Studio category selection and related UI to allow creating and editing blueprints for the four new categories (home consoles, portable consoles, gamepads, VR headsets), using the existing Device Studio page/flows.",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-design-variants-for-the-four-new-categories-to-the-existing-design-catalog-so-designpicker-can-display-them-when-the-selected-category-is-one-of-the-new-console-related-categories",
+      "title": "Add design variants for the four new categories to the existing design catalog so DesignPicker can display them when the selected category is one of the new console-related categories.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-console-hardware-feature-spec-editor-ui-in-device-studio-that-supports-selecting-from-a-dataset-of-10-000-features-specifications-with-search-and-multi-select-and-binds-selections-into-the-blueprint-data-saved-to-the-backend",
+      "title": "Implement a console hardware feature/spec editor UI in Device Studio that supports selecting from a dataset of 10,000+ features/specifications with search and multi-select, and binds selections into the blueprint data saved to the backend.",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-product-release-flow-so-that-releasing-any-of-the-new-console-related-blueprint-categories-records-the-released-product-category-correctly-and-includes-the-selected-console-feature-spec-list-in-the-released-product-s-recorded-features-field",
+      "title": "Update the product release flow so that releasing any of the new console-related blueprint categories records the released product category correctly and includes the selected console feature/spec list in the released product's recorded features field.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-introduce-an-in-game-timeline-that-begins-in-1980-for-the-console-hardware-track-by-deriving-and-displaying-the-current-year-from-simulation-time-currentday-and-ensure-the-displayed-year-is-used-when-recording-releasedproduct-year-for-console-related-releases",
+      "title": "Introduce an in-game timeline that begins in 1980 for the console hardware track by deriving and displaying the current year from simulation time (currentDay), and ensure the displayed year is used when recording ReleasedProduct.year for console-related releases.",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-any-category-based-ui-e-g-best-products-of-year-panels-and-category-labels-to-gracefully-handle-the-new-categories-without-crashes-showing-sensible-labels-and-allowing-them-to-be-included-excluded-in-any-category-filters-or-computations-as-appropriate",
+      "title": "Update any category-based UI (e.g., best-products-of-year panels and category labels) to gracefully handle the new categories without crashes, showing sensible labels and allowing them to be included/excluded in any category filters or computations as appropriate.",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-static-generated-icon-assets-for-the-four-new-categories-and-render-them-from-frontend-public-assets-generated-anywhere-these-categories-are-shown-with-an-icon-e-g-category-pickers-design-browser-without-serving-images-through-the-backend",
+      "title": "Add static generated icon assets for the four new categories and render them from frontend/public/assets/generated anywhere these categories are shown with an icon (e.g., category pickers/design browser), without serving images through the backend.",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-deterministic-in-game-calendar-system-that-maps-simulation-time-currentday-to-a-real-date-with-year-month-day-with-the-timeline-starting-at-1970-01-01-and-supporting-dates-through-5000-12-31",
+      "title": "Implement a deterministic in-game calendar system that maps simulation time (currentDay) to a real date with year/month/day, with the timeline starting at 1970-01-01 and supporting dates through 5000-12-31.",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-dashboard-simulation-status-ui-to-display-the-current-calendar-date-month-day-year-in-addition-to-the-existing-day-x-indicator-using-the-new-calendar-conversion-derived-from-currentday",
+      "title": "Update Dashboard simulation status UI to display the current calendar date (month/day/year) in addition to the existing 'Day X' indicator, using the new calendar conversion derived from currentDay.",
+      "reqIds": [
+        "REQ-46"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-existing-year-derivation-helpers-that-assume-year-1-and-365-day-years-e-g-daytoyear-with-the-new-calendar-derived-year-starting-at-1970-and-ensure-all-year-based-ui-and-computations-use-the-derived-calendar-year-consistently",
+      "title": "Replace existing year-derivation helpers that assume 'Year 1' and 365-day years (e.g., dayToYear) with the new calendar-derived year (starting at 1970), and ensure all year-based UI and computations use the derived calendar year consistently.",
+      "reqIds": [
+        "REQ-47"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-released-product-creation-records-the-released-product-year-using-the-new-calendar-derived-year-1970-based-computed-from-currentday-without-changing-the-backend-releasedproduct-schema-year-remains-a-single-numeric-year",
+      "title": "Ensure released product creation records the released product year using the new calendar-derived year (1970-based) computed from currentDay, without changing the backend ReleasedProduct schema (year remains a single numeric year).",
+      "reqIds": [
+        "REQ-48"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-era-specific-events-dataset-that-defines-timeline-events-keyed-to-specific-in-game-calendar-dates-derived-from-simulation-currentday-using-the-existing-1970-anchored-calendar-where-each-event-includes-a-stable-unique-id-a-human-readable-title-a-description-an-optional-impact-summary-string-and-one-or-more-deterministic-gameplay-effects-e-g-cash-modifier-competitor-market-share-shift-or-difficulty-market-parameter-modifier",
+      "title": "Create an era-specific events dataset that defines timeline events keyed to specific in-game calendar dates (derived from simulation currentDay using the existing 1970-anchored calendar), where each event includes: a stable unique id, a human-readable title, a description, an optional impact summary string, and one or more deterministic gameplay effects (e.g., cash modifier, competitor market-share shift, or difficulty/market parameter modifier).",
+      "reqIds": [
+        "REQ-49"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-trigger-era-specific-events-during-simulation-progression-by-checking-the-current-in-game-calendar-date-each-time-simulation-advances-and-when-a-matching-event-is-found-and-has-not-already-fired-for-the-current-save-apply-its-gameplay-effects-and-add-a-corresponding-entry-to-the-market-activity-feed",
+      "title": "Trigger era-specific events during simulation progression by checking the current in-game calendar date each time simulation advances, and when a matching event is found (and has not already fired for the current save), apply its gameplay effects and add a corresponding entry to the Market Activity feed.",
+      "reqIds": [
+        "REQ-50"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-market-activity-feed-model-and-ui-to-support-a-distinct-event-type-for-era-timeline-events-and-display-the-calendar-date-alongside-the-existing-day-indicator-for-each-market-feed-item",
+      "title": "Extend the Market Activity feed model and UI to support a distinct event type for era/timeline events and display the calendar date alongside the existing day indicator for each market feed item.",
+      "reqIds": [
+        "REQ-51"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-persist-the-list-of-triggered-era-specific-event-ids-in-saved-games-so-that-era-events-do-not-retrigger-after-loading-a-cloud-save-slot-and-ensure-the-triggered-event-list-round-trips-through-savegametoslot-and-loadsaveslot",
+      "title": "Persist the list of triggered era-specific event ids in saved games so that era events do not retrigger after loading a cloud save slot, and ensure the triggered-event list round-trips through saveGameToSlot() and loadSaveSlot().",
+      "reqIds": [
+        "REQ-52"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-redesign-the-global-app-layout-to-feel-more-realistic-and-simpler-while-preserving-the-existing-navigation-destinations-and-feature-flows-dashboard-device-studio-research-market-office-investments-cloud-saves",
+      "title": "Redesign the global app layout to feel more realistic and simpler while preserving the existing navigation destinations and feature flows (Dashboard, Device Studio, Research, Market, Office, Investments, Cloud Saves).",
+      "reqIds": [
+        "REQ-53"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-header-navigation-frontend-src-components-nav-mainnav-tsx-to-be-simpler-and-more-realistic-including-a-mobile-friendly-navigation-affordance-so-users-can-navigate-on-small-screens-where-the-current-link-row-is-hidden",
+      "title": "Update the header/navigation (frontend/src/components/nav/MainNav.tsx) to be simpler and more realistic, including a mobile-friendly navigation affordance so users can navigate on small screens where the current link row is hidden.",
+      "reqIds": [
+        "REQ-54"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-simplify-the-dashboard-layout-frontend-src-pages-dashboardpage-tsx-by-removing-or-de-emphasizing-the-large-hero-banner-treatment-and-replacing-it-with-a-realistic-compact-page-header-that-uses-the-current-company-branding-name-logo-and-avoids-hardcoded-company-naming",
+      "title": "Simplify the Dashboard layout (frontend/src/pages/DashboardPage.tsx) by removing or de-emphasizing the large hero/banner treatment and replacing it with a realistic, compact page header that uses the current company branding (name/logo) and avoids hardcoded company naming.",
+      "reqIds": [
+        "REQ-55"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-standardize-page-header-structure-across-primary-pages-e-g-device-studio-investments-market-competitors-so-that-icons-titles-and-subtitles-follow-one-consistent-simple-pattern-with-restrained-sizing-and-spacing",
+      "title": "Standardize page header structure across primary pages (e.g., Device Studio, Investments, Market & Competitors) so that icons, titles, and subtitles follow one consistent, simple pattern with restrained sizing and spacing.",
+      "reqIds": [
+        "REQ-56"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-refine-tailwind-theme-tokens-and-base-styles-frontend-src-index-css-and-tailwind-configuration-as-needed-to-support-a-more-realistic-simpler-look-e-g-subtler-borders-calmer-accent-usage-consistent-surface-contrast-while-keeping-good-readability-in-both-light-and-dark-modes",
+      "title": "Refine Tailwind theme tokens and base styles (frontend/src/index.css and Tailwind configuration as needed) to support a more realistic, simpler look (e.g., subtler borders, calmer accent usage, consistent surface contrast) while keeping good readability in both light and dark modes.",
+      "reqIds": [
+        "REQ-57"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-increase-the-visual-fidelity-of-the-office-3d-scene-by-replacing-the-current-simple-box-based-furniture-with-more-detailed-procedural-3d-props-still-built-from-three-js-primitives-that-read-as-recognizable-office-objects-e-g-desk-with-legs-chair-monitor-shelving-plants-wall-d-cor-while-preserving-the-existing-office-level-progression-behavior",
+      "title": "Increase the visual fidelity of the Office 3D scene by replacing the current simple box-based furniture with more detailed procedural 3D props (still built from Three.js primitives) that read as recognizable office objects (e.g., desk with legs, chair, monitor, shelving, plants, wall décor), while preserving the existing office-level progression behavior.",
+      "reqIds": [
+        "REQ-58"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-office-3d-lighting-material-realism-add-shadows-and-upgrade-materials-from-flat-colors-to-physically-based-material-settings-metalness-roughness-and-improved-lighting-setup-e-g-additional-fill-rim-lights-or-environment-lighting-in-a-way-that-keeps-the-scene-readable-in-both-light-and-dark-ui-themes",
+      "title": "Enhance Office 3D lighting/material realism: add shadows and upgrade materials from flat colors to physically-based material settings (metalness/roughness) and improved lighting setup (e.g., additional fill/rim lights or environment lighting) in a way that keeps the scene readable in both light and dark UI themes.",
+      "reqIds": [
+        "REQ-59"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-expand-officescenepresets-to-support-more-granular-detail-progression-more-than-the-current-5-grouped-presets-so-that-upgrades-feel-more-frequent-ensure-office3dviewer-selects-the-correct-preset-deterministically-based-on-office-level",
+      "title": "Expand officeScenePresets to support more granular detail progression (more than the current 5 grouped presets) so that upgrades feel more frequent; ensure Office3DViewer selects the correct preset deterministically based on office level.",
+      "reqIds": [
+        "REQ-60"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-subtle-non-intrusive-ambient-motion-to-the-office-3d-scene-to-increase-realism-e-g-gentle-monitor-glow-flicker-slow-ceiling-light-pulse-or-small-idle-animation-on-a-decorative-element-without-affecting-gameplay-state-or-user-controls",
+      "title": "Add subtle, non-intrusive ambient motion to the Office 3D scene to increase realism (e.g., gentle monitor glow flicker, slow ceiling light pulse, or small idle animation on a decorative element) without affecting gameplay state or user controls.",
+      "reqIds": [
+        "REQ-61"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-customizable-office-room-finishes-to-the-office-3d-scene-1-wall-color-and-or-wallpaper-style-and-2-wooden-floor-style-and-ensure-these-settings-affect-the-materials-used-in-the-office3dviewer-scene-rendering",
+      "title": "Add customizable office room finishes to the Office 3D scene: (1) wall color and/or wallpaper style, and (2) wooden floor style, and ensure these settings affect the materials used in the Office3DViewer scene rendering.",
+      "reqIds": [
+        "REQ-62"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-architectural-elements-to-the-office-3d-scene-windows-and-a-door-rendered-as-part-of-the-office-room-shell-not-as-loose-furniture-props-with-sizing-placement-that-adapts-to-the-preset-floor-dimensions-in-officescenepresets",
+      "title": "Add architectural elements to the Office 3D scene: windows and a door, rendered as part of the office room shell (not as loose furniture props), with sizing/placement that adapts to the preset floor dimensions in officeScenePresets.",
+      "reqIds": [
+        "REQ-63"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-an-office-customization-ui-on-the-office-management-page-that-lets-the-player-choose-the-wall-finish-color-wallpaper-and-floor-wood-style-and-persist-these-choices-locally-using-the-existing-persisted-office-store",
+      "title": "Provide an Office customization UI on the Office Management page that lets the player choose the wall finish (color/wallpaper) and floor wood style, and persist these choices locally using the existing persisted office store.",
+      "reqIds": [
+        "REQ-64"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -301,10 +587,122 @@
       "summary": "Ads/IAP currency: allow users to gain research points and money by watching ads or buying packs for $1.99",
       "reqIds": [],
       "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Add foldable device category/variants (e.g., foldable smartphones/tablets) with fold-specific characteristics and design options",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Monetization plan for foldable devices/features: split features so half are free and half are unlocked via a $1.99 IAP",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Company logo selection UI: add a place to set a company logo with a built-in library of ~200 options (symbols/pictures/shapes, etc.)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Add a built-in company logo library with 200 selectable options (including symbols, picture-like icons, and geometric shapes) and integrate it into the existing company logo editor so users can choose a preset logo instead of (or in addition to) generating a custom SVG logo.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Ensure the selected preset logo is saved and displayed everywhere the company logo is currently rendered, using the existing branding state (companyLogo SVG string) without changing the backend schema.",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Add a consoles/hardware business track that begins in 1980 with an early video game industry timeline/progression",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "Add new product categories to design and launch: home consoles, portable gaming devices, gamepads/controllers, and VR headsets",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Create a unique hardware spec editor for consoles/accessories with 10,000+ selectable features/technical specifications spanning design-to-launch",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Extend the backend device category list to include four new categories: \"home-consoles\", \"portable-consoles\", \"gamepads\", and \"vr-headsets\", and ensure these categories are returned by getAllDeviceCategories().",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Extend the backend Types.DeviceBlueprint data model to store a large, selectable list of hardware features/technical specifications for console-related categories, in a way that round-trips through createDeviceBlueprint() and getAllDeviceBlueprints().",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "If the backend canister currently has persisted state that would be incompatible with the updated Types.DeviceBlueprint shape, add a conditional Motoko migration in backend/migration.mo to preserve existing stored blueprints by initializing the new features/specs field to an empty list for pre-existing entries.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Add/extend an in-game calendar timeline system that can represent dates with month/day/year across a very large range (1970 to 5000)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-30",
+      "summary": "Add era-specific events to the extended timeline/calendar (e.g., historical industry events that trigger on specific dates/years and affect gameplay)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-31",
+      "summary": "Redesign overall UI layout to be simpler and more realistic (streamline screens/navigation and visual presentation)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-32",
+      "summary": "Add subtle UI/scene animations to enhance realism across the updated layout (e.g., micro-interactions, transitions)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-33",
+      "summary": "Increase detail/complexity of the Office 3D models (more realism/props/higher fidelity) within the office progression viewer",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-34",
+      "summary": "Office 3D scene: add customizable wall color/wallpaper, wooden floor material, and architectural elements (windows and a door) to increase realism",
+      "reqIds": [],
+      "status": "pending"
     }
   ],
   "gameProjectType": "3d",
-  "projectName": "Business simulator game for designing smart devices with research, competitors, office upgrades, and cloud saves",
+  "projectName": "Technology Evolution Tycoon",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

@@ -6,6 +6,7 @@ interface GameStateStore {
   gameState: GameState | null;
   releasedProducts: ReleasedProduct[];
   branding: Branding | null;
+  triggeredEraEvents: string[];
   setGameState: (state: GameState) => void;
   updateCash: (amount: bigint) => void;
   addResearchedTech: (techId: string) => void;
@@ -13,6 +14,9 @@ interface GameStateStore {
   addReleasedProduct: (product: ReleasedProduct) => void;
   setReleasedProducts: (products: ReleasedProduct[]) => void;
   setBranding: (branding: Branding) => void;
+  markTriggeredEraEvent: (eventId: string) => void;
+  hasTriggeredEraEvent: (eventId: string) => boolean;
+  setTriggeredEraEvents: (eventIds: string[]) => void;
   reset: () => void;
 }
 
@@ -25,10 +29,11 @@ const defaultBranding: Branding = {
 
 export const useGameState = create<GameStateStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       gameState: null,
       releasedProducts: [],
       branding: null,
+      triggeredEraEvents: [],
       setGameState: (state) => set({ gameState: state }),
       updateCash: (amount) =>
         set((state) => ({
@@ -52,7 +57,15 @@ export const useGameState = create<GameStateStore>()(
         })),
       setReleasedProducts: (products) => set({ releasedProducts: products }),
       setBranding: (branding) => set({ branding }),
-      reset: () => set({ gameState: null, releasedProducts: [], branding: null }),
+      markTriggeredEraEvent: (eventId) =>
+        set((state) => ({
+          triggeredEraEvents: [...state.triggeredEraEvents, eventId],
+        })),
+      hasTriggeredEraEvent: (eventId) => {
+        return get().triggeredEraEvents.includes(eventId);
+      },
+      setTriggeredEraEvents: (eventIds) => set({ triggeredEraEvents: eventIds }),
+      reset: () => set({ gameState: null, releasedProducts: [], branding: null, triggeredEraEvents: [] }),
     }),
     {
       name: 'game-state-storage',

@@ -6,12 +6,12 @@ import { Trophy, Award } from 'lucide-react';
 import type { ReleasedProduct } from '../../backend';
 import {
   DEVICE_CATEGORIES,
-  dayToYear,
   filterProductsByYearAndCategory,
   findBestProduct,
   getAvailableYears,
   calculateProductScore,
 } from './bestProductScoring';
+import { dayToYear } from '@/utils/gameCalendar';
 import LogoRenderer from '@/features/branding/LogoRenderer';
 import { getProductLogo } from './releasedProductModel';
 
@@ -60,7 +60,7 @@ export default function BestProductsOfYearPanel({ releasedProducts, currentDay }
             <SelectContent>
               {availableYears.map((year) => (
                 <SelectItem key={year} value={year.toString()}>
-                  Year {year}
+                  {year}
                 </SelectItem>
               ))}
             </SelectContent>

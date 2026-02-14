@@ -1,66 +1,202 @@
-export const officeScenePresets = [
+export interface PropDescriptor {
+  type: 'desk' | 'chair' | 'monitor' | 'shelf' | 'plant' | 'cabinet' | 'wallArt';
+  position: [number, number, number];
+  rotation?: [number, number, number];
+}
+
+export interface OfficePreset {
+  level: string;
+  props: PropDescriptor[];
+  floorSize: [number, number];
+}
+
+export const officeScenePresets: OfficePreset[] = [
+  // Levels 1-2: Minimal startup
   {
-    level: '1-4',
-    ambientLight: 0.4,
-    directionalLight: 0.6,
-    floorColor: '#3a3a3a',
-    furniture: [
-      { position: [0, 0.5, 0] as [number, number, number], size: [2, 1, 1] as [number, number, number], color: '#8b7355' },
-      { position: [-2, 0.5, -2] as [number, number, number], size: [1, 1, 1] as [number, number, number], color: '#6b5d4f' },
+    level: '1-2',
+    floorSize: [8, 8],
+    props: [
+      { type: 'desk', position: [0, 0, 0] },
+      { type: 'chair', position: [0, 0, 0.8] },
+      { type: 'monitor', position: [0, 0, -0.3] },
     ],
   },
+  // Levels 3-4: Basic office
   {
-    level: '5-8',
-    ambientLight: 0.5,
-    directionalLight: 0.7,
-    floorColor: '#4a4a4a',
-    furniture: [
-      { position: [0, 0.5, 0] as [number, number, number], size: [2.5, 1, 1.5] as [number, number, number], color: '#8b7355' },
-      { position: [-2.5, 0.5, -2] as [number, number, number], size: [1.2, 1.2, 1.2] as [number, number, number], color: '#6b5d4f' },
-      { position: [2.5, 0.5, -2] as [number, number, number], size: [1, 1.5, 1] as [number, number, number], color: '#7a6a5a' },
-      { position: [0, 0.3, 2] as [number, number, number], size: [3, 0.6, 1.5] as [number, number, number], color: '#5a4a3a' },
+    level: '3-4',
+    floorSize: [8, 8],
+    props: [
+      { type: 'desk', position: [0, 0, 0] },
+      { type: 'chair', position: [0, 0, 0.8] },
+      { type: 'monitor', position: [0, 0, -0.3] },
+      { type: 'shelf', position: [-3, 0, -2] },
+      { type: 'plant', position: [2.5, 0, 2] },
     ],
   },
+  // Levels 5-6: Growing office
   {
-    level: '9-12',
-    ambientLight: 0.6,
-    directionalLight: 0.8,
-    floorColor: '#5a5a5a',
-    furniture: [
-      { position: [0, 0.5, 0] as [number, number, number], size: [3, 1, 2] as [number, number, number], color: '#9b8365' },
-      { position: [-3, 0.5, -2] as [number, number, number], size: [1.5, 1.5, 1.5] as [number, number, number], color: '#7b6d5f' },
-      { position: [3, 0.5, -2] as [number, number, number], size: [1.2, 1.8, 1.2] as [number, number, number], color: '#8a7a6a' },
-      { position: [0, 0.3, 2.5] as [number, number, number], size: [4, 0.6, 2] as [number, number, number], color: '#6a5a4a' },
-      { position: [-2, 0.8, 1] as [number, number, number], size: [0.8, 1.6, 0.8] as [number, number, number], color: '#4a4a4a' },
+    level: '5-6',
+    floorSize: [8, 8],
+    props: [
+      { type: 'desk', position: [0, 0, 0] },
+      { type: 'chair', position: [0, 0, 0.8] },
+      { type: 'monitor', position: [0, 0, -0.3] },
+      { type: 'shelf', position: [-3, 0, -2] },
+      { type: 'plant', position: [2.5, 0, 2] },
+      { type: 'cabinet', position: [3, 0, -2] },
+      { type: 'plant', position: [-2.5, 0, 2] },
     ],
   },
+  // Levels 7-8: Established office
   {
-    level: '13-16',
-    ambientLight: 0.7,
-    directionalLight: 0.9,
-    floorColor: '#6a6a6a',
-    furniture: [
-      { position: [0, 0.5, 0] as [number, number, number], size: [3.5, 1, 2.5] as [number, number, number], color: '#ab9375' },
-      { position: [-3.5, 0.5, -2.5] as [number, number, number], size: [1.8, 1.8, 1.8] as [number, number, number], color: '#8b7d6f' },
-      { position: [3.5, 0.5, -2.5] as [number, number, number], size: [1.5, 2, 1.5] as [number, number, number], color: '#9a8a7a' },
-      { position: [0, 0.3, 3] as [number, number, number], size: [5, 0.6, 2.5] as [number, number, number], color: '#7a6a5a' },
-      { position: [-2.5, 0.8, 1.5] as [number, number, number], size: [1, 1.6, 1] as [number, number, number], color: '#5a5a5a' },
-      { position: [2.5, 0.8, 1.5] as [number, number, number], size: [1, 1.6, 1] as [number, number, number], color: '#5a5a5a' },
+    level: '7-8',
+    floorSize: [8, 8],
+    props: [
+      { type: 'desk', position: [0, 0, 0] },
+      { type: 'chair', position: [0, 0, 0.8] },
+      { type: 'monitor', position: [0, 0, -0.3] },
+      { type: 'shelf', position: [-3, 0, -2] },
+      { type: 'plant', position: [2.5, 0, 2] },
+      { type: 'cabinet', position: [3, 0, -2] },
+      { type: 'plant', position: [-2.5, 0, 2] },
+      { type: 'wallArt', position: [0, 2, -3.85], rotation: [0, 0, 0] },
     ],
   },
+  // Levels 9-10: Professional office
   {
-    level: '17-20',
-    ambientLight: 0.8,
-    directionalLight: 1.0,
-    floorColor: '#7a7a7a',
-    furniture: [
-      { position: [0, 0.5, 0] as [number, number, number], size: [4, 1, 3] as [number, number, number], color: '#bba385' },
-      { position: [-3.8, 0.5, -3] as [number, number, number], size: [2, 2, 2] as [number, number, number], color: '#9b8d7f' },
-      { position: [3.8, 0.5, -3] as [number, number, number], size: [1.8, 2.2, 1.8] as [number, number, number], color: '#aa9a8a' },
-      { position: [0, 0.3, 3.5] as [number, number, number], size: [6, 0.6, 3] as [number, number, number], color: '#8a7a6a' },
-      { position: [-3, 0.8, 2] as [number, number, number], size: [1.2, 1.6, 1.2] as [number, number, number], color: '#6a6a6a' },
-      { position: [3, 0.8, 2] as [number, number, number], size: [1.2, 1.6, 1.2] as [number, number, number], color: '#6a6a6a' },
-      { position: [0, 1, -3] as [number, number, number], size: [2, 2, 0.2] as [number, number, number], color: '#4a4a4a' },
+    level: '9-10',
+    floorSize: [10, 10],
+    props: [
+      { type: 'desk', position: [0, 0, 0] },
+      { type: 'chair', position: [0, 0, 0.8] },
+      { type: 'monitor', position: [0, 0, -0.3] },
+      { type: 'shelf', position: [-3.5, 0, -2.5] },
+      { type: 'plant', position: [3, 0, 2.5] },
+      { type: 'cabinet', position: [3.5, 0, -2.5] },
+      { type: 'plant', position: [-3, 0, 2.5] },
+      { type: 'wallArt', position: [0, 2, -4.85], rotation: [0, 0, 0] },
+      { type: 'plant', position: [0, 0, 3.5] },
+    ],
+  },
+  // Levels 11-12: Expanded office
+  {
+    level: '11-12',
+    floorSize: [10, 10],
+    props: [
+      { type: 'desk', position: [0, 0, 0] },
+      { type: 'chair', position: [0, 0, 0.8] },
+      { type: 'monitor', position: [0, 0, -0.3] },
+      { type: 'shelf', position: [-3.5, 0, -2.5] },
+      { type: 'plant', position: [3, 0, 2.5] },
+      { type: 'cabinet', position: [3.5, 0, -2.5] },
+      { type: 'plant', position: [-3, 0, 2.5] },
+      { type: 'wallArt', position: [0, 2, -4.85], rotation: [0, 0, 0] },
+      { type: 'plant', position: [0, 0, 3.5] },
+      { type: 'shelf', position: [3.5, 0, 0] },
+      { type: 'cabinet', position: [-3.5, 0, 0] },
+    ],
+  },
+  // Levels 13-14: Executive office
+  {
+    level: '13-14',
+    floorSize: [12, 12],
+    props: [
+      { type: 'desk', position: [0, 0, 0] },
+      { type: 'chair', position: [0, 0, 0.8] },
+      { type: 'monitor', position: [0, 0, -0.3] },
+      { type: 'shelf', position: [-4, 0, -3] },
+      { type: 'plant', position: [3.5, 0, 3] },
+      { type: 'cabinet', position: [4, 0, -3] },
+      { type: 'plant', position: [-3.5, 0, 3] },
+      { type: 'wallArt', position: [-2, 2, -5.85], rotation: [0, 0, 0] },
+      { type: 'wallArt', position: [2, 2, -5.85], rotation: [0, 0, 0] },
+      { type: 'plant', position: [0, 0, 4] },
+      { type: 'shelf', position: [4, 0, 0] },
+      { type: 'cabinet', position: [-4, 0, 0] },
+      { type: 'plant', position: [4.5, 0, 3] },
+    ],
+  },
+  // Levels 15-16: Premium office
+  {
+    level: '15-16',
+    floorSize: [12, 12],
+    props: [
+      { type: 'desk', position: [0, 0, 0] },
+      { type: 'chair', position: [0, 0, 0.8] },
+      { type: 'monitor', position: [0, 0, -0.3] },
+      { type: 'shelf', position: [-4, 0, -3] },
+      { type: 'plant', position: [3.5, 0, 3] },
+      { type: 'cabinet', position: [4, 0, -3] },
+      { type: 'plant', position: [-3.5, 0, 3] },
+      { type: 'wallArt', position: [-2, 2, -5.85], rotation: [0, 0, 0] },
+      { type: 'wallArt', position: [2, 2, -5.85], rotation: [0, 0, 0] },
+      { type: 'plant', position: [0, 0, 4] },
+      { type: 'shelf', position: [4, 0, 0] },
+      { type: 'cabinet', position: [-4, 0, 0] },
+      { type: 'plant', position: [4.5, 0, 3] },
+      { type: 'plant', position: [-4.5, 0, 3] },
+      { type: 'shelf', position: [-4, 0, 1.5] },
+    ],
+  },
+  // Levels 17-18: Luxury office
+  {
+    level: '17-18',
+    floorSize: [14, 14],
+    props: [
+      { type: 'desk', position: [0, 0, 0] },
+      { type: 'chair', position: [0, 0, 0.8] },
+      { type: 'monitor', position: [0, 0, -0.3] },
+      { type: 'shelf', position: [-4.5, 0, -3.5] },
+      { type: 'plant', position: [4, 0, 3.5] },
+      { type: 'cabinet', position: [4.5, 0, -3.5] },
+      { type: 'plant', position: [-4, 0, 3.5] },
+      { type: 'wallArt', position: [-2.5, 2, -6.85], rotation: [0, 0, 0] },
+      { type: 'wallArt', position: [2.5, 2, -6.85], rotation: [0, 0, 0] },
+      { type: 'plant', position: [0, 0, 4.5] },
+      { type: 'shelf', position: [4.5, 0, 0] },
+      { type: 'cabinet', position: [-4.5, 0, 0] },
+      { type: 'plant', position: [5, 0, 3.5] },
+      { type: 'plant', position: [-5, 0, 3.5] },
+      { type: 'shelf', position: [-4.5, 0, 1.5] },
+      { type: 'cabinet', position: [4.5, 0, 1.5] },
+      { type: 'plant', position: [0, 0, -2] },
+    ],
+  },
+  // Levels 19-20: Ultimate office
+  {
+    level: '19-20',
+    floorSize: [14, 14],
+    props: [
+      { type: 'desk', position: [0, 0, 0] },
+      { type: 'chair', position: [0, 0, 0.8] },
+      { type: 'monitor', position: [0, 0, -0.3] },
+      { type: 'shelf', position: [-4.5, 0, -3.5] },
+      { type: 'plant', position: [4, 0, 3.5] },
+      { type: 'cabinet', position: [4.5, 0, -3.5] },
+      { type: 'plant', position: [-4, 0, 3.5] },
+      { type: 'wallArt', position: [-2.5, 2, -6.85], rotation: [0, 0, 0] },
+      { type: 'wallArt', position: [2.5, 2, -6.85], rotation: [0, 0, 0] },
+      { type: 'wallArt', position: [0, 2.5, -6.85], rotation: [0, 0, 0] },
+      { type: 'plant', position: [0, 0, 4.5] },
+      { type: 'shelf', position: [4.5, 0, 0] },
+      { type: 'cabinet', position: [-4.5, 0, 0] },
+      { type: 'plant', position: [5, 0, 3.5] },
+      { type: 'plant', position: [-5, 0, 3.5] },
+      { type: 'shelf', position: [-4.5, 0, 1.5] },
+      { type: 'cabinet', position: [4.5, 0, 1.5] },
+      { type: 'plant', position: [0, 0, -2] },
+      { type: 'plant', position: [2.5, 0, -2.5] },
+      { type: 'plant', position: [-2.5, 0, -2.5] },
     ],
   },
 ];
+
+export function getOfficeScenePresetForLevel(level: number): OfficePreset {
+  // Deterministic preset selection based on level
+  const clampedLevel = Math.max(1, Math.min(20, level));
+  
+  // Map level to preset index (2 levels per preset)
+  const presetIndex = Math.min(Math.floor((clampedLevel - 1) / 2), officeScenePresets.length - 1);
+  
+  return officeScenePresets[presetIndex];
+}
