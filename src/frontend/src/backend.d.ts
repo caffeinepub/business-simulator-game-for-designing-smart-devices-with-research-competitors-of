@@ -7,19 +7,11 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
-export interface SavedGame {
-    saveId: string;
-    name: string;
-    lastModified: bigint;
-    gameState: GameState;
+export interface StoreNetwork {
+    stores: Array<Store>;
+    productAttractionBonus: bigint;
+    productivityBonus: bigint;
 }
-export type DeviceCategory = {
-    __kind__: "singleCategory";
-    singleCategory: string;
-} | {
-    __kind__: "categoryList";
-    categoryList: Array<string>;
-};
 export interface Requirements {
     cash?: bigint;
     researchedTechnologies?: Array<string>;
@@ -27,6 +19,10 @@ export interface Requirements {
 export interface Protection {
     mechanisms: Array<ProtectionMechanism>;
     protectionRating: string;
+}
+export interface Motherboard {
+    sockets: Array<string>;
+    interfaces: Array<string>;
 }
 export interface DisplayUnit {
     height: bigint;
@@ -37,42 +33,6 @@ export interface DisplayUnit {
     details: string;
     energyConsumption?: bigint;
     width: bigint;
-}
-export interface Motherboard {
-    sockets: Array<string>;
-    interfaces: Array<string>;
-}
-export interface DeviceBlueprint {
-    weight: bigint;
-    impedance: bigint;
-    name: string;
-    rams: Array<RAM>;
-    protection: Protection;
-    deviceSlots: Array<DeviceSlot>;
-    resistanceRating: string;
-    processingUnit: ProcessingUnit;
-    connections: DeviceConnections;
-    wirelessPowerTransfer: Array<string>;
-    coating: string;
-    finalized: boolean;
-    category: DeviceCategory;
-    comfortRating: string;
-    display: DisplayUnit;
-    motherboard: Motherboard;
-    ports: Array<string>;
-    certifications: Array<string>;
-    price: bigint;
-    battery: Battery;
-    technologyRatingSystem: string;
-    storages: Array<Storage>;
-    audioDevices: Array<AudioDevice>;
-    cameras: Array<Camera>;
-}
-export interface WirelessConnection {
-    connectionName: string;
-    supportedStandards: Array<string>;
-    maxUploadSpeed: bigint;
-    maxDownloadSpeed: bigint;
 }
 export interface SaveSlot {
     id: string;
@@ -89,20 +49,25 @@ export type ResearchStatus = {
     __kind__: "inProgress";
     inProgress: bigint;
 };
-export interface GameState {
-    cash: bigint;
-    difficulty: string;
-    researchedTechs: Array<string>;
-    products: Array<string>;
+export interface ReleasedProduct {
+    features: Array<string>;
+    name: string;
+    year: bigint;
+    productId: string;
+    sales: bigint;
+    category: string;
+    rating: number;
+    price: bigint;
 }
-export interface RAM {
-    id: bigint;
+export interface SmartConnection {
+    frequencyBand: string;
     manufacturer: string;
-    clockSpeed: bigint;
-    type: string;
-    description: string;
-    capacity: bigint;
-    modules: bigint;
+    transportProtocol: string;
+    smartFeatures: Array<string>;
+    rangeInMeters: bigint;
+    interfaceType: string;
+    encryptionType: string;
+    standard: string;
 }
 export interface ProcessingUnit {
     manufacturer: string;
@@ -115,15 +80,10 @@ export interface ProcessingUnit {
     architecture: string;
     energyConsumption?: bigint;
 }
-export interface SmartConnection {
-    frequencyBand: string;
-    manufacturer: string;
-    transportProtocol: string;
-    smartFeatures: Array<string>;
-    rangeInMeters: bigint;
-    interfaceType: string;
-    encryptionType: string;
-    standard: string;
+export interface DeviceSlot {
+    maxCapacity: bigint;
+    version: string;
+    slotType: string;
 }
 export interface PlayerResearch {
     daysActive: bigint;
@@ -131,11 +91,6 @@ export interface PlayerResearch {
     researchId: string;
     researchLevel: bigint;
     researchState: bigint;
-}
-export interface DeviceSlot {
-    maxCapacity: bigint;
-    version: string;
-    slotType: string;
 }
 export interface Battery {
     voltage: number;
@@ -172,6 +127,98 @@ export interface Storage {
     capacity: bigint;
     isSolidState?: boolean;
 }
+export interface PortConnection {
+    features: Array<string>;
+    manufacturer: string;
+    count: bigint;
+    compatibility: Array<string>;
+    version: string;
+    supportedStandards: Array<string>;
+    compatibilityRequirements: Array<string>;
+    supportedProtocols: Array<string>;
+    portType: string;
+    physicalFormFactor: string;
+}
+export interface Store {
+    country: string;
+    employees: bigint;
+    inventoryCapacity: bigint;
+    establishmentDate: bigint;
+    storeName: string;
+    location: string;
+}
+export interface ProtectionMechanism {
+    mechanismType: string;
+    waterproofCertification: string;
+    fingerprintResistance: boolean;
+    structuralFeatures: Array<string>;
+    additionalFeatures: Array<string>;
+    layerCount: bigint;
+    material: string;
+}
+export interface SavedGame {
+    saveId: string;
+    name: string;
+    lastModified: bigint;
+    gameState: GameState;
+    branding: Branding;
+    releasedProducts: Array<ReleasedProduct>;
+    storeNetwork: StoreNetwork;
+}
+export type DeviceCategory = {
+    __kind__: "singleCategory";
+    singleCategory: string;
+} | {
+    __kind__: "categoryList";
+    categoryList: Array<string>;
+};
+export interface DeviceBlueprint {
+    weight: bigint;
+    impedance: bigint;
+    name: string;
+    rams: Array<RAM>;
+    protection: Protection;
+    deviceSlots: Array<DeviceSlot>;
+    resistanceRating: string;
+    processingUnit: ProcessingUnit;
+    connections: DeviceConnections;
+    wirelessPowerTransfer: Array<string>;
+    coating: string;
+    finalized: boolean;
+    category: DeviceCategory;
+    comfortRating: string;
+    display: DisplayUnit;
+    motherboard: Motherboard;
+    ports: Array<string>;
+    certifications: Array<string>;
+    price: bigint;
+    battery: Battery;
+    technologyRatingSystem: string;
+    storages: Array<Storage>;
+    audioDevices: Array<AudioDevice>;
+    cameras: Array<Camera>;
+}
+export interface WirelessConnection {
+    connectionName: string;
+    supportedStandards: Array<string>;
+    maxUploadSpeed: bigint;
+    maxDownloadSpeed: bigint;
+}
+export interface GameState {
+    cash: bigint;
+    difficulty: string;
+    researchedTechs: Array<string>;
+    products: Array<string>;
+}
+export interface RAM {
+    id: bigint;
+    manufacturer: string;
+    clockSpeed: bigint;
+    type: string;
+    description: string;
+    capacity: bigint;
+    modules: bigint;
+}
 export type DeviceBlueprintId = bigint;
 export interface AudioDevice {
     output: string;
@@ -194,31 +241,16 @@ export interface Camera {
     hasAutofocus: boolean;
     lensType: string;
 }
-export interface PortConnection {
-    features: Array<string>;
-    manufacturer: string;
-    count: bigint;
-    compatibility: Array<string>;
-    version: string;
-    supportedStandards: Array<string>;
-    compatibilityRequirements: Array<string>;
-    supportedProtocols: Array<string>;
-    portType: string;
-    physicalFormFactor: string;
+export interface Branding {
+    productLogo: string;
+    productName: string;
+    companyLogo: string;
+    companyName: string;
 }
 export interface UserProfile {
     name: string;
     totalPlayTime: bigint;
     preferredDifficulty?: string;
-}
-export interface ProtectionMechanism {
-    mechanismType: string;
-    waterproofCertification: string;
-    fingerprintResistance: boolean;
-    structuralFeatures: Array<string>;
-    additionalFeatures: Array<string>;
-    layerCount: bigint;
-    material: string;
 }
 export enum UserRole {
     admin = "admin",
@@ -226,23 +258,20 @@ export enum UserRole {
     guest = "guest"
 }
 export interface backendInterface {
+    addReleasedProductToSave(slotId: string, product: ReleasedProduct): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    bulkSaveToSlot(saves: Array<SavedGame>): Promise<void>;
-    checkSaveSlotExists(slotId: string): Promise<boolean>;
     completeResearchEntry(researchEntry: PlayerResearch): Promise<void>;
-    createDefaultSaveSlot(): Promise<void>;
     createDeviceBlueprint(blueprint: DeviceBlueprint): Promise<DeviceBlueprintId>;
-    deleteSaveSlot(slotId: string): Promise<void>;
     getActiveTechnologyResearch(): Promise<PlayerResearch | null>;
     getAllDeviceBlueprints(): Promise<Array<DeviceBlueprint>>;
     getAllDeviceCategories(): Promise<DeviceCategory>;
+    getAllReleasedProducts(): Promise<Array<ReleasedProduct>>;
     getAllTechnologies(): Promise<Array<Technology>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getSaveSlotInfos(): Promise<Array<SaveSlot>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
-    isSlotAvailable(slotId: string): Promise<boolean>;
     loadSaveSlot(slotId: string): Promise<SavedGame | null>;
     processInput(inputData: Uint8Array): Promise<string>;
     renameSaveSlot(slotId: string, newName: string): Promise<void>;

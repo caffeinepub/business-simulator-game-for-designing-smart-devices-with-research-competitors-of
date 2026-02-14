@@ -5,14 +5,19 @@ import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 import { useGameState } from '@/state/gameState';
 import { useInvestmentStore } from './investmentStore';
+import { useStoreNetworkStore } from '@/features/stores/storeNetworkStore';
+import { validateStoreBuild, STORE_BUILD_COST } from '@/features/stores/storeNetworkModel';
 import { toast } from 'sonner';
 import { Building2, Megaphone, Users } from 'lucide-react';
+import StoresBuildCard from '@/features/stores/StoresBuildCard';
 
 export default function InvestmentsActionsPanel() {
   const [marketingAmount, setMarketingAmount] = useState('10000');
   const [recruitmentAmount, setRecruitmentAmount] = useState('5000');
+  const [isBuilding, setIsBuilding] = useState(false);
   const { gameState, updateCash } = useGameState();
   const { addInvestment } = useInvestmentStore();
+  const { storeNetwork, buildStore } = useStoreNetworkStore();
 
   const handleInvestment = (type: string, amount: bigint, description: string) => {
     if (!gameState || gameState.cash < amount) {
@@ -25,8 +30,48 @@ export default function InvestmentsActionsPanel() {
     toast.success('Investment completed successfully!');
   };
 
+  const handleBuildStore = (country: string) => {
+    if (!gameState) {
+      toast.error('Game state not initialized');
+      return;
+    }
+
+    const validation = validateStoreBuild(storeNetwork.stores, country, gameState.cash);
+    
+    if (!validation.valid) {
+      toast.error(validation.error);
+      return;
+    }
+
+    setIsBuilding(true);
+    
+    try {
+      // Deduct cash
+      updateCash(gameState.cash - BigInt(STORE_BUILD_COST));
+      
+      // Build store
+      buildStore(country);
+      
+      // Log investment
+      addInvestment({
+        type: 'store',
+        amount: BigInt(STORE_BUILD_COST),
+        description: `Built flagship store in ${country}`,
+      });
+      
+      toast.success(`Store built successfully in ${country}!`);
+    } catch (error) {
+      toast.error('Failed to build store');
+      console.error(error);
+    } finally {
+      setIsBuilding(false);
+    }
+  };
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <StoresBuildCard onBuildStore={handleBuildStore} isBuilding={isBuilding} />
+
       <Card>
         <CardHeader>
           <div className="flex items-center gap-2">

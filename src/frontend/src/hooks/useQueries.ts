@@ -1,6 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { UserProfile, DeviceBlueprint, Technology, PlayerResearch, SavedGame } from '../backend';
+import type {
+  UserProfile,
+  DeviceBlueprint,
+  Technology,
+  PlayerResearch,
+  SavedGame,
+  ReleasedProduct,
+} from '../backend';
 
 export function useGetCallerUserProfile() {
   const { actor, isFetching: actorFetching } = useActor();
@@ -78,6 +85,21 @@ export function useGetAllTechnologies() {
   });
 }
 
+export function useCompleteResearchEntry() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (researchEntry: PlayerResearch) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.completeResearchEntry(researchEntry);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['activeTechnologyResearch'] });
+    },
+  });
+}
+
 export function useGetActiveTechnologyResearch() {
   const { actor, isFetching } = useActor();
 
@@ -91,27 +113,11 @@ export function useGetActiveTechnologyResearch() {
   });
 }
 
-export function useCompleteResearchEntry() {
-  const { actor } = useActor();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (researchEntry: PlayerResearch) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.completeResearchEntry(researchEntry);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['activeTechnologyResearch'] });
-      queryClient.invalidateQueries({ queryKey: ['technologies'] });
-    },
-  });
-}
-
 export function useGetSaveSlotInfos() {
   const { actor, isFetching } = useActor();
 
   return useQuery({
-    queryKey: ['saveSlotInfos'],
+    queryKey: ['saveSlots'],
     queryFn: async () => {
       if (!actor) return [];
       return actor.getSaveSlotInfos();
@@ -130,7 +136,7 @@ export function useSaveGameToSlot() {
       return actor.saveGameToSlot(save);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['saveSlotInfos'] });
+      queryClient.invalidateQueries({ queryKey: ['saveSlots'] });
     },
   });
 }
@@ -146,21 +152,6 @@ export function useLoadSaveSlot() {
   });
 }
 
-export function useDeleteSaveSlot() {
-  const { actor } = useActor();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (slotId: string) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.deleteSaveSlot(slotId);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['saveSlotInfos'] });
-    },
-  });
-}
-
 export function useRenameSaveSlot() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
@@ -171,7 +162,7 @@ export function useRenameSaveSlot() {
       return actor.renameSaveSlot(slotId, newName);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['saveSlotInfos'] });
+      queryClient.invalidateQueries({ queryKey: ['saveSlots'] });
     },
   });
 }

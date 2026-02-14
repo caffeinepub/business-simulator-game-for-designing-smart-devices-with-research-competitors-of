@@ -7,12 +7,13 @@ import {
   useGetSaveSlotInfos,
   useSaveGameToSlot,
   useLoadSaveSlot,
-  useDeleteSaveSlot,
   useRenameSaveSlot,
 } from '@/hooks/useQueries';
-import { useGameState } from '@/state/gameState';
+import { useGameState, defaultBranding } from '@/state/gameState';
+import { useStoreNetworkStore } from '@/features/stores/storeNetworkStore';
+import { createEmptyStoreNetwork } from '@/features/stores/storeNetworkModel';
 import { toast } from 'sonner';
-import { Plus, Download, Trash2, Edit2 } from 'lucide-react';
+import { Plus, Download, Edit2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -22,14 +23,15 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import type { Branding } from '@/backend';
 
 export default function SaveSlotsPanel() {
   const { data: slots, isLoading } = useGetSaveSlotInfos();
   const saveGame = useSaveGameToSlot();
   const loadGame = useLoadSaveSlot();
-  const deleteSlot = useDeleteSaveSlot();
   const renameSlot = useRenameSaveSlot();
-  const { gameState, setGameState } = useGameState();
+  const { gameState, setGameState, releasedProducts, setReleasedProducts, branding, setBranding } = useGameState();
+  const { storeNetwork, initializeFromSave } = useStoreNetworkStore();
 
   const [showNewSave, setShowNewSave] = useState(false);
   const [showRename, setShowRename] = useState<string | null>(null);
@@ -41,12 +43,17 @@ export default function SaveSlotsPanel() {
       return;
     }
 
+    const saveBranding: Branding = branding || defaultBranding;
+
     try {
       await saveGame.mutateAsync({
         saveId: `save-${Date.now()}`,
         name: saveName.trim(),
         lastModified: BigInt(Date.now()),
+        branding: saveBranding,
         gameState,
+        releasedProducts: releasedProducts || [],
+        storeNetwork,
       });
       toast.success('Game saved successfully!');
       setShowNewSave(false);
@@ -62,20 +69,17 @@ export default function SaveSlotsPanel() {
       const save = await loadGame.mutateAsync(slotId);
       if (save) {
         setGameState(save.gameState);
+        setReleasedProducts(save.releasedProducts || []);
+        setBranding(save.branding || defaultBranding);
+        
+        // Load store network with safe defaults for older saves
+        const loadedStoreNetwork = save.storeNetwork || createEmptyStoreNetwork();
+        initializeFromSave(loadedStoreNetwork);
+        
         toast.success('Game loaded successfully!');
       }
     } catch (error) {
       toast.error('Failed to load game');
-      console.error(error);
-    }
-  };
-
-  const handleDeleteSave = async (slotId: string) => {
-    try {
-      await deleteSlot.mutateAsync(slotId);
-      toast.success('Save deleted successfully!');
-    } catch (error) {
-      toast.error('Failed to delete save');
       console.error(error);
     }
   };
@@ -140,9 +144,6 @@ export default function SaveSlotsPanel() {
                       }}
                     >
                       <Edit2 className="h-4 w-4" />
-                    </Button>
-                    <Button variant="destructive" size="sm" onClick={() => handleDeleteSave(slot.id)}>
-                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 </CardContent>

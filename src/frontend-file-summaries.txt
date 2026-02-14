@@ -1,3 +1,26 @@
 {
-  "frontend/src/features/office/officeScenePresets.ts": "Defines 5 office scene presets with furniture configurations for different office levels (1-4, 5-8, 9-12, 13-16, 17-20), using properly typed tuples for Three.js position and size vectors."
+  "frontend/src/features/office/officeScenePresets.ts": "Defines 5 office scene presets with furniture configurations for different office levels (1-4, 5-8, 9-12, 13-16, 17-20), using properly typed tuples for Three.js position and size vectors.",
+  "frontend/src/state/gameState.ts": "Zustand store managing game state, released products, and branding with persistence, including methods to add/update cash, research, products, and branding information.",
+  "frontend/src/features/dashboard/releasedProductModel.ts": "Helper module for creating released product records with optional adjusted sales and rating parameters.",
+  "frontend/src/features/dashboard/bestProductScoring.ts": "Scoring and filtering logic for Best Product of the Year awards, including year conversion, product filtering by category/year, and winner selection based on calculated scores.",
+  "frontend/src/features/dashboard/BestProductsOfYearPanel.tsx": "Dashboard panel displaying Best Product of the Year winners for each device category with year selection and product logo rendering.",
+  "frontend/src/features/products/ReleaseProductModal.tsx": "Product release modal with branding, launch parameters, and store network bonus display showing adjusted costs and expected results.",
+  "frontend/src/pages/DashboardPage.tsx": "Main dashboard with metrics, simulation controls, store network summary, and best products panel.",
+  "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx": "Cloud save management with store network persistence and backward-compatible loading with safe defaults.",
+  "frontend/src/features/new-game/NewGameModal.tsx": "New game creation modal with company name input, company logo creator, and difficulty selection that initializes game state and branding.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for backend operations including user profiles, device blueprints, technologies, research, and save slot management with branding support.",
+  "frontend/src/features/branding/logoGenerator.ts": "Pure functions for generating deterministic SVG logos from configuration (text, shape, colors) with support for circle, square, hexagon, and triangle shapes.",
+  "frontend/src/features/branding/logoFallback.ts": "Helper functions for generating fallback SVG logos using initials when no custom logo is provided.",
+  "frontend/src/features/branding/LogoCreator.tsx": "Reusable logo creation component with controls for text, shape, and colors, providing live preview and reset functionality.",
+  "frontend/src/features/branding/LogoRenderer.tsx": "Component for consistently rendering logos (SVG or fallback initials) with configurable size and styling.",
+  "frontend/src/components/nav/MainNav.tsx": "Main navigation header displaying dynamic company name and logo from game state with fallback to default branding.",
+  "frontend/src/features/stores/storeNetworkModel.ts": "Domain model for store network with constants, helpers for creating stores, computing bonuses, and validating store builds.",
+  "frontend/src/features/stores/storeNetworkStore.ts": "Zustand store managing store network state with persistence, including actions to initialize from saves and build new stores.",
+  "frontend/src/features/stores/StoresBuildCard.tsx": "Investment card component for building stores with country selection, cost display, and build action.",
+  "frontend/src/features/stores/StoreNetworkSummaryPanel.tsx": "Summary panel displaying store count, locations, and computed productivity/attraction bonuses.",
+  "frontend/src/features/products/releaseModifiers.ts": "Pure functions for applying productivity and attraction modifiers to production costs, sales, and ratings.",
+  "frontend/src/features/investments/InvestmentsActionsPanel.tsx": "Investment actions panel including store building, company acquisition, marketing campaigns, and talent recruitment.",
+  "frontend/src/features/investments/InvestmentsLog.tsx": "Investment history log displaying all investment types including stores with appropriate icons.",
+  "frontend/src/pages/InvestmentsPage.tsx": "Investments page layout with actions panel, store network summary, and investment log.",
+  "frontend/src/state/saveGameStore.ts": "Local save game store tracking current save ID and local store network snapshot for round-trip persistence."
 }

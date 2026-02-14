@@ -7,13 +7,22 @@ import Time "mo:core/Time";
 import Runtime "mo:core/Runtime";
 import Nat "mo:core/Nat";
 import Int "mo:core/Int";
+import Blob "mo:core/Blob";
 import List "mo:core/List";
 import Principal "mo:core/Principal";
 
-import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import MixinAuthorization "authorization/MixinAuthorization";
+import MixinStorage "blob-storage/Mixin";
+import Migration "migration";
+import Set "mo:core/Set";
 
+// Enable migration on upgrades
+(with migration = Migration.run)
 actor {
+  include MixinStorage();
+
+  // Types Module
   module Types {
     public type ResearchStatus = {
       #completed;
@@ -24,6 +33,13 @@ actor {
     public type Requirements = {
       cash : ?Nat;
       researchedTechnologies : ?[Text];
+    };
+
+    public type Branding = {
+      companyName : Text;
+      companyLogo : Text;
+      productName : Text;
+      productLogo : Text;
     };
 
     public type Technology = {
@@ -220,11 +236,40 @@ actor {
       researchState : Nat;
     };
 
+    public type ReleasedProduct = {
+      productId : Text;
+      name : Text;
+      category : Text;
+      year : Nat;
+      sales : Nat;
+      rating : Float;
+      price : Nat;
+      features : [Text];
+    };
+
     public type SavedGame = {
       saveId : Text;
       name : Text;
       lastModified : Nat;
+      branding : Branding;
       gameState : GameState;
+      releasedProducts : [ReleasedProduct];
+      storeNetwork : StoreNetwork;
+    };
+
+    public type StoreNetwork = {
+      stores : [Store];
+      productivityBonus : Nat;
+      productAttractionBonus : Nat;
+    };
+
+    public type Store = {
+      country : Text;
+      storeName : Text;
+      location : Text;
+      employees : Nat;
+      inventoryCapacity : Nat;
+      establishmentDate : Nat;
     };
 
     public type GameState = {
@@ -293,7 +338,7 @@ actor {
   // User Profile Management
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can access profiles");
+      Runtime.trap("Unauthorized: Only users can view profiles");
     };
     userProfiles.get(caller);
   };
@@ -374,12 +419,12 @@ actor {
 
   public query ({ caller }) func getActiveTechnologyResearch() : async ?Types.PlayerResearch {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view research");
+      Runtime.trap("Unauthorized: Only users can view research progress");
     };
     playerResearch.get(caller);
   };
 
-  // Save Slot Management
+  // Save Slot Management with Branding and Released Products
   public shared ({ caller }) func saveGameToSlot(newSave : Types.SavedGame) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can save games");
@@ -391,7 +436,7 @@ actor {
     };
 
     let updatedSaves = existingSaves.filter(
-      func(save) { save.saveId != newSave.saveId },
+      func(save) { save.saveId != newSave.saveId }
     );
 
     let newSaves = updatedSaves.concat([newSave]);
@@ -420,55 +465,6 @@ actor {
     };
   };
 
-  public query ({ caller }) func checkSaveSlotExists(slotId : Text) : async Bool {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can check save slots");
-    };
-
-    switch (saveSlots.get(caller)) {
-      case (?slots) {
-        slots.find<Types.SavedGame>(func(save) { save.saveId == slotId }) != null;
-      };
-      case (null) { false };
-    };
-  };
-
-  public shared ({ caller }) func bulkSaveToSlot(saves : [Types.SavedGame]) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can bulk save");
-    };
-    saveSlots.add(caller, saves);
-  };
-
-  public query ({ caller }) func isSlotAvailable(slotId : Text) : async Bool {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can check slot availability");
-    };
-
-    switch (saveSlots.get(caller)) {
-      case (?slots) {
-        slots.find<Types.SavedGame>(func(save) { save.saveId == slotId }) == null;
-      };
-      case (null) { true };
-    };
-  };
-
-  public shared ({ caller }) func deleteSaveSlot(slotId : Text) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can delete save slots");
-    };
-
-    switch (saveSlots.get(caller)) {
-      case (?slots) {
-        let updatedSlots = slots.filter(
-          func(save) { save.saveId != slotId }
-        );
-        saveSlots.add(caller, updatedSlots);
-      };
-      case (null) { };
-    };
-  };
-
   public shared ({ caller }) func loadSaveSlot(slotId : Text) : async ?Types.SavedGame {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can load save slots");
@@ -489,46 +485,86 @@ actor {
 
     switch (saveSlots.get(caller)) {
       case (?slots) {
-        let updatedSlots = slots.map(
-          func(save) {
-            if (save.saveId == slotId) {
-              {
-                saveId = save.saveId;
-                name = newName;
-                lastModified = Int.abs(Time.now());
-                gameState = save.gameState;
-              };
-            } else {
-              save;
-            };
-          }
-        );
-        saveSlots.add(caller, updatedSlots);
+        // Verify the save slot exists and belongs to the caller
+        let slotExists = slots.find(func(save) { save.saveId == slotId });
+        switch (slotExists) {
+          case (null) { Runtime.trap("Unauthorized: Save slot not found or does not belong to you") };
+          case (?_) {
+            let updatedSlots = slots.map(
+              func(save) {
+                if (save.saveId == slotId) {
+                  {
+                    saveId = save.saveId;
+                    name = newName;
+                    lastModified = Int.abs(Time.now());
+                    branding = save.branding;
+                    gameState = save.gameState;
+                    releasedProducts = save.releasedProducts;
+                    storeNetwork = save.storeNetwork;
+                  };
+                } else {
+                  save;
+                };
+              }
+            );
+            saveSlots.add(caller, updatedSlots);
+          };
+        };
       };
-      case (null) { Runtime.trap("Save slot not found") };
+      case (null) { Runtime.trap("Unauthorized: Save slot not found or does not belong to you") };
     };
   };
 
-  // User State Initialization Helpers
-  public shared ({ caller }) func createDefaultSaveSlot() : async () {
+  // Additional Product Management Functions
+  public query ({ caller }) func getAllReleasedProducts() : async [Types.ReleasedProduct] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can create default save slots");
+      Runtime.trap("Unauthorized: Only users can view released products");
     };
 
-    let slotExists = await checkSaveSlotExists("default");
-    if (not slotExists) {
-      let defaultSave : Types.SavedGame = {
-        saveId = "default";
-        name = "Default Save";
-        lastModified = Int.abs(Time.now());
-        gameState = {
-          cash = 100_000;
-          researchedTechs = [];
-          products = [];
-          difficulty = "normal";
+    switch (saveSlots.get(caller)) {
+      case (?slots) {
+        if (slots.size() > 0) {
+          slots[0].releasedProducts;
+        } else { [] };
+      };
+      case (null) { [] };
+    };
+  };
+
+  public shared ({ caller }) func addReleasedProductToSave(slotId : Text, product : Types.ReleasedProduct) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can add released products");
+    };
+
+    switch (saveSlots.get(caller)) {
+      case (?slots) {
+        // Verify the save slot exists and belongs to the caller
+        let slotExists = slots.find(func(save) { save.saveId == slotId });
+        switch (slotExists) {
+          case (null) { Runtime.trap("Unauthorized: Save slot not found or does not belong to you") };
+          case (?_) {
+            let updatedSlots = slots.map(
+              func(save) {
+                if (save.saveId == slotId) {
+                  {
+                    saveId = save.saveId;
+                    name = save.name;
+                    branding = save.branding;
+                    lastModified = save.lastModified;
+                    gameState = save.gameState;
+                    releasedProducts = save.releasedProducts.concat([product]);
+                    storeNetwork = save.storeNetwork;
+                  };
+                } else {
+                  save;
+                };
+              }
+            );
+            saveSlots.add(caller, updatedSlots);
+          };
         };
       };
-      await saveGameToSlot(defaultSave);
+      case (null) { Runtime.trap("Unauthorized: Save slot not found or does not belong to you") };
     };
   };
 };

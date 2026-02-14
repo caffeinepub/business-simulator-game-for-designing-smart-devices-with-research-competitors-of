@@ -4,13 +4,17 @@ import { Badge } from '@/components/ui/badge';
 import { DollarSign, TrendingUp, Users, Zap, Plus } from 'lucide-react';
 import { useGameState } from '@/state/gameState';
 import { useSimulationEngine } from '@/features/simulation/simulationEngine';
+import { useStoreNetworkStore } from '@/features/stores/storeNetworkStore';
 import NewGameModal from '@/features/new-game/NewGameModal';
 import { useState } from 'react';
 import MetricsPanel from '@/features/dashboard/MetricsPanel';
+import BestProductsOfYearPanel from '@/features/dashboard/BestProductsOfYearPanel';
+import StoreNetworkSummaryPanel from '@/features/stores/StoreNetworkSummaryPanel';
 
 export default function DashboardPage() {
-  const { gameState } = useGameState();
+  const { gameState, releasedProducts } = useGameState();
   const { isRunning, toggleSimulation, currentDay } = useSimulationEngine();
+  const { storeNetwork } = useStoreNetworkStore();
   const [showNewGame, setShowNewGame] = useState(false);
 
   return (
@@ -69,7 +73,7 @@ export default function DashboardPage() {
             <Zap className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{gameState?.products.length || 0}</div>
+            <div className="text-2xl font-bold">{releasedProducts.length}</div>
             <p className="text-xs text-muted-foreground">Released devices</p>
           </CardContent>
         </Card>
@@ -87,14 +91,25 @@ export default function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Market Share</CardTitle>
+            <CardTitle className="text-sm font-medium">Store Network</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12.5%</div>
-            <p className="text-xs text-muted-foreground">+2.3% from last month</p>
+            <div className="text-2xl font-bold">{storeNetwork.stores.length}</div>
+            <p className="text-xs text-muted-foreground">
+              {storeNetwork.stores.length === 0 ? 'No stores yet' : 'Global stores'}
+            </p>
           </CardContent>
         </Card>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <BestProductsOfYearPanel releasedProducts={releasedProducts} currentDay={currentDay} />
+        </div>
+        <div className="lg:col-span-1">
+          <StoreNetworkSummaryPanel />
+        </div>
       </div>
 
       {showNewGame && <NewGameModal onClose={() => setShowNewGame(false)} />}

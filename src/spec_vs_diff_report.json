@@ -1,174 +1,39 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-14T03:17:09.087Z",
-  "summary": "Diff adds a React app shell with TanStack Router pages, a main navigation bar, Internet Identity login UI + profile setup modal, basic device blueprint creation UI with a design picker, competitor list UI plus a market feed store/UI, an investments actions panel + persistent investment log, and a cloud saves slots panel UI. Several major gameplay systems in the BuildRequest are not evidenced in the provided diff summary (research 3000+ tech tree with prerequisites/effects, difficulty/new game flow, competitor simulation over time, market sales loop, OS simulation, 3D office upgrades, and some persistence/effects requirements).",
+  "generatedAt": "2026-02-14T04:41:55.957Z",
+  "summary": "Diff adds a frontend store-network system (model, persisted Zustand store, Investments build UI, summary panels on Dashboard/Investments) and applies store-derived modifiers to product release calculations. Cloud save UI now includes storeNetwork in create/load flows with backward-compatible defaults. Backend changes are truncated, so persistence/types round-trip cannot be fully verified from provided evidence.",
   "missing_requirements": [
     {
-      "id": "REQ-2",
-      "requirement": "Device blueprints can be opened and edited after saving, and persist across reloads for the same user (or local anonymous mode).",
-      "reason": "The diff shows creating blueprints and listing them, but does not show loading a specific blueprint into the editor for editing, nor any explicit persistence-across-reload behavior for anonymous users. The editor accepts a blueprintId prop but no evidence is shown that it fetches and populates fields for editing.",
+      "id": "REQ-21",
+      "requirement": "Extend the saved game data model to include a player-built store network in shared types and ensure it round-trips through Cloud Saves (create/load) and backend persisted state.",
+      "reason": "Frontend now sends/reads `storeNetwork` in cloud save payloads, but the diff summary does not show (due to backend truncation) that the backend save-slot types/storage actually include `storeNetwork`, nor that shared types exported from the backend include the required Store/StoreNetwork structures.",
       "evidence": [
-        "frontend/src/features/device-studio/BlueprintList.tsx",
-        "frontend/src/features/device-studio/DeviceBlueprintEditor.tsx (truncated)"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "requirement": "Research system with 3000+ technologies, searchable/filterable list/tree, prerequisites, time/cost, and effects that update unlocked tech and visible stats.",
-      "reason": "No research dataset generation, search/filter UI, prerequisite enforcement, research progression, or effect application is evidenced in the provided diff summary.",
-      "evidence": [
-        "frontend/src/App.tsx (route exists to /research)"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "requirement": "New Game flow with difficulty selection (Normal/Challenging) that changes economic parameters, is displayed/documented, and persists in saves.",
-      "reason": "No New Game flow UI, difficulty selector UI, documented parameter changes, or evidence of saving difficulty with the game state is shown. The competitor store references a difficulty string, but no selection and persistence is evidenced.",
-      "evidence": [
-        "frontend/src/features/competitors/competitorModel.ts"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "requirement": "Competitor simulation over time where AI researches/develops/releases products and affects market; includes a market feed/log of releases/impact.",
-      "reason": "A competitor list UI and a market feed store/UI exist, but no simulation steps/timers/turn progression or automated competitor actions (research/develop/release) are evidenced.",
-      "evidence": [
-        "frontend/src/features/competitors/CompetitorList.tsx",
-        "frontend/src/features/competitors/competitorModel.ts",
-        "frontend/src/features/market/MarketFeed.tsx",
-        "frontend/src/features/market/marketFeedStore.ts"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "requirement": "Product release and market loop: convert a blueprint to a released product with pricing + launch parameter(s), simulate sales/earnings over time, and show changing cash/market metrics on dashboard.",
-      "reason": "Blueprint list opens a ReleaseProductModal, but the modal implementation and any sales/earnings simulation over time are not shown. Dashboard metrics shown are hard-coded strings and not evidenced as changing with simulation time.",
-      "evidence": [
-        "frontend/src/features/device-studio/BlueprintList.tsx",
-        "frontend/src/features/dashboard/MetricsPanel.tsx"
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "requirement": "In-game smartphone OS simulation runnable from a device/product view with home screen, launcher, settings, and at least two interactive apps; state persists per save.",
-      "reason": "No OS simulation screens/components or per-save OS state persistence is evidenced in the diff summary.",
-      "evidence": [
-        "frontend/src/App.tsx (no OS route or components shown)"
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "requirement": "Office improvement system with 20 levels, upgrade costs/requirements, persistence, and a Three.js/React Three Fiber 3D office viewer with camera controls and multiple visual milestones.",
-      "reason": "No office upgrade logic, level persistence, or any Three.js/React Three Fiber viewer code is evidenced in the provided diff summary.",
-      "evidence": [
-        "frontend/src/App.tsx (route exists to /office)"
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "requirement": "Investments actions (buy company, marketing, paid employee search) must affect simulated variables beyond cash (e.g., market share/sales/R&D speed/staffing quality), be logged, and persist after reload and after save reload.",
-      "reason": "Investments panel deducts cash and logs actions to a zustand persisted store, but no evidence is shown that investments affect other simulation variables (market share/sales/R&D speed/staffing) or that these outcomes are integrated into the main save/load system (cloud saves).",
-      "evidence": [
-        "frontend/src/features/investments/InvestmentsActionsPanel.tsx (truncated)",
-        "frontend/src/features/investments/InvestmentsLog.tsx",
-        "frontend/src/features/investments/investmentStore.ts"
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "requirement": "Design variants must be selectable with a design browser/selector; selection updates live preview; design choice is saved into the blueprint and restored when reopening.",
-      "reason": "DesignPicker exists and shows variants with a preview image, but the selectedDesign value is only local state and there is no evidence it is written into the blueprint data structure sent to the backend, nor restored when reopening/editing a blueprint.",
-      "evidence": [
-        "frontend/src/features/device-studio/DesignPicker.tsx",
-        "frontend/src/features/device-studio/DeviceBlueprintEditor.tsx (truncated)",
-        "frontend/src/features/device-studio/designCatalog.ts"
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "requirement": "Cloud synchronization via Internet Identity with save slot management (create/rename/load/delete) that persists across devices; anonymous users prompted or local-only mode clearly labeled.",
-      "reason": "Login button and save slot UI with create/load/rename/delete actions are present, but the diff summary does not show the underlying backend save persistence across devices, nor any explicit anonymous-mode handling/prompting behavior.",
-      "evidence": [
-        "frontend/src/components/auth/LoginButton.tsx",
-        "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx (truncated)",
-        "backend/main.mo (truncated)"
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "requirement": "Coherent, distinctive economic-strategy theme applied consistently (avoid blue/purple dominant palette) and clear presentation of key metrics driven by game state (cash, revenue, market share, R&D progress).",
-      "reason": "While Tailwind classes are used, the diff summary does not evidence a defined theme palette (and MarketFeed uses a blue icon color for defaults). Dashboard metrics are hard-coded and not shown as consistently driven by game state/simulation.",
-      "evidence": [
-        "frontend/src/features/dashboard/MetricsPanel.tsx",
-        "frontend/src/features/market/MarketFeed.tsx",
-        "frontend/src/components/layout/GameLayout.tsx"
+        "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
+        "backend/main.mo (truncated)",
+        "backend/migration.mo (truncated)"
       ]
     }
   ],
-  "hallucinated_features": [
-    {
-      "description": "Profile setup modal requiring the user to enter a name after Internet Identity login (user profile creation flow).",
-      "reason": "The BuildRequest specifies cloud saves/authentication but does not request an additional mandatory user profile creation step with name/totalPlayTime fields.",
-      "evidence": [
-        "frontend/src/components/auth/ProfileSetupModal.tsx",
-        "frontend/src/components/layout/GameLayout.tsx"
-      ]
-    }
-  ],
-  "confidence": 0.68,
+  "hallucinated_features": [],
+  "confidence": 0.62,
   "changed_files": [
-    "all_files_summary.json",
     "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/index.css",
-    "frontend/index.html",
-    "frontend/src/App.tsx",
-    "frontend/src/components/auth/LoginButton.tsx",
-    "frontend/src/components/auth/ProfileSetupModal.tsx",
-    "frontend/src/components/layout/GameLayout.tsx",
-    "frontend/src/components/nav/MainNav.tsx",
     "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
-    "frontend/src/features/competitors/CompetitorList.tsx",
-    "frontend/src/features/competitors/competitorModel.ts",
-    "frontend/src/features/dashboard/MetricsPanel.tsx",
-    "frontend/src/features/device-studio/BlueprintList.tsx",
-    "frontend/src/features/device-studio/DesignPicker.tsx",
-    "frontend/src/features/device-studio/DeviceBlueprintEditor.tsx",
-    "frontend/src/features/device-studio/designCatalog.ts",
-    "frontend/src/features/device-studio/deviceBlueprintAdapters.ts",
+    "frontend/src/features/dashboard/releasedProductModel.ts",
     "frontend/src/features/investments/InvestmentsActionsPanel.tsx",
     "frontend/src/features/investments/InvestmentsLog.tsx",
-    "frontend/src/features/investments/investmentStore.ts",
-    "frontend/src/features/market/MarketFeed.tsx",
-    "frontend/src/features/market/marketFeedStore.ts",
-    "frontend/src/features/new-game/NewGameModal.tsx",
-    "frontend/src/features/new-game/difficultyPresets.ts",
-    "frontend/src/features/office/Office3DViewer.tsx",
-    "frontend/src/features/office/OfficeUpgradePanel.tsx",
-    "frontend/src/features/office/officeScenePresets.ts",
-    "frontend/src/features/office/officeStore.ts",
     "frontend/src/features/products/ReleaseProductModal.tsx",
-    "frontend/src/features/research/ResearchDetailsPanel.tsx",
-    "frontend/src/features/research/ResearchList.tsx",
-    "frontend/src/features/research/techDataset.ts",
-    "frontend/src/features/simulation/simulationEngine.ts",
-    "frontend/src/hooks/useActor.ts",
-    "frontend/src/hooks/useInternetIdentity.ts",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/index.css",
-    "frontend/src/main.tsx",
-    "frontend/src/pages/CloudSavesPage.tsx",
-    "frontend/src/pages/CompetitorsMarketPage.tsx",
+    "frontend/src/features/products/releaseModifiers.ts",
+    "frontend/src/features/stores/StoreNetworkSummaryPanel.tsx",
+    "frontend/src/features/stores/StoresBuildCard.tsx",
+    "frontend/src/features/stores/storeNetworkModel.ts",
+    "frontend/src/features/stores/storeNetworkStore.ts",
     "frontend/src/pages/DashboardPage.tsx",
-    "frontend/src/pages/DeviceStudioPage.tsx",
     "frontend/src/pages/InvestmentsPage.tsx",
-    "frontend/src/pages/OfficePage.tsx",
-    "frontend/src/pages/ResearchPage.tsx",
-    "frontend/src/state/gameState.ts",
     "frontend/src/state/saveGameStore.ts",
-    "frontend/src/utils/urlParams.ts",
-    "frontend/tailwind.config.js",
     "project_state.json"
   ]
 }

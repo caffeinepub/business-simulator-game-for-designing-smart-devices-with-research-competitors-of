@@ -3,6 +3,8 @@ import { Building2, Cpu, FlaskConical, TrendingUp, Briefcase, Cloud, LayoutDashb
 import LoginButton from '../auth/LoginButton';
 import { useInternetIdentity } from '@/hooks/useInternetIdentity';
 import { useGetCallerUserProfile } from '@/hooks/useQueries';
+import { useGameState } from '@/state/gameState';
+import LogoRenderer from '@/features/branding/LogoRenderer';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -19,6 +21,10 @@ export default function MainNav() {
   const currentPath = router.location.pathname;
   const { identity } = useInternetIdentity();
   const { data: userProfile } = useGetCallerUserProfile();
+  const { branding } = useGameState();
+
+  const companyName = branding?.companyName || 'TechCorp';
+  const companyLogo = branding?.companyLogo;
 
   return (
     <header className="border-b border-border bg-card">
@@ -26,8 +32,12 @@ export default function MainNav() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-8">
             <Link to="/" className="flex items-center gap-2">
-              <img src="/assets/generated/logo.dim_512x512.png" alt="Logo" className="h-8 w-8" />
-              <span className="text-xl font-bold text-foreground">TechCorp</span>
+              {companyLogo ? (
+                <LogoRenderer logo={companyLogo} name={companyName} size="md" />
+              ) : (
+                <img src="/assets/generated/logo.dim_512x512.png" alt="Logo" className="h-8 w-8" />
+              )}
+              <span className="text-xl font-bold text-foreground">{companyName}</span>
             </Link>
             <nav className="hidden md:flex items-center gap-1">
               {navItems.map((item) => {

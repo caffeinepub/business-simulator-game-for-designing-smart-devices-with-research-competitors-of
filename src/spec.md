@@ -1,19 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Build a serious business-simulator game foundation where players can design smart devices, research technologies, compete in a simulated market, progress an upgradable 3D office, invest money, and sync saves via Internet Identity.
+**Goal:** Add a country-based store expansion system that can be built by the player, persists in saves, and provides productivity and product attraction bonuses that affect product release outcomes.
 
 **Planned changes:**
-- Create the core game shell UI with navigation: Dashboard, Device Studio, Research, Competitors/Market, Office, Investments, and Cloud Saves.
-- Implement Device Studio to create/edit/save device blueprints for smartphones, tablets, watches, and smart-glasses with selectable characteristics and design variants.
-- Add a Research system with a generated dataset of 3000+ technologies, including search/filter, prerequisites, time/cost, and visible effects on stats.
-- Add New Game flow with difficulty selection (Normal, Challenging) and persist/apply parameter changes per save.
-- Implement competitor simulation where AI companies research, develop, and release products over time, with a visible market feed/log.
-- Add product release loop: launch from a blueprint with pricing and at least one additional launch parameter, then simulate sales/earnings over time.
-- Create an in-game smartphone OS simulation UI (home, launcher, settings) with at least two interactive built-in apps and per-save persistence.
-- Implement Office progression (20 levels) with upgrade costs and a Three.js/React Three Fiber 3D office viewer that changes across levels (initially at least 5 visual milestones) plus basic camera controls.
-- Add Investments actions (buy company, marketing campaign, paid employee search) that affect simulated variables and are logged per save.
-- Implement cloud synchronization using Internet Identity, including save slot create/rename/load/delete and cross-device persistence.
-- Apply a coherent visual theme suitable for an economic-strategy/business-simulator game (avoid blue/purple as the dominant palette) across all screens.
+- Extend the saved game model/shared types with a store network (stores tied to countries) and derived productivity/attraction modifiers, with backward-compatible loading and correct Cloud Save + local persistence round-tripping.
+- Add a new “Stores” build action in Investments: select a country, show cost, build if affordable, log the investment, and consistently handle duplicate stores per country (disallow or upgrade) with persistence.
+- Display store network status and effects in the UI (store count, country list, and current productivity/attraction bonuses) on a primary management surface (Investments and/or Dashboard) with immediate updates after building.
+- Apply store-derived modifiers to the Release Product flow and surface the adjustments in the Release Product modal, ensuring deterministic improved outcomes and correct affordability validation using adjusted costs.
 
-**User-visible outcome:** Players can start a new game with a chosen difficulty, navigate all major sections, create and manage device blueprints, browse and research a large tech list with effects, release products to generate sales over time, watch competitors act in the market, upgrade and view a changing 3D office, make investment actions with visible impacts, use a simple in-game phone OS UI, and sign in to manage cloud save slots.
+**User-visible outcome:** Players can build stores in specific countries from Investments, see their store network and bonuses in the UI, and observe clearly explained productivity/attraction effects improving release results (e.g., lower costs and/or higher sales/rating) while saves correctly preserve all store data.

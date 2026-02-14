@@ -1,11 +1,10 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
-  "summary": "Business simulator/economic strategy game where players design and manufacture smart devices (smartphones, tablets, watches, smart-glasses) from scratch, research technologies, compete with AI rivals, manage investments, upgrade offices with 3D models, and support cloud sync.",
+  "projectStateVersion": 11,
+  "summary": "Business simulator/economic strategy game where players design and manufacture smart devices, research technologies, compete with AI rivals, manage investments, upgrade offices with 3D models, support cloud sync, and includes optional monetization/quality-of-life features (IAP/ads) plus company/product branding and category awards.",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Game logo mark in a clean tech-business style (logo.dim_512x512.png)\n- Wide dashboard hero/banner illustration with a stylized office + devices scene (hero-banner.dim_1600x600.png)\n- Set of 12 minimal monochrome UI icons for the main navigation (nav-icons-set.dim_1024x1024.png)\n- Device design preview sheet showing multiple silhouettes/angles for smartphone/tablet/watch/smart-glasses (device-design-sheet.dim_1600x900.png)",
   "existing_features": [
     {
       "id": "feature-create-the-core-game-shell-ui-with-navigation-for-dashboard-device-studio-create-devices-research-competitors-market-office-investments-and-cloud-saves",
@@ -102,6 +101,102 @@
         "REQ-12"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-extend-saved-game-data-to-track-released-products-with-enough-metadata-to-compute-a-per-category-best-product-of-the-year-winner-and-ensure-this-data-is-persisted-in-cloud-saves",
+      "title": "Extend saved game data to track released products with enough metadata to compute a per-category “Best Product of the Year” winner, and ensure this data is persisted in cloud saves.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-when-the-player-releases-a-product-record-a-released-product-entry-including-category-and-a-score-basis-so-that-yearly-award-winners-can-be-computed-from-actual-releases",
+      "title": "When the player releases a product, record a released-product entry (including category and a score basis) so that yearly award winners can be computed from actual releases.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-ui-section-that-shows-best-product-of-the-year-winners-for-each-device-category-smartphones-tablets-watches-smart-glasses-laptops-computed-from-the-current-save-s-released-products-for-the-selected-year",
+      "title": "Add a UI section that shows “Best Product of the Year” winners for each device category (smartphones, tablets, watches, smart-glasses, laptops), computed from the current save’s released products for the selected year.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-saved-game-data-model-to-store-company-branding-company-name-and-company-logo-and-product-branding-product-name-and-product-logo-in-a-way-that-persists-through-cloud-saves-and-loads-correctly-when-a-save-slot-is-loaded",
+      "title": "Extend the saved game data model to store company branding (company name and company logo) and product branding (product name and product logo) in a way that persists through Cloud Saves and loads correctly when a save slot is loaded.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-company-setup-step-to-the-start-new-game-flow-that-lets-the-player-enter-a-company-name-and-create-edit-a-company-logo-before-starting-the-game",
+      "title": "Add a company setup step to the “Start New Game” flow that lets the player enter a company name and create/edit a company logo before starting the game.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-an-in-app-logo-creator-component-that-can-be-used-for-both-company-logos-and-product-logos-producing-a-logo-value-that-can-be-stored-in-state-and-persisted-e-g-an-svg-string",
+      "title": "Provide an in-app logo creator component that can be used for both company logos and product logos, producing a logo value that can be stored in state and persisted (e.g., an SVG string).",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-allow-the-player-to-name-and-brand-products-ensure-the-product-name-can-be-edited-at-release-time-and-allow-creating-editing-a-product-logo-during-blueprint-creation-editing-and-or-during-release",
+      "title": "Allow the player to name and brand products: ensure the product name can be edited at release time, and allow creating/editing a product logo during blueprint creation/editing and/or during release.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-key-ui-surfaces-to-display-the-player-s-company-name-logo-and-the-released-product-s-name-logo-where-those-entities-are-shown-while-preserving-the-existing-layout-and-navigation",
+      "title": "Update key UI surfaces to display the player’s company name/logo and the released product’s name/logo where those entities are shown (while preserving the existing layout and navigation).",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-saved-game-data-model-to-include-a-player-built-store-network-where-each-store-is-tied-to-a-specific-country-and-contributes-to-two-computed-modifiers-1-a-productivity-bonus-and-2-a-product-attraction-bonus-ensure-this-data-round-trips-correctly-through-cloud-saves-create-load-and-local-persisted-state",
+      "title": "Extend the saved game data model to include a player-built store network, where each store is tied to a specific country and contributes to two computed modifiers: (1) a productivity bonus and (2) a product attraction bonus; ensure this data round-trips correctly through Cloud Saves (create/load) and local persisted state.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-stores-build-action-in-the-investments-area-that-lets-the-player-select-a-country-and-build-a-store-if-they-have-enough-cash-then-records-the-action-and-updates-game-state-accordingly",
+      "title": "Add a \"Stores\" build action in the Investments area that lets the player select a country and build a store if they have enough cash, then records the action and updates game state accordingly.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-expose-the-current-store-network-and-its-effects-in-the-ui-by-showing-number-of-stores-the-list-of-countries-with-stores-and-the-current-productivity-and-attraction-bonuses-on-at-least-one-primary-management-surface-investments-and-or-dashboard",
+      "title": "Expose the current store network and its effects in the UI by showing: number of stores, the list of countries with stores, and the current productivity and attraction bonuses on at least one primary management surface (Investments and/or Dashboard).",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-store-derived-modifiers-to-the-product-release-flow-so-that-a-productivity-affects-the-effective-production-cost-and-or-production-outcome-and-b-attraction-affects-the-released-product-s-resulting-sales-and-or-rating-calculation-in-a-deterministic-clearly-communicated-way-in-the-release-product-modal",
+      "title": "Apply store-derived modifiers to the product release flow so that (a) productivity affects the effective production cost and/or production outcome and (b) attraction affects the released product’s resulting sales and/or rating calculation, in a deterministic, clearly communicated way in the Release Product modal.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -156,6 +251,54 @@
     {
       "id": "AR-9",
       "summary": "Cloud synchronization (cross-device save sync)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Category awards: Best Product of the Year (and potentially Month) per device category",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Company & product naming: allow players to name their company and products",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Company & product logo creator: allow players to create logos for their company and products",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Hiring/workers system: hire workers to speed up product development and research point generation",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Global stores expansion: build stores in countries to increase productivity and attention/awareness",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "God Mode IAP: unlock unlimited money/build-everything mode as a $9.99 purchase",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Future Tech IAP: add future-tech features per product as a $3.99 purchase, plus a $15.99 bundle for Future Tech + God Mode",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Ads/IAP currency: allow users to gain research points and money by watching ads or buying packs for $1.99",
       "reqIds": [],
       "status": "pending"
     }

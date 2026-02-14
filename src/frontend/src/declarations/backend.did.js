@@ -8,22 +8,31 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const _CaffeineStorageCreateCertificateResult = IDL.Record({
+  'method' : IDL.Text,
+  'blob_hash' : IDL.Text,
+});
+export const _CaffeineStorageRefillInformation = IDL.Record({
+  'proposed_top_up_amount' : IDL.Opt(IDL.Nat),
+});
+export const _CaffeineStorageRefillResult = IDL.Record({
+  'success' : IDL.Opt(IDL.Bool),
+  'topped_up_amount' : IDL.Opt(IDL.Nat),
+});
+export const ReleasedProduct = IDL.Record({
+  'features' : IDL.Vec(IDL.Text),
+  'name' : IDL.Text,
+  'year' : IDL.Nat,
+  'productId' : IDL.Text,
+  'sales' : IDL.Nat,
+  'category' : IDL.Text,
+  'rating' : IDL.Float64,
+  'price' : IDL.Nat,
+});
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
   'user' : IDL.Null,
   'guest' : IDL.Null,
-});
-export const GameState = IDL.Record({
-  'cash' : IDL.Nat,
-  'difficulty' : IDL.Text,
-  'researchedTechs' : IDL.Vec(IDL.Text),
-  'products' : IDL.Vec(IDL.Text),
-});
-export const SavedGame = IDL.Record({
-  'saveId' : IDL.Text,
-  'name' : IDL.Text,
-  'lastModified' : IDL.Nat,
-  'gameState' : GameState,
 });
 export const PlayerResearch = IDL.Record({
   'daysActive' : IDL.Nat,
@@ -218,20 +227,77 @@ export const SaveSlot = IDL.Record({
   'name' : IDL.Text,
   'lastModified' : IDL.Int,
 });
+export const GameState = IDL.Record({
+  'cash' : IDL.Nat,
+  'difficulty' : IDL.Text,
+  'researchedTechs' : IDL.Vec(IDL.Text),
+  'products' : IDL.Vec(IDL.Text),
+});
+export const Branding = IDL.Record({
+  'productLogo' : IDL.Text,
+  'productName' : IDL.Text,
+  'companyLogo' : IDL.Text,
+  'companyName' : IDL.Text,
+});
+export const Store = IDL.Record({
+  'country' : IDL.Text,
+  'employees' : IDL.Nat,
+  'inventoryCapacity' : IDL.Nat,
+  'establishmentDate' : IDL.Nat,
+  'storeName' : IDL.Text,
+  'location' : IDL.Text,
+});
+export const StoreNetwork = IDL.Record({
+  'stores' : IDL.Vec(Store),
+  'productAttractionBonus' : IDL.Nat,
+  'productivityBonus' : IDL.Nat,
+});
+export const SavedGame = IDL.Record({
+  'saveId' : IDL.Text,
+  'name' : IDL.Text,
+  'lastModified' : IDL.Nat,
+  'gameState' : GameState,
+  'branding' : Branding,
+  'releasedProducts' : IDL.Vec(ReleasedProduct),
+  'storeNetwork' : StoreNetwork,
+});
 
 export const idlService = IDL.Service({
+  '_caffeineStorageBlobIsLive' : IDL.Func(
+      [IDL.Vec(IDL.Nat8)],
+      [IDL.Bool],
+      ['query'],
+    ),
+  '_caffeineStorageBlobsToDelete' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Vec(IDL.Nat8))],
+      ['query'],
+    ),
+  '_caffeineStorageConfirmBlobDeletion' : IDL.Func(
+      [IDL.Vec(IDL.Vec(IDL.Nat8))],
+      [],
+      [],
+    ),
+  '_caffeineStorageCreateCertificate' : IDL.Func(
+      [IDL.Text],
+      [_CaffeineStorageCreateCertificateResult],
+      [],
+    ),
+  '_caffeineStorageRefillCashier' : IDL.Func(
+      [IDL.Opt(_CaffeineStorageRefillInformation)],
+      [_CaffeineStorageRefillResult],
+      [],
+    ),
+  '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addReleasedProductToSave' : IDL.Func([IDL.Text, ReleasedProduct], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-  'bulkSaveToSlot' : IDL.Func([IDL.Vec(SavedGame)], [], []),
-  'checkSaveSlotExists' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
   'completeResearchEntry' : IDL.Func([PlayerResearch], [], []),
-  'createDefaultSaveSlot' : IDL.Func([], [], []),
   'createDeviceBlueprint' : IDL.Func(
       [DeviceBlueprint],
       [DeviceBlueprintId],
       [],
     ),
-  'deleteSaveSlot' : IDL.Func([IDL.Text], [], []),
   'getActiveTechnologyResearch' : IDL.Func(
       [],
       [IDL.Opt(PlayerResearch)],
@@ -243,6 +309,11 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'getAllDeviceCategories' : IDL.Func([], [DeviceCategory], ['query']),
+  'getAllReleasedProducts' : IDL.Func(
+      [],
+      [IDL.Vec(ReleasedProduct)],
+      ['query'],
+    ),
   'getAllTechnologies' : IDL.Func([], [IDL.Vec(Technology)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
@@ -253,7 +324,6 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-  'isSlotAvailable' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
   'loadSaveSlot' : IDL.Func([IDL.Text], [IDL.Opt(SavedGame)], []),
   'processInput' : IDL.Func([IDL.Vec(IDL.Nat8)], [IDL.Text], []),
   'renameSaveSlot' : IDL.Func([IDL.Text, IDL.Text], [], []),
@@ -264,22 +334,31 @@ export const idlService = IDL.Service({
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const _CaffeineStorageCreateCertificateResult = IDL.Record({
+    'method' : IDL.Text,
+    'blob_hash' : IDL.Text,
+  });
+  const _CaffeineStorageRefillInformation = IDL.Record({
+    'proposed_top_up_amount' : IDL.Opt(IDL.Nat),
+  });
+  const _CaffeineStorageRefillResult = IDL.Record({
+    'success' : IDL.Opt(IDL.Bool),
+    'topped_up_amount' : IDL.Opt(IDL.Nat),
+  });
+  const ReleasedProduct = IDL.Record({
+    'features' : IDL.Vec(IDL.Text),
+    'name' : IDL.Text,
+    'year' : IDL.Nat,
+    'productId' : IDL.Text,
+    'sales' : IDL.Nat,
+    'category' : IDL.Text,
+    'rating' : IDL.Float64,
+    'price' : IDL.Nat,
+  });
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,
     'user' : IDL.Null,
     'guest' : IDL.Null,
-  });
-  const GameState = IDL.Record({
-    'cash' : IDL.Nat,
-    'difficulty' : IDL.Text,
-    'researchedTechs' : IDL.Vec(IDL.Text),
-    'products' : IDL.Vec(IDL.Text),
-  });
-  const SavedGame = IDL.Record({
-    'saveId' : IDL.Text,
-    'name' : IDL.Text,
-    'lastModified' : IDL.Nat,
-    'gameState' : GameState,
   });
   const PlayerResearch = IDL.Record({
     'daysActive' : IDL.Nat,
@@ -474,20 +553,77 @@ export const idlFactory = ({ IDL }) => {
     'name' : IDL.Text,
     'lastModified' : IDL.Int,
   });
+  const GameState = IDL.Record({
+    'cash' : IDL.Nat,
+    'difficulty' : IDL.Text,
+    'researchedTechs' : IDL.Vec(IDL.Text),
+    'products' : IDL.Vec(IDL.Text),
+  });
+  const Branding = IDL.Record({
+    'productLogo' : IDL.Text,
+    'productName' : IDL.Text,
+    'companyLogo' : IDL.Text,
+    'companyName' : IDL.Text,
+  });
+  const Store = IDL.Record({
+    'country' : IDL.Text,
+    'employees' : IDL.Nat,
+    'inventoryCapacity' : IDL.Nat,
+    'establishmentDate' : IDL.Nat,
+    'storeName' : IDL.Text,
+    'location' : IDL.Text,
+  });
+  const StoreNetwork = IDL.Record({
+    'stores' : IDL.Vec(Store),
+    'productAttractionBonus' : IDL.Nat,
+    'productivityBonus' : IDL.Nat,
+  });
+  const SavedGame = IDL.Record({
+    'saveId' : IDL.Text,
+    'name' : IDL.Text,
+    'lastModified' : IDL.Nat,
+    'gameState' : GameState,
+    'branding' : Branding,
+    'releasedProducts' : IDL.Vec(ReleasedProduct),
+    'storeNetwork' : StoreNetwork,
+  });
   
   return IDL.Service({
+    '_caffeineStorageBlobIsLive' : IDL.Func(
+        [IDL.Vec(IDL.Nat8)],
+        [IDL.Bool],
+        ['query'],
+      ),
+    '_caffeineStorageBlobsToDelete' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Vec(IDL.Nat8))],
+        ['query'],
+      ),
+    '_caffeineStorageConfirmBlobDeletion' : IDL.Func(
+        [IDL.Vec(IDL.Vec(IDL.Nat8))],
+        [],
+        [],
+      ),
+    '_caffeineStorageCreateCertificate' : IDL.Func(
+        [IDL.Text],
+        [_CaffeineStorageCreateCertificateResult],
+        [],
+      ),
+    '_caffeineStorageRefillCashier' : IDL.Func(
+        [IDL.Opt(_CaffeineStorageRefillInformation)],
+        [_CaffeineStorageRefillResult],
+        [],
+      ),
+    '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addReleasedProductToSave' : IDL.Func([IDL.Text, ReleasedProduct], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-    'bulkSaveToSlot' : IDL.Func([IDL.Vec(SavedGame)], [], []),
-    'checkSaveSlotExists' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
     'completeResearchEntry' : IDL.Func([PlayerResearch], [], []),
-    'createDefaultSaveSlot' : IDL.Func([], [], []),
     'createDeviceBlueprint' : IDL.Func(
         [DeviceBlueprint],
         [DeviceBlueprintId],
         [],
       ),
-    'deleteSaveSlot' : IDL.Func([IDL.Text], [], []),
     'getActiveTechnologyResearch' : IDL.Func(
         [],
         [IDL.Opt(PlayerResearch)],
@@ -499,6 +635,11 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'getAllDeviceCategories' : IDL.Func([], [DeviceCategory], ['query']),
+    'getAllReleasedProducts' : IDL.Func(
+        [],
+        [IDL.Vec(ReleasedProduct)],
+        ['query'],
+      ),
     'getAllTechnologies' : IDL.Func([], [IDL.Vec(Technology)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
@@ -509,7 +650,6 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-    'isSlotAvailable' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
     'loadSaveSlot' : IDL.Func([IDL.Text], [IDL.Opt(SavedGame)], []),
     'processInput' : IDL.Func([IDL.Vec(IDL.Nat8)], [IDL.Text], []),
     'renameSaveSlot' : IDL.Func([IDL.Text, IDL.Text], [], []),

@@ -2,41 +2,12 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-the-core-game-shell-ui-with-navigation-for-dashboard-device-studio-create-devices-research-competitors-market-office-investments-and-cloud-saves",
-      "featureTitle": "Create the core game shell UI with navigation for: Dashboard, Device Studio (create devices), Research, Competitors/Market, Office, Investments, and Cloud Saves.",
+      "featureId": "feature-extend-the-saved-game-data-model-to-include-a-player-built-store-network-where-each-store-is-tied-to-a-specific-country-and-contributes-to-two-computed-modifiers-1-a-productivity-bonus-and-2-a-product-attraction-bonus-ensure-this-data-round-trips-correctly-through-cloud-saves-create-load-and-local-persisted-state",
+      "featureTitle": "Extend the saved game data model to include a player-built store network, where each store is tied to a specific country and contributes to two computed modifiers: (1) a productivity bonus and (2) a product attraction bonus; ensure this data round-trips correctly through Cloud Saves (create/load) and local persisted state.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/layout/GameLayout.tsx",
-        "frontend/src/components/nav/MainNav.tsx",
-        "frontend/src/pages/CloudSavesPage.tsx",
-        "frontend/src/pages/CompetitorsMarketPage.tsx",
-        "frontend/src/pages/DashboardPage.tsx",
-        "frontend/src/pages/DeviceStudioPage.tsx",
-        "frontend/src/pages/InvestmentsPage.tsx",
-        "frontend/src/pages/OfficePage.tsx",
-        "frontend/src/pages/ResearchPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-a-device-creation-system-that-lets-the-player-create-smartphones-tablets-watches-and-smart-glasses-from-scratch-by-selecting-characteristics-e-g-cpu-tier-ram-storage-display-battery-camera-materials-and-a-design-option-then-saving-the-device-as-a-product-blueprint",
-      "featureTitle": "Implement a device creation system that lets the player create smartphones, tablets, watches, and smart-glasses from scratch by selecting characteristics (e.g., CPU tier, RAM, storage, display, battery, camera, materials) and a design option, then saving the device as a product blueprint.",
-      "files": [
-        "frontend/src/features/device-studio/BlueprintList.tsx",
-        "frontend/src/features/device-studio/DeviceBlueprintEditor.tsx",
-        "frontend/src/features/device-studio/deviceBlueprintAdapters.ts",
-        "frontend/src/pages/DeviceStudioPage.tsx",
+        "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
+        "frontend/src/features/stores/storeNetworkModel.ts",
+        "frontend/src/features/stores/storeNetworkStore.ts",
         "frontend/src/state/saveGameStore.ts"
       ],
       "components": [
@@ -45,156 +16,21 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-2"
+        "REQ-21"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-an-r-d-technology-research-system-containing-3000-technologies-with-a-searchable-browsable-tech-tree-list-research-prerequisites-research-time-cost-and-effects-that-modify-device-characteristics-and-or-business-efficiency",
-      "featureTitle": "Add an R&D technology research system containing 3000+ technologies, with a searchable/browsable tech tree/list, research prerequisites, research time/cost, and effects that modify device characteristics and/or business efficiency.",
-      "files": [
-        "frontend/src/features/research/ResearchDetailsPanel.tsx",
-        "frontend/src/features/research/ResearchList.tsx",
-        "frontend/src/features/research/techDataset.ts",
-        "frontend/src/pages/ResearchPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-a-challenging-mode-difficulty-setting-aimed-at-economic-strategy-fans-that-changes-economic-parameters-e-g-starting-cash-competitor-strength-r-d-costs-market-volatility-and-is-selectable-when-starting-a-new-game",
-      "featureTitle": "Implement a challenging mode (difficulty setting) aimed at economic-strategy fans that changes economic parameters (e.g., starting cash, competitor strength, R&D costs, market volatility) and is selectable when starting a new game.",
-      "files": [
-        "frontend/src/features/new-game/NewGameModal.tsx",
-        "frontend/src/features/new-game/difficultyPresets.ts",
-        "frontend/src/pages/DashboardPage.tsx",
-        "frontend/src/state/gameState.ts",
-        "frontend/src/state/saveGameStore.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-4"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-competitor-simulation-with-smart-behavior-ai-competitors-automatically-research-technologies-develop-products-and-release-them-to-the-market-over-time-affecting-market-competition-and-player-outcomes",
-      "featureTitle": "Implement competitor simulation with smart behavior: AI competitors automatically research technologies, develop products, and release them to the market over time, affecting market competition and player outcomes.",
-      "files": [
-        "frontend/src/features/competitors/CompetitorList.tsx",
-        "frontend/src/features/competitors/competitorModel.ts",
-        "frontend/src/features/market/MarketFeed.tsx",
-        "frontend/src/features/simulation/simulationEngine.ts",
-        "frontend/src/pages/CompetitorsMarketPage.tsx",
-        "frontend/src/state/saveGameStore.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-5"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-product-release-and-market-loop-the-player-can-take-a-saved-blueprint-set-pricing-production-marketing-options-release-it-and-then-observe-sales-earnings-over-simulation-time",
-      "featureTitle": "Add a product release and market loop: the player can take a saved blueprint, set pricing/production/marketing options, release it, and then observe sales/earnings over simulation time.",
-      "files": [
-        "frontend/src/features/dashboard/MetricsPanel.tsx",
-        "frontend/src/features/device-studio/BlueprintList.tsx",
-        "frontend/src/features/products/ReleaseProductModal.tsx",
-        "frontend/src/pages/DashboardPage.tsx",
-        "frontend/src/state/saveGameStore.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-6"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-an-in-game-smartphone-os-simulation-that-can-be-run-on-a-virtual-phone-provide-a-basic-home-screen-app-launcher-settings-and-at-least-two-interactive-built-in-apps-e-g-notes-mail-browser-mock",
-      "featureTitle": "Implement an in-game smartphone OS simulation that can be “run” on a virtual phone: provide a basic home screen, app launcher, settings, and at least two interactive built-in apps (e.g., Notes, Mail, Browser mock).",
-      "files": [
-        "frontend/src/pages/DeviceStudioPage.tsx",
-        "frontend/src/state/saveGameStore.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-7"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-an-office-improvement-progression-system-with-20-upgrade-levels-and-a-dedicated-3d-office-viewer-each-level-changes-the-office-appearance-using-beautiful-3d-models-rendered-with-three-js-react-three-fiber",
-      "featureTitle": "Create an office improvement/progression system with 20 upgrade levels and a dedicated 3D office viewer; each level changes the office appearance using beautiful 3D models rendered with Three.js/React Three Fiber.",
-      "files": [
-        "frontend/src/features/office/Office3DViewer.tsx",
-        "frontend/src/features/office/OfficeUpgradePanel.tsx",
-        "frontend/src/features/office/officeScenePresets.ts",
-        "frontend/src/pages/OfficePage.tsx",
-        "frontend/src/state/saveGameStore.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-8"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-business-investment-actions-buying-companies-marketing-spend-and-paid-employee-search-each-action-must-affect-at-least-one-simulated-variable-cash-market-share-product-sales-r-d-speed-staffing-quality",
-      "featureTitle": "Add business investment actions: buying companies, marketing spend, and paid employee search; each action must affect at least one simulated variable (cash, market share, product sales, R&D speed, staffing quality).",
+      "featureId": "feature-add-a-stores-build-action-in-the-investments-area-that-lets-the-player-select-a-country-and-build-a-store-if-they-have-enough-cash-then-records-the-action-and-updates-game-state-accordingly",
+      "featureTitle": "Add a \"Stores\" build action in the Investments area that lets the player select a country and build a store if they have enough cash, then records the action and updates game state accordingly.",
       "files": [
         "frontend/src/features/investments/InvestmentsActionsPanel.tsx",
         "frontend/src/features/investments/InvestmentsLog.tsx",
-        "frontend/src/pages/InvestmentsPage.tsx",
-        "frontend/src/state/saveGameStore.ts"
+        "frontend/src/features/stores/StoresBuildCard.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -202,21 +38,21 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-9"
+        "REQ-22"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-provide-many-device-design-variants-visual-styles-for-each-device-category-and-a-design-browser-selector-within-device-studio",
-      "featureTitle": "Provide many device design variants (visual styles) for each device category and a design browser/selector within Device Studio.",
+      "featureId": "feature-expose-the-current-store-network-and-its-effects-in-the-ui-by-showing-number-of-stores-the-list-of-countries-with-stores-and-the-current-productivity-and-attraction-bonuses-on-at-least-one-primary-management-surface-investments-and-or-dashboard",
+      "featureTitle": "Expose the current store network and its effects in the UI by showing: number of stores, the list of countries with stores, and the current productivity and attraction bonuses on at least one primary management surface (Investments and/or Dashboard).",
       "files": [
-        "frontend/src/features/device-studio/DesignPicker.tsx",
-        "frontend/src/features/device-studio/DeviceBlueprintEditor.tsx",
-        "frontend/src/features/device-studio/designCatalog.ts",
-        "frontend/src/features/device-studio/deviceBlueprintAdapters.ts"
+        "frontend/src/features/stores/StoreNetworkSummaryPanel.tsx",
+        "frontend/src/pages/DashboardPage.tsx",
+        "frontend/src/pages/InvestmentsPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -224,23 +60,21 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-10"
+        "REQ-23"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-cloud-synchronization-via-internet-identity-allow-users-to-sign-in-and-have-their-saves-stored-and-retrievable-across-devices-include-save-slot-management-create-rename-load-delete",
-      "featureTitle": "Implement cloud synchronization via Internet Identity: allow users to sign in and have their saves stored and retrievable across devices; include save slot management (create, rename, load, delete).",
+      "featureId": "feature-apply-store-derived-modifiers-to-the-product-release-flow-so-that-a-productivity-affects-the-effective-production-cost-and-or-production-outcome-and-b-attraction-affects-the-released-product-s-resulting-sales-and-or-rating-calculation-in-a-deterministic-clearly-communicated-way-in-the-release-product-modal",
+      "featureTitle": "Apply store-derived modifiers to the product release flow so that (a) productivity affects the effective production cost and/or production outcome and (b) attraction affects the released product’s resulting sales and/or rating calculation, in a deterministic, clearly communicated way in the Release Product modal.",
       "files": [
-        "frontend/src/components/auth/LoginButton.tsx",
-        "frontend/src/components/auth/ProfileSetupModal.tsx",
-        "frontend/src/components/layout/GameLayout.tsx",
-        "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
-        "frontend/src/pages/CloudSavesPage.tsx",
-        "frontend/src/state/saveGameStore.ts"
+        "frontend/src/features/dashboard/releasedProductModel.ts",
+        "frontend/src/features/products/ReleaseProductModal.tsx",
+        "frontend/src/features/products/releaseModifiers.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -248,32 +82,11 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-11"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-define-and-apply-a-coherent-distinctive-visual-theme-colors-typography-layout-and-component-styling-appropriate-for-a-serious-economic-strategy-business-simulator-game-and-apply-it-consistently-across-all-screens-avoid-blue-purple-as-the-dominant-palette",
-      "featureTitle": "Define and apply a coherent, distinctive visual theme (colors, typography, layout, and component styling) appropriate for a serious economic-strategy/business-simulator game, and apply it consistently across all screens (avoid blue/purple as the dominant palette).",
-      "files": [
-        "frontend/src/components/layout/GameLayout.tsx",
-        "frontend/src/features/dashboard/MetricsPanel.tsx",
-        "frontend/src/index.css",
-        "frontend/tailwind.config.js"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-12"
+        "REQ-24"
       ],
       "confidence": "high"
     }

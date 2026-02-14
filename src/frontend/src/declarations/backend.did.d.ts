@@ -25,6 +25,12 @@ export interface Battery {
   'connector' : string,
   'capacity' : bigint,
 }
+export interface Branding {
+  'productLogo' : string,
+  'productName' : string,
+  'companyLogo' : string,
+  'companyName' : string,
+}
 export interface Camera {
   'id' : bigint,
   'hasZoom' : boolean,
@@ -144,6 +150,16 @@ export interface RAM {
   'capacity' : bigint,
   'modules' : bigint,
 }
+export interface ReleasedProduct {
+  'features' : Array<string>,
+  'name' : string,
+  'year' : bigint,
+  'productId' : string,
+  'sales' : bigint,
+  'category' : string,
+  'rating' : number,
+  'price' : bigint,
+}
 export interface Requirements {
   'cash' : [] | [bigint],
   'researchedTechnologies' : [] | [Array<string>],
@@ -161,6 +177,9 @@ export interface SavedGame {
   'name' : string,
   'lastModified' : bigint,
   'gameState' : GameState,
+  'branding' : Branding,
+  'releasedProducts' : Array<ReleasedProduct>,
+  'storeNetwork' : StoreNetwork,
 }
 export interface SmartConnection {
   'frequencyBand' : string,
@@ -185,6 +204,19 @@ export interface Storage {
   'endurance' : [] | [bigint],
   'capacity' : bigint,
   'isSolidState' : [] | [boolean],
+}
+export interface Store {
+  'country' : string,
+  'employees' : bigint,
+  'inventoryCapacity' : bigint,
+  'establishmentDate' : bigint,
+  'storeName' : string,
+  'location' : string,
+}
+export interface StoreNetwork {
+  'stores' : Array<Store>,
+  'productAttractionBonus' : bigint,
+  'productivityBonus' : bigint,
 }
 export interface Technology {
   'status' : ResearchStatus,
@@ -214,25 +246,51 @@ export interface WirelessConnection {
   'maxUploadSpeed' : bigint,
   'maxDownloadSpeed' : bigint,
 }
+export interface _CaffeineStorageCreateCertificateResult {
+  'method' : string,
+  'blob_hash' : string,
+}
+export interface _CaffeineStorageRefillInformation {
+  'proposed_top_up_amount' : [] | [bigint],
+}
+export interface _CaffeineStorageRefillResult {
+  'success' : [] | [boolean],
+  'topped_up_amount' : [] | [bigint],
+}
 export interface _SERVICE {
+  '_caffeineStorageBlobIsLive' : ActorMethod<[Uint8Array], boolean>,
+  '_caffeineStorageBlobsToDelete' : ActorMethod<[], Array<Uint8Array>>,
+  '_caffeineStorageConfirmBlobDeletion' : ActorMethod<
+    [Array<Uint8Array>],
+    undefined
+  >,
+  '_caffeineStorageCreateCertificate' : ActorMethod<
+    [string],
+    _CaffeineStorageCreateCertificateResult
+  >,
+  '_caffeineStorageRefillCashier' : ActorMethod<
+    [[] | [_CaffeineStorageRefillInformation]],
+    _CaffeineStorageRefillResult
+  >,
+  '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addReleasedProductToSave' : ActorMethod<
+    [string, ReleasedProduct],
+    undefined
+  >,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
-  'bulkSaveToSlot' : ActorMethod<[Array<SavedGame>], undefined>,
-  'checkSaveSlotExists' : ActorMethod<[string], boolean>,
   'completeResearchEntry' : ActorMethod<[PlayerResearch], undefined>,
-  'createDefaultSaveSlot' : ActorMethod<[], undefined>,
   'createDeviceBlueprint' : ActorMethod<[DeviceBlueprint], DeviceBlueprintId>,
-  'deleteSaveSlot' : ActorMethod<[string], undefined>,
   'getActiveTechnologyResearch' : ActorMethod<[], [] | [PlayerResearch]>,
   'getAllDeviceBlueprints' : ActorMethod<[], Array<DeviceBlueprint>>,
   'getAllDeviceCategories' : ActorMethod<[], DeviceCategory>,
+  'getAllReleasedProducts' : ActorMethod<[], Array<ReleasedProduct>>,
   'getAllTechnologies' : ActorMethod<[], Array<Technology>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getSaveSlotInfos' : ActorMethod<[], Array<SaveSlot>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
-  'isSlotAvailable' : ActorMethod<[string], boolean>,
   'loadSaveSlot' : ActorMethod<[string], [] | [SavedGame]>,
   'processInput' : ActorMethod<[Uint8Array], string>,
   'renameSaveSlot' : ActorMethod<[string, string], undefined>,

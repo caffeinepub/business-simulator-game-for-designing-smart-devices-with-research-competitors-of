@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { useInvestmentStore } from './investmentStore';
-import { Building2, Megaphone, Users } from 'lucide-react';
+import { Building2, Megaphone, Users, Store } from 'lucide-react';
 
 export default function InvestmentsLog() {
   const { investments } = useInvestmentStore();
@@ -15,6 +15,8 @@ export default function InvestmentsLog() {
         return <Megaphone className="h-4 w-4" />;
       case 'recruitment':
         return <Users className="h-4 w-4" />;
+      case 'store':
+        return <Store className="h-4 w-4" />;
       default:
         return null;
     }

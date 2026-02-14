@@ -1,534 +1,115 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Smart device business simulator (frontend) — game shell, device studio, research, simulation UI, 3D office, and cloud saves",
+  "title": "Country store expansion system (stores network, UI, and release modifiers)",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Core game shell UI with navigation across all major sections and distinct screens.",
+      "id": "REQ-21",
+      "summary": "Persist a player-built country store network in local state and include it in cloud save create/load with safe defaults for older saves.",
       "acceptanceCriteria": [
-        "App loads to a playable home/dashboard screen with clear navigation to all major sections listed in the requirement.",
-        "Each section renders a distinct page/panel with placeholder content where deeper features are implemented in later requirements.",
-        "All user-facing text is in English."
+        "A new store-network structure exists in the shared types so it can be stored inside a save slot and restored on load.",
+        "Loading an older save (without store data) does not crash; missing store data defaults to an empty store list and zero/neutral modifiers.",
+        "Creating a cloud save, then loading it, preserves the list of built stores and the derived modifiers."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/features/stores/storeNetworkModel.ts",
           "operation": "create",
-          "description": "Create the top-level app shell with routing + layout, and wire navigation to: Dashboard, Device Studio, Research, Competitors/Market, Office, Investments, and Cloud Saves. Use shadcn-ui components (e.g., sidebar/nav, buttons, cards) to provide consistent layout primitives. Verify the component's usage instructions before implementing."
+          "description": "Create store-network domain helpers: define default empty StoreNetwork, a deterministic bonus computation (productivity + attraction) derived from the stores list, and helpers to add/validate a store for a given country."
         },
         {
-          "path": "frontend/src/components/layout/GameLayout.tsx",
+          "path": "frontend/src/features/stores/storeNetworkStore.ts",
           "operation": "create",
-          "description": "Create a reusable game layout (header + left navigation + main content) that all screens use to ensure consistent structure and spacing. Use shadcn-ui layout primitives where available. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/nav/MainNav.tsx",
-          "operation": "create",
-          "description": "Create the main navigation UI using the generated navigation icons set and link to all major sections. Use shadcn-ui components for accessible navigation interactions. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "create",
-          "description": "Create the Dashboard screen with placeholder panels for key metrics (cash, revenue, market share, R&D progress) and links into other sections."
-        },
-        {
-          "path": "frontend/src/pages/DeviceStudioPage.tsx",
-          "operation": "create",
-          "description": "Create the Device Studio screen container with placeholder sections for category selection, characteristics editor, design selector, and blueprint list (implemented in later requirements)."
-        },
-        {
-          "path": "frontend/src/pages/ResearchPage.tsx",
-          "operation": "create",
-          "description": "Create the Research screen container with placeholder UI areas for search/filter and technology list (implemented in later requirements)."
-        },
-        {
-          "path": "frontend/src/pages/CompetitorsMarketPage.tsx",
-          "operation": "create",
-          "description": "Create the Competitors/Market screen container with placeholders for competitor list and market feed/log (implemented in later requirements)."
-        },
-        {
-          "path": "frontend/src/pages/OfficePage.tsx",
-          "operation": "create",
-          "description": "Create the Office screen container with placeholders for office level, upgrade CTA, and a 3D viewer region (implemented in later requirements)."
-        },
-        {
-          "path": "frontend/src/pages/InvestmentsPage.tsx",
-          "operation": "create",
-          "description": "Create the Investments screen container with placeholders for actions and timeline/log (implemented in later requirements)."
-        },
-        {
-          "path": "frontend/src/pages/CloudSavesPage.tsx",
-          "operation": "create",
-          "description": "Create the Cloud Saves screen container with placeholders for authentication state, save slot list, and actions (implemented in later requirements)."
-        },
-        {
-          "path": "frontend/public/assets/generated/nav-icons-set.dim_1024x1024.png",
-          "operation": "create",
-          "description": "Add generated asset for the main navigation icon set and wire it into the navigation UI where appropriate."
-        },
-        {
-          "path": "frontend/public/assets/generated/hero-banner.dim_1600x600.png",
-          "operation": "create",
-          "description": "Add generated hero/banner illustration asset and wire it into the Dashboard header area as a static banner."
-        },
-        {
-          "path": "frontend/public/assets/generated/logo.dim_512x512.png",
-          "operation": "create",
-          "description": "Add generated logo asset and wire it into the app header / shell branding."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Device creation UI for building and editing smart device blueprints and persisting them via local or cloud-backed saves.",
-      "acceptanceCriteria": [
-        "Device Studio supports selecting a device category (smartphone/tablet/watch/smart-glasses).",
-        "Player can configure a set of characteristics and choose a design variant.",
-        "A saved blueprint appears in a list of created blueprints and can be opened and edited.",
-        "Blueprint data persists across reloads for the same signed-in user (or locally for anonymous mode if implemented)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/features/device-studio/DeviceBlueprintEditor.tsx",
-          "operation": "create",
-          "description": "Implement the blueprint editor UI: category selector, characteristics form (CPU tier, RAM, storage, display, battery, camera, materials), and save/update actions. Use shadcn-ui form controls (inputs/selects/tabs) for consistent styling. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/features/device-studio/BlueprintList.tsx",
-          "operation": "create",
-          "description": "Implement a list UI of created blueprints with actions to open/edit and to start a release flow (wired in REQ-6). Use shadcn-ui table/list components where available. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/features/device-studio/deviceBlueprintAdapters.ts",
-          "operation": "create",
-          "description": "Add frontend-only adapters/mappers between the editor's simplified form state and the backend DeviceBlueprint type (including sensible defaults for required nested fields)."
-        },
-        {
-          "path": "frontend/src/hooks/useDeviceBlueprints.ts",
-          "operation": "create",
-          "description": "Create React Query hooks to load and save blueprints by calling backend capabilities (e.g., getAllDeviceBlueprints/createDeviceBlueprint) and to keep UI cache in sync."
-        },
-        {
-          "path": "frontend/src/state/saveGameStore.ts",
-          "operation": "create",
-          "description": "Create a small save-game state layer that supports anonymous local persistence (e.g., localStorage) and signed-in persistence via the Cloud Saves flow, so blueprints persist across reloads in at least one mode."
-        },
-        {
-          "path": "frontend/src/pages/DeviceStudioPage.tsx",
-          "operation": "modify",
-          "description": "Wire DeviceBlueprintEditor + BlueprintList into Device Studio page; connect to save-game state and blueprint hooks; ensure blueprint selection/editing is navigable and not orphaned."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Research UI with a 3000+ tech dataset, search/filtering, prerequisites gating, and visible effects on player stats.",
-      "acceptanceCriteria": [
-        "The Research screen shows 3000+ technology entries (generated dataset is acceptable).",
-        "Technologies can be searched by name and filtered by category/tier.",
-        "A technology can only be researched if prerequisites are met.",
-        "Completing research updates the player's unlocked technologies and impacts at least one visible stat/effect in the UI."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/features/research/techDataset.ts",
-          "operation": "create",
-          "description": "Implement a generated 3000+ technology dataset fallback (used if backend-provided list is unavailable/empty), including categories/tiers, prerequisite links, and effect descriptors suitable for UI display."
-        },
-        {
-          "path": "frontend/src/features/research/ResearchList.tsx",
-          "operation": "create",
-          "description": "Create a searchable, filterable list/virtualized table for technologies (3000+ items). Use shadcn-ui inputs/selects/table components to keep styling consistent. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/features/research/ResearchDetailsPanel.tsx",
-          "operation": "create",
-          "description": "Create a details panel showing prerequisites, time/cost, and effects; include a CTA to start/complete research when allowed, and show locked reasons when not allowed."
-        },
-        {
-          "path": "frontend/src/hooks/useTechnologies.ts",
-          "operation": "create",
-          "description": "Create React Query hooks to fetch technologies and active research from backend capabilities (e.g., getAllTechnologies/getActiveTechnologyResearch) with graceful fallback to generated dataset."
-        },
-        {
-          "path": "frontend/src/hooks/useResearchProgress.ts",
-          "operation": "create",
-          "description": "Implement a client-side research progression controller that respects prerequisites, tracks in-progress research over simulation time, and triggers backend completion calls when appropriate (using the available backend capability for completion)."
-        },
-        {
-          "path": "frontend/src/pages/ResearchPage.tsx",
-          "operation": "modify",
-          "description": "Wire ResearchList + ResearchDetailsPanel into the Research page; connect search/filter state and prerequisites gating; ensure completing research updates visible stats (e.g., an R&D bonus summary in the page header)."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "New Game flow with difficulty selection (Normal/Challenging) that changes visible economic parameters and persists in the save.",
-      "acceptanceCriteria": [
-        "New Game flow includes difficulty selection with at least: Normal and Challenging.",
-        "Challenging mode applies clearly documented parameter changes shown in the UI (e.g., higher costs and stronger competitors).",
-        "Difficulty choice is stored with the save and affects gameplay consistently after reload."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/features/new-game/NewGameModal.tsx",
-          "operation": "create",
-          "description": "Implement a New Game modal/flow that lets players choose difficulty (Normal/Challenging) and starts a new save state. Use shadcn-ui dialog/radio-group/button components for accessibility and consistency. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/features/new-game/difficultyPresets.ts",
-          "operation": "create",
-          "description": "Define difficulty presets with explicit parameter deltas (starting cash, competitor strength, R&D costs, market volatility) and human-readable descriptions for the UI (avoid blue/purple dominant theme language)."
-        },
-        {
-          "path": "frontend/src/state/gameState.ts",
-          "operation": "create",
-          "description": "Create a centralized game state model on the frontend (mirroring backend GameState fields as needed) that stores selected difficulty and derived parameters used by simulation and economics UI."
-        },
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Add New Game entry point on Dashboard and a visible summary of the selected difficulty + key parameter changes so the impact is clearly documented in the UI."
-        },
-        {
-          "path": "frontend/src/state/saveGameStore.ts",
-          "operation": "modify",
-          "description": "Persist difficulty choice within the active save (local and/or cloud mode) and rehydrate it on load so it affects subsequent simulation calculations."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Competitor simulation UI: show AI companies, automated actions over time, and a market feed/log of releases and impacts.",
-      "acceptanceCriteria": [
-        "Competitors list shows multiple AI companies with basic stats (cash/market share/active products).",
-        "At defined simulation steps (turn/day/week), competitors perform actions (research/develop/release) without player input.",
-        "Player can see a market feed/log of competitor releases and their impact on market conditions (even if simplified)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/features/simulation/simulationEngine.ts",
-          "operation": "create",
-          "description": "Implement a turn/day/week simulation loop runner on the frontend that advances time, triggers competitor actions, and emits events for UI updates (no real-time networking required)."
-        },
-        {
-          "path": "frontend/src/features/competitors/competitorModel.ts",
-          "operation": "create",
-          "description": "Define a frontend competitor model with basic stats and simple AI decision rules influenced by difficulty parameters."
-        },
-        {
-          "path": "frontend/src/features/competitors/CompetitorList.tsx",
-          "operation": "create",
-          "description": "Render competitor companies with basic stats (cash/market share/active products). Use shadcn-ui cards/tables for consistent presentation. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/features/market/MarketFeed.tsx",
-          "operation": "create",
-          "description": "Implement a market feed/log UI that records competitor product releases and simplified market impacts over simulation steps. Use shadcn-ui timeline/list patterns where suitable. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/CompetitorsMarketPage.tsx",
-          "operation": "modify",
-          "description": "Wire CompetitorList + MarketFeed into the Competitors/Market page and connect them to the simulation engine so actions occur automatically at simulation steps."
-        },
-        {
-          "path": "frontend/src/state/saveGameStore.ts",
-          "operation": "modify",
-          "description": "Persist competitor state and market feed/log within the active save so it survives reloads and is consistent after load."
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Product release and market loop UI: release a blueprint with price/launch parameters and display evolving sales/earnings on the Dashboard over simulation time.",
-      "acceptanceCriteria": [
-        "A blueprint can be converted into a released product with configurable price (and at least one additional launch parameter).",
-        "After release, the product generates sales/earnings during simulation progression.",
-        "Dashboard shows cash and at least one market metric changing over time (e.g., revenue, market share, product rating)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/features/products/ReleaseProductModal.tsx",
-          "operation": "create",
-          "description": "Create a release flow modal for converting a blueprint into a product with configurable price plus at least one additional launch parameter (e.g., production volume or marketing budget). Use shadcn-ui dialog/form components. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/features/products/productSimulation.ts",
-          "operation": "create",
-          "description": "Implement simplified sales/earnings calculations tied to simulation time progression, influenced by difficulty and investments where applicable."
-        },
-        {
-          "path": "frontend/src/features/dashboard/MetricsPanel.tsx",
-          "operation": "create",
-          "description": "Create a dashboard metrics panel to display cash, revenue, and at least one market metric that changes over time. Use shadcn-ui cards/badges for clarity. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Wire MetricsPanel into the Dashboard; show time progression controls and surface product performance summaries that update as the simulation advances."
-        },
-        {
-          "path": "frontend/src/features/device-studio/BlueprintList.tsx",
-          "operation": "modify",
-          "description": "Add a 'Release' action to each blueprint row that opens ReleaseProductModal; ensure released products are reflected in the save and dashboard metrics."
-        },
-        {
-          "path": "frontend/src/state/saveGameStore.ts",
-          "operation": "modify",
-          "description": "Persist released products and their performance metrics in the active save so results remain consistent after reload."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "In-game smartphone OS simulation UI: home screen, app launcher, settings, and at least two interactive built-in apps with per-save persistence.",
-      "acceptanceCriteria": [
-        "From a device/product view, the user can open an OS simulation screen.",
-        "OS simulation includes a home screen, an app grid/launcher, and a settings screen.",
-        "At least two built-in apps are interactive (create/edit a note; browse mock pages; etc.).",
-        "OS simulation state is stored per save (e.g., created notes persist after reload)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/features/os-sim/OsSimScreen.tsx",
-          "operation": "create",
-          "description": "Create the OS simulation container screen with a virtual phone frame, navigation between home/launcher/settings/apps, and save-backed state loading."
-        },
-        {
-          "path": "frontend/src/features/os-sim/apps/NotesApp.tsx",
-          "operation": "create",
-          "description": "Implement an interactive Notes app allowing create/edit/delete notes; store notes in per-save OS state."
-        },
-        {
-          "path": "frontend/src/features/os-sim/apps/BrowserMockApp.tsx",
-          "operation": "create",
-          "description": "Implement an interactive Browser mock app that can navigate among a small set of mock pages and track basic history/state per save."
-        },
-        {
-          "path": "frontend/src/features/os-sim/SettingsApp.tsx",
-          "operation": "create",
-          "description": "Implement a settings screen (e.g., theme toggles within game theme constraints, notification toggles, device name) persisted per save."
-        },
-        {
-          "path": "frontend/src/features/products/ProductDetailsPanel.tsx",
-          "operation": "create",
-          "description": "Create a product/device details view that includes a button to open the OS simulation for that product/device context."
-        },
-        {
-          "path": "frontend/src/pages/DeviceStudioPage.tsx",
-          "operation": "modify",
-          "description": "Wire ProductDetailsPanel (and OS simulation entry point) into the Device Studio/blueprint workflow so users can open the OS simulation from a device/product view and return back."
-        },
-        {
-          "path": "frontend/src/state/saveGameStore.ts",
-          "operation": "modify",
-          "description": "Extend save persistence to include OS simulation state keyed per product/device so notes and app states survive reloads."
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Office progression with 20 levels and a dedicated 3D office viewer (3D game) using Three.js/React Three Fiber with camera controls.",
-      "acceptanceCriteria": [
-        "Office screen displays current office level (1–20) and upgrade requirements/cost.",
-        "Upgrading increases the office level and persists in the save.",
-        "A 3D office viewer renders a scene that visibly changes across multiple levels (at least 5 distinct visual milestones initially, scalable to 20).",
-        "3D viewer includes basic camera controls (orbit/pan/zoom) and performs acceptably in browser."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/features/office/OfficeUpgradePanel.tsx",
-          "operation": "create",
-          "description": "Implement office level display (1–20), upgrade cost/requirements UI, and upgrade action that updates save state. Use shadcn-ui cards/buttons/progress components for consistent styling. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/features/office/Office3DViewer.tsx",
-          "operation": "create",
-          "description": "Implement the 3D office viewer (3D game) with React Three Fiber scene composition and basic camera controls (orbit/pan/zoom). Ensure performance-friendly settings and scalable milestones. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/features/office/officeScenePresets.ts",
-          "operation": "create",
-          "description": "Define at least 5 distinct visual milestone presets (e.g., furniture/layout/lighting changes) mapped to office levels, designed to scale up to 20 levels."
-        },
-        {
-          "path": "frontend/src/pages/OfficePage.tsx",
-          "operation": "modify",
-          "description": "Wire OfficeUpgradePanel + Office3DViewer into the Office page; ensure the 3D scene updates when office level changes and that upgrades persist via the save store."
-        },
-        {
-          "path": "frontend/src/state/saveGameStore.ts",
-          "operation": "modify",
-          "description": "Persist office level and any office-related modifiers in the active save so upgrades survive reloads."
-        }
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "summary": "Investments UI for buy company, marketing spend, and paid employee search with measurable effects and a persistent action log.",
-      "acceptanceCriteria": [
-        "Investments screen lists at least: Buy Company, Marketing Campaign, Paid Employee Search.",
-        "Each action deducts cash and produces a measurable effect visible in UI metrics within the simulation (immediate or over time).",
-        "Actions are recorded in a timeline/log for the current save.",
-        "All investment outcomes persist after reload."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/features/investments/InvestmentsActionsPanel.tsx",
-          "operation": "create",
-          "description": "Create UI for the three investment actions with configurable spend/selection and a confirmation step; deduct cash and apply effects. Use shadcn-ui forms/dialogs for consistent UX. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/features/investments/InvestmentsLog.tsx",
-          "operation": "create",
-          "description": "Render a timeline/log of investment actions for the current save. Use shadcn-ui list/table components where appropriate. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/features/investments/investmentEffects.ts",
-          "operation": "create",
-          "description": "Implement simplified investment effect functions that adjust simulated variables (cash, market share, product sales, R&D speed, staffing quality) immediately or over time."
-        },
-        {
-          "path": "frontend/src/pages/InvestmentsPage.tsx",
-          "operation": "modify",
-          "description": "Wire InvestmentsActionsPanel + InvestmentsLog into the Investments page and connect actions into the simulation/economy so effects are measurable in Dashboard metrics."
-        },
-        {
-          "path": "frontend/src/state/saveGameStore.ts",
-          "operation": "modify",
-          "description": "Persist investment actions and resulting modifiers in the active save so outcomes and logs survive reloads."
-        }
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "summary": "Design variants per device category with a design selector and live preview in Device Studio, persisted in blueprint data.",
-      "acceptanceCriteria": [
-        "Device Studio includes a design picker with multiple variants per category (smartphone/tablet/watch/smart-glasses).",
-        "Selecting a design updates a live preview (2D render or 3D model).",
-        "Design choices are saved in the blueprint and appear correctly when re-opened."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/public/assets/generated/device-design-sheet.dim_1600x900.png",
-          "operation": "create",
-          "description": "Add generated device design preview sheet asset and wire it into the design browser/preview as a static visual reference."
-        },
-        {
-          "path": "frontend/src/features/device-studio/DesignPicker.tsx",
-          "operation": "create",
-          "description": "Implement a design browser/selector with multiple variants per category and selection state. Use shadcn-ui tabs/cards for browsing variants. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/features/device-studio/DesignPreview.tsx",
-          "operation": "create",
-          "description": "Implement a live preview panel (2D) that updates when a design is selected, using the generated device-design sheet as a source for preview visuals."
-        },
-        {
-          "path": "frontend/src/features/device-studio/designCatalog.ts",
-          "operation": "create",
-          "description": "Define a design catalog mapping categories to multiple design variant identifiers + metadata used by DesignPicker and persisted in blueprint editor state."
-        },
-        {
-          "path": "frontend/src/features/device-studio/DeviceBlueprintEditor.tsx",
-          "operation": "modify",
-          "description": "Wire DesignPicker + DesignPreview into the blueprint editor; ensure selected design variant is stored in the blueprint editor state and round-trips correctly when reopening a saved blueprint."
-        },
-        {
-          "path": "frontend/src/features/device-studio/deviceBlueprintAdapters.ts",
-          "operation": "modify",
-          "description": "Extend blueprint mapping to include persisted design variant identifier(s) and ensure they rehydrate into the editor correctly."
-        }
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "summary": "Cloud synchronization UI using Internet Identity: authentication state, user profile setup, and save slot management (create/rename/load/delete), with local-only mode for anonymous users.",
-      "acceptanceCriteria": [
-        "User can sign in with Internet Identity and see authentication state in the UI.",
-        "Signed-in users can create at least one cloud save slot and load it later.",
-        "Saves persist across page reloads and across browsers/devices when signed into the same identity.",
-        "User can rename and delete save slots.",
-        "Anonymous users either (a) are prompted to sign in for cloud saves or (b) use a clearly labeled local-only mode."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/auth/LoginButton.tsx",
-          "operation": "create",
-          "description": "Add a login/logout button using the authorization component guidance (Internet Identity via existing hook), and on logout clear React Query cache so cached app data is cleared. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/auth/ProfileSetupModal.tsx",
-          "operation": "create",
-          "description": "Implement first-login profile setup (ask for a human-readable name) using authorization-backed backend capabilities (getCallerUserProfile/saveCallerUserProfile) and prevent modal flash per the component guidance. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useCurrentUserProfile.ts",
-          "operation": "create",
-          "description": "Create a React Query hook wrapper for current user profile loading that follows the authorization component guidance (actor dependency + retry false) and exposes state suitable for gating ProfileSetupModal. Verify the component's usage instructions before implementing."
+          "description": "Create a persisted Zustand store for store network state (stores list + computed bonuses). Expose actions to initialize/replace from a loaded save and to build a store. Use the helpers from storeNetworkModel.ts."
         },
         {
           "path": "frontend/src/features/cloud-saves/SaveSlotsPanel.tsx",
-          "operation": "create",
-          "description": "Implement save slot management UI: list slots, create slot, rename, load, delete. Use shadcn-ui table/dialog/input/button components. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/features/cloud-saves/cloudSaveAdapters.ts",
-          "operation": "create",
-          "description": "Create adapters to serialize/deserialize the current frontend save state to the backend SavedGame type for saving/loading slots (no backend changes in this plan)."
-        },
-        {
-          "path": "frontend/src/hooks/useCloudSaves.ts",
-          "operation": "create",
-          "description": "Create React Query hooks for cloud save slot operations (list/load/save/rename/delete) using available backend capabilities, and ensure UI updates and cache invalidation on mutations."
-        },
-        {
-          "path": "frontend/src/pages/CloudSavesPage.tsx",
           "operation": "modify",
-          "description": "Wire LoginButton, ProfileSetupModal, and SaveSlotsPanel into Cloud Saves page; clearly label anonymous local-only mode and prompt sign-in for cloud actions."
-        },
-        {
-          "path": "frontend/src/components/layout/GameLayout.tsx",
-          "operation": "modify",
-          "description": "Surface authentication state (signed in user name from profile) in the global header, using the authorization component guidance to avoid showing the principal id. Verify the component's usage instructions before implementing."
+          "description": "Include storeNetwork when creating a cloud save and restore it on load. When a loaded save has missing storeNetwork, initialize the store network store with an empty network and neutral modifiers to avoid crashes."
         },
         {
           "path": "frontend/src/state/saveGameStore.ts",
           "operation": "modify",
-          "description": "Integrate cloud save load/save with the save store: when signed in, allow persisting the current save to selected slot; when anonymous, persist locally only; ensure rehydration works after reload."
+          "description": "Extend local persisted state to also record the currently loaded save's storeNetwork snapshot alongside existing local save data, ensuring local round-trip behavior even without cloud load (when applicable)."
         }
       ]
     },
     {
-      "id": "REQ-12",
-      "summary": "Coherent, distinctive economic-strategy visual theme (non-blue/purple dominant) applied consistently across all screens and key metrics.",
+      "id": "REQ-22",
+      "summary": "Add a Stores build action in Investments to select a country, validate funds/duplicates, build the store, deduct cash, and log the investment.",
       "acceptanceCriteria": [
-        "UI uses a consistent design system (spacing, typography scale, buttons, cards, tables) across all screens.",
-        "Theme is suitable for an economic strategy game and does not use blue/purple as the dominant palette.",
-        "Key game metrics (cash, revenue, market share, R&D progress) are presented clearly and consistently."
+        "The Investments screen includes a new card/panel to build a store with at least: country selection, displayed cost, and a \"Build Store\" action.",
+        "Attempting to build a store with insufficient funds shows an error and does not change cash or store state.",
+        "Building a store deducts cash, appends the store to the store network state, and adds an entry to the existing investments log.",
+        "The UI prevents or clearly handles building a duplicate store in the same country (either disallow or treat as an upgrade level), and the behavior is consistent and persisted."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/index.css",
+          "path": "frontend/src/features/stores/StoresBuildCard.tsx",
           "operation": "create",
-          "description": "Create global Tailwind + CSS variable theme tokens (shadcn-style variables) with an economic-strategy aesthetic using non-blue/purple dominant palette (e.g., graphite/emerald/amber accents). Apply consistent typography and background/surface styling."
+          "description": "Create a new Investments action card for building stores. Use shadcn-ui components (Card, Button, Input/Label, and a country Select) to provide country selection, cost display, and a Build Store action. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/tailwind.config.js",
+          "path": "frontend/src/features/investments/InvestmentsActionsPanel.tsx",
           "operation": "modify",
-          "description": "Adjust Tailwind theme extensions (colors, typography defaults if needed) to support the chosen palette and consistent UI surfaces without making blue/purple dominant."
+          "description": "Wire the new StoresBuildCard into the Investments actions grid. Ensure the build handler checks cash, prevents or clearly handles duplicate country builds consistently (e.g., disallow duplicates with an error toast), deducts cash via useGameState.updateCash, updates store network via the storeNetwork store action, and logs via useInvestmentStore.addInvestment."
         },
         {
-          "path": "frontend/src/components/layout/GameLayout.tsx",
+          "path": "frontend/src/features/investments/InvestmentsLog.tsx",
           "operation": "modify",
-          "description": "Apply consistent layout styling (spacing, surfaces, headers, navigation states) so every page inherits the same design language; use shadcn-ui components to standardize buttons/cards/tables. Verify the component's usage instructions before implementing."
+          "description": "Extend the log icon/type handling to support a new investment type for store building (e.g., 'stores' or 'store') so store build entries render consistently in the history."
+        }
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "summary": "Show the store network status and computed effects in the UI (store count, country list, productivity bonus, attraction bonus).",
+      "acceptanceCriteria": [
+        "The player can see an up-to-date list of built store countries somewhere in the app without opening developer tools.",
+        "The UI displays the computed productivity bonus and attraction bonus values derived from the store network.",
+        "After building a store, the displayed list and bonus values update immediately."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/stores/StoreNetworkSummaryPanel.tsx",
+          "operation": "create",
+          "description": "Create a summary panel that reads from the storeNetwork store and displays: number of stores, list of countries with stores, and the computed productivity and attraction bonuses. Use shadcn-ui components (Card/Badge/Separator as needed). Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/features/dashboard/MetricsPanel.tsx",
+          "path": "frontend/src/pages/InvestmentsPage.tsx",
           "operation": "modify",
-          "description": "Ensure key metrics (cash, revenue, market share, R&D progress) use consistent formatting, labeling, and visual hierarchy aligned with the theme (e.g., semantic accents for positive/negative deltas)."
+          "description": "Add the StoreNetworkSummaryPanel to the Investments page layout (e.g., near the actions or alongside the log) so players can always see store network status while making investment decisions."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Expose store network effects on a primary management surface by adding a small store summary card/panel (using StoreNetworkSummaryPanel or a compact variant) so bonuses are visible without navigating away."
+        }
+      ]
+    },
+    {
+      "id": "REQ-24",
+      "summary": "Apply store-derived productivity and attraction modifiers to the Release Product flow with deterministic, clearly shown adjustments and correct affordability validation.",
+      "acceptanceCriteria": [
+        "The Release Product modal shows how productivity and attraction are affecting the calculated totals/outcomes (e.g., shows a bonus line or adjusted totals).",
+        "Releasing the same product inputs with more stores built results in a measurably better outcome (lower cost and/or higher sales/rating) than with zero stores, without requiring randomness.",
+        "The release flow still validates cash correctly using the adjusted total cost, and does not allow releasing if the player cannot afford it."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/products/releaseModifiers.ts",
+          "operation": "create",
+          "description": "Create deterministic modifier utilities for the release flow: compute adjusted production cost from productivity bonus and adjusted sales/rating (or sales only) from attraction bonus. Keep the mapping simple, measurable, and explainable in UI."
+        },
+        {
+          "path": "frontend/src/features/dashboard/releasedProductModel.ts",
+          "operation": "modify",
+          "description": "Update released product creation to accept optional modifier inputs (or accept already-adjusted inputs) so attraction can deterministically improve resulting sales and/or rating in a reproducible way."
+        },
+        {
+          "path": "frontend/src/features/products/ReleaseProductModal.tsx",
+          "operation": "modify",
+          "description": "Read current store bonuses from the storeNetwork store and apply them to the release calculations. Show explicit lines for (a) productivity impact on production cost and adjusted total cost and (b) attraction impact on resulting sales/rating. Validate cash using the adjusted total cost and block release if unaffordable."
         }
       ]
     }
